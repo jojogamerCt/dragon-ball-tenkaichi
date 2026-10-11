@@ -28,6 +28,7 @@ public final class Appearance {
     public int outfit;
     public int outfitPrimary = 0xF07A1A;
     public int outfitSecondary = 0x1F3FAE;
+    public int featureColor = 0xD86A8C;
     public boolean tail = true;
     public boolean useOwnSkin;
 
@@ -53,6 +54,7 @@ public final class Appearance {
         auraColor &= 0xFFFFFF;
         outfitPrimary &= 0xFFFFFF;
         outfitSecondary &= 0xFFFFFF;
+        featureColor &= 0xFFFFFF;
         if (!race.has(com.dbtenkaichi.race.RacePassive.TAIL)) {
             tail = false;
         }
@@ -78,6 +80,7 @@ public final class Appearance {
         tag.putInt("outfit", outfit);
         tag.putInt("outfit_primary", outfitPrimary);
         tag.putInt("outfit_secondary", outfitSecondary);
+        tag.putInt("feature", featureColor);
         tag.putBoolean("tail", tail);
         tag.putBoolean("own_skin", useOwnSkin);
         return tag;
@@ -99,28 +102,99 @@ public final class Appearance {
         outfit = tag.getIntOr("outfit", outfit);
         outfitPrimary = tag.getIntOr("outfit_primary", outfitPrimary);
         outfitSecondary = tag.getIntOr("outfit_secondary", outfitSecondary);
+        featureColor = tag.getIntOr("feature", featureColor);
         tail = tag.getBooleanOr("tail", tail);
         useOwnSkin = tag.getBooleanOr("own_skin", useOwnSkin);
     }
 
     public static Appearance defaultsFor(Race race) {
         Appearance a = new Appearance();
+        a.tail = race.tailByDefault();
         switch (race) {
             case SAIYAN -> {
                 a.hairStyle = HairStyle.WILD_SPIKES.ordinal();
                 a.hairColor = 0x111111;
                 a.auraColor = 0xF2F6FF;
-                a.tail = true;
+            }
+            case HALF_SAIYAN -> {
+                a.hairStyle = HairStyle.SIDE_SWEPT.ordinal();
+                a.hairColor = 0x1A1410;
+                a.auraColor = 0xFFF2C0;
+                a.outfitPrimary = 0x6A2FA0;
+                a.outfitSecondary = 0xE0B030;
             }
             case HUMAN -> {
                 a.hairStyle = HairStyle.SHORT_NEAT.ordinal();
                 a.hairColor = 0x3B2416;
                 a.auraColor = 0x9FD8FF;
-                a.tail = false;
             }
-            default -> {
-                a.tail = race.tailByDefault();
+            case NAMEKIAN -> {
+                a.skinColor = 0x6DBF4A;
+                a.featureColor = 0xD8789A;
+                a.auraColor = 0xF4FFF0;
+                a.outfitPrimary = 0x5C3B8E;
+                a.outfitSecondary = 0x2A6FB0;
             }
+            case FRIEZA_RACE -> {
+                a.skinColor = 0xF2F0F4;
+                a.featureColor = 0x8E3FB8;
+                a.eyeColor = 0xB0141E;
+                a.auraColor = 0xC890FF;
+                a.outfit = 1;
+                a.outfitPrimary = 0x24204A;
+                a.outfitSecondary = 0x7A3010;
+            }
+            case MAJIN -> {
+                a.skinColor = 0xF4A0C0;
+                a.featureColor = 0xE07AA4;
+                a.eyeColor = 0x0E0E0E;
+                a.auraColor = 0xFF9ACD;
+                a.outfitPrimary = 0xF2F2F2;
+                a.outfitSecondary = 0x2A2A2A;
+            }
+            case ANDROID -> {
+                a.skinColor = 0xF0CBA4;
+                a.featureColor = 0x9AA7B4;
+                a.eyeColor = 0x2A6FD0;
+                a.hairStyle = HairStyle.SHORT_NEAT.ordinal();
+                a.hairColor = 0xE8D27A;
+                a.auraColor = 0xBFE8FF;
+                a.outfit = 2;
+                a.outfitPrimary = 0x2E2E36;
+                a.outfitSecondary = 0x1F3F7A;
+            }
+            case BIO_ANDROID -> {
+                a.skinColor = 0x7FB45A;
+                a.featureColor = 0x2E4A1E;
+                a.eyeColor = 0xC01A6A;
+                a.auraColor = 0xB8F070;
+                a.outfit = 1;
+                a.outfitPrimary = 0x1E3A16;
+                a.outfitSecondary = 0x9C6FB8;
+            }
+            case KAIOSHIN -> {
+                a.skinColor = 0xC8A0E8;
+                a.featureColor = 0xF0D040;
+                a.hairStyle = HairStyle.FLAME_UP.ordinal();
+                a.hairColor = 0xF4F4F4;
+                a.auraColor = 0xFFFFFF;
+                a.outfitPrimary = 0x3A2A8A;
+                a.outfitSecondary = 0xE8E0D0;
+            }
+            case DEMON -> {
+                a.skinColor = 0xC8484A;
+                a.featureColor = 0x2A1A30;
+                a.eyeColor = 0xF0D020;
+                a.hairStyle = HairStyle.LONG_MANE.ordinal();
+                a.hairColor = 0x1A0A24;
+                a.auraColor = 0x9A2AE0;
+                a.outfit = 1;
+                a.outfitPrimary = 0x2A1A30;
+                a.outfitSecondary = 0x8A1A1A;
+            }
+        }
+        if (!race.hasHair()) {
+            a.hairStyle = HairStyle.BALD.ordinal();
         }
         return a;
     }

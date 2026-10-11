@@ -214,6 +214,7 @@ def build():
         "brows": ("Eyebrows", "Sopracciglia"), "expression": ("Expression", "Espressione"), "hair": ("Hair", "Capelli"), "hair_color": ("Hair color", "Colore capelli"),
         "tail": ("Tail", "Coda"), "aura": ("Aura", "Aura"), "outfit": ("Outfit", "Abito"), "outfit_primary": ("Main color", "Colore principale"),
         "outfit_secondary": ("Accent color", "Colore accento"),
+        "feature_color": ("Feature color", "Colore dettagli"),
     }
     for k, (e, i) in rows.items():
         add("screen.dbtenkaichi.creator." + k, e, i)

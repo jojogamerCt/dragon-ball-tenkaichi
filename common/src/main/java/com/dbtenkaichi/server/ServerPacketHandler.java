@@ -75,6 +75,7 @@ public final class ServerPacketHandler {
         appearance.outfit = packet.outfit();
         appearance.outfitPrimary = packet.outfitPrimary();
         appearance.outfitSecondary = packet.outfitSecondary();
+        appearance.featureColor = packet.featureColor();
         appearance.tail = packet.tail();
         appearance.useOwnSkin = packet.useOwnSkin();
         appearance.sanitize(race, gp.minHeight, gp.maxHeight);

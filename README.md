@@ -12,11 +12,15 @@ scripts in `tools/`.
 
 ## Status
 
-Version **0.1.0 — vertical slice**: character creation, Saiyans and Humans, 12 stats, Battle Power,
+Version **0.1.0 — vertical slice**: character creation with all 10 playable races (Saiyan, Half-Saiyan,
+Human, Namekian, Frieza Race, Majin, Android, Bio-Android, Kaioshin, Demon Realm Race), each with its own
+server-side passives, 3D features and HD procedural skin, 12 stats, Battle Power,
 melee combat with combos/guards/dodges, lock-on, flight, Ki charging, 3D aura, Ki Blast, Kamehameha,
 Beam Clash, Super Saiyan, a trainer Master, a Saiyan Raider with AI, HUD, multiplayer sync, saving and
 configuration. Details in `docs/FEATURES.md`, verification status in `docs/PROGRESS.md` and
 `docs/TESTING.md`, limitations in `docs/KNOWN_ISSUES.md` (project docs are currently in Italian).
+
+![The 10 playable races](docs/screenshots/race_gallery.png)
 
 ## Requirements
 

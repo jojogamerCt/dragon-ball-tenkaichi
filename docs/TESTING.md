@@ -54,7 +54,7 @@ Il client entra nel mondo con Quick Play ed esegue `ClientSmokeTest`: apertura a
 creator al primo accesso, creazione Saiyan via pacchetto, comandi `/tenkaichi`, carica del Ki,
 volo, trasformazione Super Saiyan con cinematica, NPC, lock-on, carica e sparo del Kamehameha,
 contro-raggio del Predone → **Beam Clash** sincronizzato, combo in posizione di combattimento,
-menu personaggio; salva screenshot in `runs/client/screenshots/dbt_*.png` e chiude il gioco.
+menu personaggio, galleria delle 10 razze nel creator; salva screenshot in `runs/client/screenshots/dbt_*.png` e chiude il gioco.
 
 Esito: **Fabric e NeoForge completano tutti i passaggi** (character created: true, flying: true,
 form: super_saiyan, beam clash active: true). Nessuna eccezione di rendering registrata
@@ -66,7 +66,9 @@ form: super_saiyan, beam clash active: true). Nessuna eccezione di rendering reg
 - HUD (HP, Ki, stamina, BP, TP, padronanza, slot tecniche, lock-on, barra del clash, letterbox).
 - Aura in carica e aura Super Saiyan; capelli dorati e occhi verdi in forma Super Saiyan.
 - Kamehameha (raggio multistrato con esplosioni lungo la traiettoria) e Beam Clash.
-- Raggio viola del Predone, Maestro con gi arancione, menu statistiche.
+- Raggio viola del Predone, Maestro con barba, menu statistiche.
+- Galleria delle 10 razze (`docs/screenshots/race_gallery.png`, da NeoForge; identica su Fabric):
+  ogni razza ha colori, skin HD e modelli razziali distinti e riconoscibili.
 
 ## 6. Non ancora verificato
 
@@ -75,5 +77,6 @@ form: super_saiyan, beam clash active: true). Nessuna eccezione di rendering reg
 - Parata, perfect block, schivata, vanish, dash e recupero aereo con input umano reale.
 - Sessioni di allenamento (meditazione, controllo Ki, sparring, schivate) e apprendimento del Kamehameha dal Maestro.
 - Sblocco del Super Saiyan per rabbia e Zenkai in condizioni di gioco naturali.
+- Passive razziali in partita (rigenerazione, assorbimento, portata allungata, furia, invisibilità ai sensi).
 - JAR di release in un'installazione di produzione (launcher ufficiale) invece dell'ambiente di sviluppo.
 - Prestazioni (FPS, MSPT, RAM) e benchmark: non misurati.

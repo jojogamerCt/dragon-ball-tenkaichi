@@ -167,8 +167,9 @@ class BalanceTest {
     }
 
     @Test
-    void slicePlayableRacesAreImplemented() {
-        assertTrue(Race.SAIYAN.implemented());
-        assertTrue(Race.HUMAN.implemented());
+    void allRacesArePlayable() {
+        for (Race race : Race.values()) {
+            assertTrue(race.implemented(), race + " must be playable");
+        }
     }
 }

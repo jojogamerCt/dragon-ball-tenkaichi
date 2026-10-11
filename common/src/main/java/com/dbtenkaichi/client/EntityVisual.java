@@ -14,6 +14,7 @@ public final class EntityVisual {
     public Race race = Race.HUMAN;
     public Appearance appearance = Appearance.defaultsFor(Race.HUMAN);
     public boolean created;
+    public boolean beard;
     public String form = PlayerData.BASE_FORM;
     public int flags;
     public float kiRatio = 1.0f;

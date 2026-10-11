@@ -7,7 +7,9 @@ Classificazione: **Alta** (blocca funzioni importanti), **Media** (degrada l'esp
 |---|---|---|
 | Media | Prestazioni non misurate | L'aura e i raggi generano geometria per frame (fino a ~20 fiamme × 6 segmenti × 4 strati). Livelli Low/Medium riducono il carico ma mancano benchmark. |
 | Media | Multiplayer con più giocatori reali non provato | La logica è autoritativa e i pacchetti sono inviati ai tracker, ma il test reale è stato fatto con un solo client. |
-| Media | Solo 2 razze giocabili, 1 trasformazione giocabile, 2 tecniche giocatore | Le altre 8 razze hanno tratti definiti ma sono disabilitate (`implemented=false`). |
+| Media | 1 trasformazione giocabile, 2 tecniche giocatore | Tutte le 10 razze sono giocabili, ma solo Saiyan e Mezzo-Saiyan hanno una trasformazione (Super Saiyan). |
+| Media | Bilanciamento delle passive razziali non provato in gioco | Gli effetti sono attivi lato server e le razze risultano distinte nei test JUnit, ma i valori non sono stati provati in partite reali. |
+| Bassa | Modelli razziali a cubi | Antenne, corna, cresta e orecchie sono composte da cubi segmentati (stile Minecraft), non da mesh curve. |
 | Media | Spawn naturale del Predone non implementato | Si ottiene con uovo o `/summon dbtenkaichi:saiyan_raider`. |
 | Bassa | Capelli Super Saiyan visivamente compatti | Le punte si fondono in un'unica sagoma conica da alcune angolazioni. |
 | Bassa | Skin personalizzata non usata per le mani in prima persona | La mano in prima persona usa la skin Minecraft del giocatore. |

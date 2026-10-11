@@ -59,7 +59,8 @@ public class RaiderEntity extends FighterNpc implements Enemy {
         goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 16.0f));
         goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+        targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true,
+                (target, level) -> !(target instanceof Player player && com.dbtenkaichi.race.RaceMechanics.hiddenFromSenses(player, PlayerManager.data(player).race(), this))));
     }
 
     @Override

@@ -26,10 +26,27 @@ public abstract class AvatarRendererMixin {
         try {
             EntityVisual visual = TenkaichiLayers.visual(state);
             if (visual != null && !visual.appearance.useOwnSkin) {
-                cir.setReturnValue(CustomSkins.textureFor(visual.appearance, visual.eyeColor(), visual.hairColor()));
+                cir.setReturnValue(CustomSkins.textureFor(visual.race, visual.appearance, visual.eyeColor(), visual.hairColor()));
             }
         } catch (RuntimeException e) {
             RenderGuard.report("skin", e);
+        }
+    }
+
+    @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;F)V", at = @At("TAIL"))
+    private void dbtenkaichi$outfitLayers(net.minecraft.world.entity.Avatar avatar, AvatarRenderState state, float partial, CallbackInfo ci) {
+        try {
+            EntityVisual visual = TenkaichiLayers.visual(state);
+            if (visual != null && !visual.appearance.useOwnSkin) {
+                state.showHat = true;
+                state.showJacket = true;
+                state.showLeftPants = true;
+                state.showRightPants = true;
+                state.showLeftSleeve = true;
+                state.showRightSleeve = true;
+            }
+        } catch (RuntimeException e) {
+            RenderGuard.report("outfit", e);
         }
     }
 

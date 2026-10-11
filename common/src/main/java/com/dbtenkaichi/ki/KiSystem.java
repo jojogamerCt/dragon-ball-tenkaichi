@@ -119,7 +119,7 @@ public final class KiSystem {
         CombatSystem.anim(player, AnimClip.BEAM_FIRE, technique.duration() + 10, 0);
         CombatSystem.playSound(level, player, ModSounds.BEAM_FIRE.get(), 1.6f, 1.0f);
         float mastery = data.skillMastery(id);
-        data.setSkillMastery(id, mastery + 0.01f);
+        data.setSkillMastery(id, mastery + 0.01f * com.dbtenkaichi.race.RaceMechanics.skillMasteryFactor(data.race()));
         TrainingSystem.passiveGain(player, data, "technique_" + id, technique.trainedStat(), 2.0 + ratio * 2.0);
     }
 

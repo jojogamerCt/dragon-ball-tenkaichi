@@ -50,12 +50,12 @@ public final class TrainingSystem {
         data.recordTraining(activity, day);
         PlayerManager.grantTp(player, data, gain);
         addPractice(player, data, stat, gain * 0.035);
-        data.setFatigue(data.fatigue() + base * 0.0005);
+        data.setFatigue(data.fatigue() + base * 0.0005 * com.dbtenkaichi.race.RaceMechanics.fatigueFactor(data.race()));
         return gain;
     }
 
     public static void addPractice(ServerPlayer player, PlayerData data, StatType stat, double amount) {
-        float value = data.practice(stat) + (float) amount;
+        float value = data.practice(stat) + (float) (amount * com.dbtenkaichi.race.RaceMechanics.practiceFactor(data.race()));
         int cap = ProgressionMath.statCap(data.stat(StatType.POTENTIAL), ConfigManager.balance());
         if (value >= 1.0f && data.stat(stat) < cap) {
             value -= 1.0f;

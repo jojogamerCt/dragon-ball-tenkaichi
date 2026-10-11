@@ -58,7 +58,8 @@ public record Fighter(LivingEntity entity, StatBlock stats, Race race, @Nullable
     }
 
     public double attackMultiplier(BalanceConfig cfg) {
-        return form == null ? 1.0 : form.attack(cfg) * form.controlFactor(mastery);
+        double race = com.dbtenkaichi.race.RaceMechanics.attackFactor(entity, this.race);
+        return (form == null ? 1.0 : form.attack(cfg) * form.controlFactor(mastery)) * race;
     }
 
     public double defenseMultiplier(BalanceConfig cfg) {
@@ -66,7 +67,8 @@ public record Fighter(LivingEntity entity, StatBlock stats, Race race, @Nullable
     }
 
     public double kiMultiplier(BalanceConfig cfg) {
-        return form == null ? 1.0 : form.ki(cfg) * form.controlFactor(mastery);
+        double race = com.dbtenkaichi.race.RaceMechanics.kiFactor(entity, this.race);
+        return (form == null ? 1.0 : form.ki(cfg) * form.controlFactor(mastery)) * race;
     }
 
     public double speedMultiplier() {

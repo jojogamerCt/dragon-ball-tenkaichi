@@ -70,6 +70,7 @@ public final class ClientState {
             } else if (npc instanceof MasterEntity) {
                 visual.race = Race.HUMAN;
                 visual.appearance = masterAppearance();
+                visual.beard = true;
             }
         }
         if (entity instanceof Player player && player.isLocalPlayer()) {
@@ -123,6 +124,11 @@ public final class ClientState {
         a.hairColor = 0x0E0E12;
         a.auraColor = 0xC24BFF;
         a.skinColor = 0xD9A06B;
+        a.outfit = 1;
+        a.outfitPrimary = 0x1C1C2A;
+        a.outfitSecondary = 0x6A2FA0;
+        a.eyebrowStyle = 1;
+        a.expression = 2;
         a.tail = true;
         return a;
     }
@@ -133,6 +139,11 @@ public final class ClientState {
         a.hairColor = 0xEDEDED;
         a.auraColor = 0xBFE6FF;
         a.skinColor = 0xE8B88A;
+        a.eyebrowStyle = 2;
+        a.expression = 3;
+        a.outfit = 2;
+        a.outfitPrimary = 0xE8902A;
+        a.outfitSecondary = 0x2F6B3A;
         a.tail = false;
         return a;
     }

@@ -39,8 +39,30 @@
 1. Test multiplayer con due client reali e prove di riconnessione/cambio dimensione.
 2. Benchmark (FPS/MSPT) e ottimizzazione di aura/raggi.
 3. Altre tecniche (Galick Gun, Masenko, Destructo Disc, Special Beam Cannon) e Super Saiyan 2/3.
-4. Spawn naturale del Predone e strutture iniziali; razze Namecciano e Androide.
+4. Spawn naturale del Predone e strutture iniziali; trasformazioni per le razze non Saiyan.
 5. Fasi 7–10 della roadmap.
 
 ### Verifiche fallite ancora aperte
 Nessuna verifica automatica fallisce allo stato attuale.
+
+## Sessione 2 — 11 ottobre 2026
+
+### Implementato
+- Tutte le 10 razze abilitate e giocabili (migrazione della config comune allo schema 2).
+- `RaceMechanics`: ogni passiva razziale ha un effetto server-side (rigenerazione pagata in Ki,
+  assorbimento alle uccisioni, portata allungata, corpo elastico, sopravvivenza nello spazio,
+  invisibilità ai sensi dei nemici, furia demoniaca, Ki divino, fame di battaglia, maestria tecnica,
+  riserva di energia, potenziale nascosto).
+- Aspetto per razza: colori predefiniti, palette della pelle, "colore dettagli" sincronizzato in rete.
+- Skin procedurali HD 128×128 con abiti 3D sui layer esterni; dettagli razziali sulla skin.
+- Nuovi modelli: tratti razziali (3 gruppi di colore), coda spessa, spalline dell'armatura, barba;
+  ciocche dei capelli curve a 4 segmenti; coda Saiyan a 8 segmenti; nuove texture HD.
+- Nuova icona della mod fornita dal proprietario del progetto.
+
+### Testato
+- Build pulita, 19/19 JUnit; smoke server Fabric e NeoForge: PASS.
+- Test client su entrambi i loader con galleria delle 10 razze: tutti i passaggi completati.
+
+### Problemi trovati e risolti
+- Il creator sostituito da un altro creator azzerava l'anteprima (`removed()` dopo il costruttore)
+  → l'anteprima viene ripubblicata in `init()`.

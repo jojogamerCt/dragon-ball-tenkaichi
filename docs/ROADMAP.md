@@ -14,7 +14,7 @@ entrambi i loader e verificato nei limiti indicati in `TESTING.md`.
 
 ## Fase 2 — Personaggio (vertical slice)
 - [x] Character creator con anteprima 3D ruotabile/zoomabile
-- [x] Saiyan e Umano giocabili; altre 8 razze definite (tratti/affinità) ma non abilitate
+- [x] Tutte le 10 razze giocabili con passive reali, aspetto, modelli 3D e skin HD dedicati
 - [x] 12 statistiche persistenti, TP, limiti da Potenziale, pratica per statistica
 - [x] Battle Power con condizione, forma, soppressione
 - [ ] Altezza: applicata via attributo `scale`; editor espressioni/voce minimale

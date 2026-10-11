@@ -85,7 +85,7 @@ public final class CombatSystem {
         if (rt == null || rt.busy(now) || rt.guarding || rt.skillSlot >= 0 || now < rt.nextAttackAllowed) {
             return false;
         }
-        LivingEntity target = findTarget(attacker, rt, meleeRange(rt));
+        LivingEntity target = findTarget(attacker, rt, meleeRange(attacker, rt));
         MeleeMove move;
         if (rt.dashingUntil > now) {
             move = MeleeMove.RUSH;
@@ -116,7 +116,7 @@ public final class CombatSystem {
         rt.lastCombat = now;
         rt.stateDirty = true;
         anim(attacker, move.clip, move.clip.defaultDuration, 0);
-        LivingEntity target = findTarget(attacker, rt, meleeRange(rt));
+        LivingEntity target = findTarget(attacker, rt, meleeRange(attacker, rt));
         if (target == null) {
             playSound(level, attacker, ModSounds.SWING.get(), 0.6f, 1.0f + attacker.getRandom().nextFloat() * 0.2f);
             return true;
@@ -134,9 +134,10 @@ public final class CombatSystem {
         return true;
     }
 
-    public static double meleeRange(RuntimeState rt) {
+    public static double meleeRange(LivingEntity attacker, RuntimeState rt) {
         GameplayConfig gp = ConfigManager.gameplay();
-        return rt.lockedTarget >= 0 ? gp.meleeRangeLocked : gp.meleeRange;
+        double bonus = attacker instanceof Player player ? com.dbtenkaichi.race.RaceMechanics.meleeRangeBonus(PlayerManager.data(player).race()) : 0.0;
+        return (rt.lockedTarget >= 0 ? gp.meleeRangeLocked : gp.meleeRange) + bonus;
     }
 
     public static @Nullable LivingEntity findTarget(LivingEntity attacker, RuntimeState rt, double range) {
@@ -354,9 +355,10 @@ public final class CombatSystem {
 
         if (attacker instanceof ServerPlayer player) {
             PlayerData data = PlayerManager.data(player);
+            com.dbtenkaichi.race.RaceMechanics.onMeleeHit(player, data, damage);
             double ratio = (double) def.battlePower() / Math.max(1L, att.battlePower());
             double worth = Math.max(0.05, Math.min(2.0, ratio));
-            TrainingSystem.passiveGain(player, data, "melee", StatType.MARTIAL_ARTS, 0.35 * worth);
+            TrainingSystem.passiveGain(player, data, "melee", StatType.MARTIAL_ARTS, 0.35 * worth * com.dbtenkaichi.race.RaceMechanics.combatGainFactor(data.race(), worth));
             TrainingSystem.passiveGain(player, data, "melee_strength", StatType.STRENGTH, 0.25 * worth);
         }
         if (target instanceof ServerPlayer defender && guard == DamageMath.GuardState.GUARD) {

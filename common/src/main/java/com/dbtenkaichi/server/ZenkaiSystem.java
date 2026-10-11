@@ -60,7 +60,7 @@ public final class ZenkaiSystem {
         int cap = ProgressionMath.statCap(data.stat(StatType.POTENTIAL), cfg);
         int total = 0;
         for (StatType type : BOOSTED) {
-            int gain = ProgressionMath.zenkaiLevels(data.stat(type), ownBp, (long) pending, cfg);
+            int gain = (int) Math.round(ProgressionMath.zenkaiLevels(data.stat(type), ownBp, (long) pending, cfg) * com.dbtenkaichi.race.RaceMechanics.zenkaiFactor(data.race()));
             int allowed = Math.max(0, Math.min(gain, cap - data.stat(type)));
             data.stats().add(type, allowed);
             total += allowed;

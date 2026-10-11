@@ -35,12 +35,12 @@ public class FighterNpcRenderer extends LivingEntityRenderer<FighterNpc, AvatarR
         HumanoidMobRenderer.extractHumanoidRenderState(entity, state, partialTicks, this.itemModelResolver);
         state.skin = DefaultPlayerSkin.getDefaultSkin();
         state.id = entity.getId();
-        state.showHat = false;
-        state.showJacket = false;
-        state.showLeftPants = false;
-        state.showRightPants = false;
-        state.showLeftSleeve = false;
-        state.showRightSleeve = false;
+        state.showHat = true;
+        state.showJacket = true;
+        state.showLeftPants = true;
+        state.showRightPants = true;
+        state.showLeftSleeve = true;
+        state.showRightSleeve = true;
         state.showCape = false;
         state.isSpectator = false;
     }
@@ -51,7 +51,7 @@ public class FighterNpcRenderer extends LivingEntityRenderer<FighterNpc, AvatarR
         if (visual == null) {
             return DefaultPlayerSkin.getDefaultSkin().body().texturePath();
         }
-        return CustomSkins.textureFor(visual.appearance, visual.eyeColor(), visual.hairColor());
+        return CustomSkins.textureFor(visual.race, visual.appearance, visual.eyeColor(), visual.hairColor());
     }
 
     @Override

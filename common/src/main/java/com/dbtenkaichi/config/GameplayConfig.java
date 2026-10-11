@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class GameplayConfig {
-    public List<String> enabledRaces = new ArrayList<>(List.of("saiyan", "human"));
+    public static final List<String> ALL_RACES = List.of("saiyan", "half_saiyan", "human", "namekian", "frieza_race", "majin", "android", "bio_android", "kaioshin", "demon");
+
+    public List<String> enabledRaces = new ArrayList<>(ALL_RACES);
     public boolean allowCharacterReset = false;
     public float minHeight = 0.88f;
     public float maxHeight = 1.12f;

@@ -229,6 +229,7 @@ public final class PlayerManager {
             data.setFatigue(data.fatigue() - fatigueRecovery);
         }
 
+        ki = com.dbtenkaichi.race.RaceMechanics.tick(player, data, ki, now);
         data.setKi(clamp(ki, 0, maxKi));
         data.setStamina(clamp(stamina, 0, maxStamina));
 
@@ -258,6 +259,7 @@ public final class PlayerManager {
         FormDefinition form = data.isTransformed() ? FormRegistry.get(data.form(), false) : null;
         setModifier(player, Attributes.MOVEMENT_SPEED, FORM_SPEED_ID, form == null ? 0.0 : (form.speedMultiplier * form.controlFactor(data.mastery(form.id))) - 1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
         setModifier(player, Attributes.MOVEMENT_SPEED, CHARGE_SLOW_ID, data.runtime().charging ? -0.6 : 0.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+        com.dbtenkaichi.race.RaceMechanics.applyAttributes(player, data);
         float newMax = player.getMaxHealth();
         if (player.getHealth() > newMax) {
             player.setHealth(newMax);

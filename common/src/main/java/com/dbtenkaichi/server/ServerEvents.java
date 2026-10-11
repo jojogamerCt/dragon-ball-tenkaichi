@@ -111,6 +111,9 @@ public final class ServerEvents {
         }
         long enemyBp = Fighter.of(entity).battlePower();
         rewardContributors(level, entity, enemyBp);
+        if (source.getEntity() instanceof ServerPlayer killer && PlayerManager.data(killer).isCreated()) {
+            com.dbtenkaichi.race.RaceMechanics.onKill(killer, PlayerManager.data(killer), entity);
+        }
     }
 
     public static void onFighterDefeated(ServerLevel level, LivingEntity entity, long enemyBp) {

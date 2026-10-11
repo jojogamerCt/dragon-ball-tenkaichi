@@ -15,31 +15,97 @@ def path(*parts):
     return p
 
 
+def clamp8(v):
+    return int(max(0, min(255, v)))
+
+
 def hair():
     rng = random.Random(7)
-    img = Image.new("RGBA", (64, 64))
+    size = 128
+    img = Image.new("RGBA", (size, size))
     px = img.load()
-    strands = [rng.uniform(0.82, 1.0) for _ in range(64)]
-    for x in range(64):
-        for y in range(64):
-            base = strands[x] * (1.0 - (y % 16) / 16.0 * 0.18)
-            if (x + y // 4) % 7 == 0:
-                base *= 0.86
-            v = int(max(0, min(255, base * 255 + rng.uniform(-6, 6))))
-            px[x, y] = (v, v, v, 255)
+    strand = [rng.uniform(0.78, 1.0) for _ in range(size)]
+    phase = [rng.uniform(0, math.pi * 2) for _ in range(size)]
+    for x in range(size):
+        for y in range(size):
+            local = (y % 32) / 32.0
+            v = strand[x] * (1.08 - local * 0.3)
+            v *= 0.92 + 0.08 * math.sin(y * 0.35 + phase[x])
+            if (x + y // 6) % 9 == 0:
+                v *= 0.8
+            if (x * 3 + y) % 23 == 0:
+                v *= 1.12
+            band = math.exp(-((local - 0.22) ** 2) / 0.004)
+            v += band * 0.18 * strand[x]
+            g = clamp8(v * 236 + rng.uniform(-5, 5))
+            px[x, y] = (g, g, g, 255)
     img.save(path("textures", "entity", "hair.png"))
 
 
 def tail():
     rng = random.Random(11)
-    img = Image.new("RGBA", (32, 16))
+    w, h = 64, 32
+    img = Image.new("RGBA", (w, h))
     px = img.load()
-    for x in range(32):
-        for y in range(16):
-            v = 0.78 + 0.22 * math.sin(x * 1.7 + y * 0.6) * 0.5 + rng.uniform(-0.05, 0.05)
-            g = int(max(0, min(255, v * 255)))
+    for x in range(w):
+        for y in range(h):
+            fur = 0.8 + 0.12 * math.sin(x * 1.9 + math.sin(y * 0.8) * 2.0)
+            fur += 0.08 * math.sin(y * 2.4 + x * 0.3)
+            if (x * 7 + y * 3) % 11 == 0:
+                fur *= 0.85
+            g = clamp8(fur * 240 + rng.uniform(-8, 8))
             px[x, y] = (g, g, g, 255)
     img.save(path("textures", "entity", "tail.png"))
+
+
+def feature():
+    rng = random.Random(23)
+    size = 128
+    img = Image.new("RGBA", (size, size))
+    px = img.load()
+    for x in range(size):
+        for y in range(size):
+            local = (y % 16) / 16.0
+            v = 1.0 - local * 0.16 + 0.04 * math.sin(x * 0.7) * math.sin(y * 0.5)
+            if y % 16 == 0:
+                v *= 1.1
+            g = clamp8(v * 238 + rng.uniform(-3, 3))
+            px[x, y] = (g, g, g, 255)
+    img.save(path("textures", "entity", "feature.png"))
+
+
+def thick_tail():
+    rng = random.Random(29)
+    w, h = 64, 64
+    img = Image.new("RGBA", (w, h))
+    px = img.load()
+    for x in range(w):
+        for y in range(h):
+            ring = (y % 8) / 8.0
+            v = 0.98 - abs(ring - 0.5) * 0.25
+            if y % 8 == 0:
+                v *= 0.78
+            v += 0.03 * math.sin(x * 0.9)
+            g = clamp8(v * 245 + rng.uniform(-3, 3))
+            px[x, y] = (g, g, g, 255)
+    img.save(path("textures", "entity", "thick_tail.png"))
+
+
+def armor_pad():
+    rng = random.Random(31)
+    size = 64
+    img = Image.new("RGBA", (size, size))
+    px = img.load()
+    for x in range(size):
+        for y in range(size):
+            v = 1.0 - (y % 16) / 16.0 * 0.22
+            if y % 16 in (0, 1):
+                v = 1.15
+            if y % 16 == 13:
+                v *= 0.7
+            g = clamp8(v * 225 + rng.uniform(-3, 3))
+            px[x, y] = (g, g, g, 255)
+    img.save(path("textures", "entity", "armor_pad.png"))
 
 
 def aura_swirl():
@@ -126,8 +192,10 @@ def item_models():
 if __name__ == "__main__":
     hair()
     tail()
+    feature()
+    thick_tail()
+    armor_pad()
     aura_swirl()
-    icon()
     senzu()
     egg("master_spawn_egg", (240, 122, 26), (31, 63, 174))
     egg("saiyan_raider_spawn_egg", (40, 40, 60), (194, 75, 255))

@@ -24,7 +24,7 @@ public enum Race {
             .passives(ZENKAI, HIDDEN_POTENTIAL)
             .tpGain(1.05).combatTpGain(1.1).kiRegen(1.0).flightCost(1.0)
             .visuals(true, false, false, false)
-            .implemented(false)),
+            .implemented(true)),
     HUMAN(builder()
             .affinity(StatType.KI_CONTROL, 1.3).affinity(StatType.MARTIAL_ARTS, 1.3).affinity(StatType.AGILITY, 1.15)
             .affinity(StatType.STRENGTH, 0.9).affinity(StatType.KI_OUTPUT, 0.95).affinity(StatType.STAMINA, 1.1)
@@ -40,7 +40,7 @@ public enum Race {
             .passives(REGENERATION, STRETCH_LIMBS)
             .tpGain(1.0).combatTpGain(1.0).kiRegen(1.1).flightCost(0.95)
             .visuals(false, false, true, false)
-            .implemented(false)),
+            .implemented(true)),
     FRIEZA_RACE(builder()
             .affinity(StatType.SPEED, 1.2).affinity(StatType.KI_OUTPUT, 1.2).affinity(StatType.DEFENSE, 1.1)
             .affinity(StatType.MARTIAL_ARTS, 0.85)
@@ -48,7 +48,7 @@ public enum Race {
             .passives(SPACE_SURVIVAL, TAIL)
             .tpGain(0.95).combatTpGain(1.05).kiRegen(1.0).flightCost(0.9)
             .visuals(false, true, false, true)
-            .implemented(false)),
+            .implemented(true)),
     MAJIN(builder()
             .affinity(StatType.CONSTITUTION, 1.4).affinity(StatType.STAMINA, 1.2).affinity(StatType.KI_CONTROL, 0.8)
             .affinity(StatType.MARTIAL_ARTS, 0.85)
@@ -56,7 +56,7 @@ public enum Race {
             .passives(REGENERATION, ELASTIC_BODY, ABSORPTION)
             .tpGain(0.95).combatTpGain(1.0).kiRegen(1.05).flightCost(1.0)
             .visuals(false, false, true, false)
-            .implemented(false)),
+            .implemented(true)),
     ANDROID(builder()
             .affinity(StatType.KI_CAPACITY, 0.7).affinity(StatType.STAMINA, 1.4).affinity(StatType.DEFENSE, 1.2)
             .affinity(StatType.SPIRIT, 0.7)
@@ -64,28 +64,28 @@ public enum Race {
             .passives(ENERGY_RESERVE, UNSENSABLE)
             .tpGain(0.9).combatTpGain(1.0).kiRegen(1.6).flightCost(0.8)
             .visuals(true, false, false, false)
-            .implemented(false)),
+            .implemented(true)),
     BIO_ANDROID(builder()
             .affinity(StatType.CONSTITUTION, 1.15).affinity(StatType.KI_OUTPUT, 1.1).affinity(StatType.POTENTIAL, 1.1)
             .start(StatType.CONSTITUTION, 2).start(StatType.KI_OUTPUT, 2)
-            .passives(REGENERATION, ABSORPTION, ZENKAI)
+            .passives(REGENERATION, ABSORPTION, ZENKAI, TAIL)
             .tpGain(0.95).combatTpGain(1.1).kiRegen(1.0).flightCost(1.0)
             .visuals(false, true, false, true)
-            .implemented(false)),
+            .implemented(true)),
     KAIOSHIN(builder()
             .affinity(StatType.SPIRIT, 1.4).affinity(StatType.KI_CONTROL, 1.3).affinity(StatType.STRENGTH, 0.8)
             .start(StatType.SPIRIT, 4).start(StatType.KI_CONTROL, 2)
             .passives(DIVINE_KI, KI_EFFICIENCY)
             .tpGain(1.0).combatTpGain(0.95).kiRegen(1.25).flightCost(0.8)
             .visuals(true, false, false, false)
-            .implemented(false)),
+            .implemented(true)),
     DEMON(builder()
             .affinity(StatType.KI_OUTPUT, 1.3).affinity(StatType.STRENGTH, 1.1).affinity(StatType.SPIRIT, 0.85)
             .start(StatType.KI_OUTPUT, 3).start(StatType.STRENGTH, 2)
             .passives(DEMONIC_RAGE)
             .tpGain(1.0).combatTpGain(1.1).kiRegen(1.0).flightCost(1.0)
             .visuals(true, false, false, true)
-            .implemented(false));
+            .implemented(true));
 
     private static final Race[] VALUES = values();
 

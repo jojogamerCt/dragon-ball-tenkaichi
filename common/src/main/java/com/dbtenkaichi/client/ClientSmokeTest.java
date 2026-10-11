@@ -95,7 +95,7 @@ public final class ClientSmokeTest {
                 a.auraColor = 0xE8F4FF;
                 a.outfit = 0;
                 Services.NETWORK.sendToServer(new Packets.CreateCharacter(Race.SAIYAN.ordinal(), a.presentation, 1.0f, a.build, a.skinColor, a.eyeStyle, a.eyeColor,
-                        a.eyebrowStyle, a.hairStyle, a.hairColor, a.expression, a.voice, a.auraColor, a.outfit, a.outfitPrimary, a.outfitSecondary, true, false));
+                        a.eyebrowStyle, a.hairStyle, a.hairColor, a.expression, a.voice, a.auraColor, a.outfit, a.outfitPrimary, a.outfitSecondary, a.featureColor, true, false));
                 mc.gui.setScreen(null);
                 command(mc, "time set day");
                 command(mc, "weather clear");
@@ -231,13 +231,30 @@ public final class ClientSmokeTest {
                 mc.gui.setScreen(new CharacterScreen());
             }
             case 530 -> shot(mc, "12_character_menu");
-            case 540 -> {
+            case 535 -> {
+                mc.gui.setScreen(null);
+                action(ActionType.TRANSFORM_DOWN, 0);
+                action(ActionType.COMBAT_STANCE, 0);
+                command(mc, "kill @e[type=dbtenkaichi:saiyan_raider]");
+            }
+            case 760 -> {
                 mc.gui.setScreen(null);
                 finished = true;
                 Tenkaichi.LOG.info("[DBT-CLIENT] RESULT {}", LOG);
                 mc.stop();
             }
             default -> {
+                int gallery = tick - 600;
+                if (gallery >= 0 && gallery < Race.values().length * 14) {
+                    Race race = Race.values()[gallery / 14];
+                    if (gallery % 14 == 0) {
+                        net.minecraft.nbt.CompoundTag tag = new net.minecraft.nbt.CompoundTag();
+                        tag.putString("races", race.id());
+                        mc.gui.setScreen(new CharacterCreatorScreen(tag));
+                    } else if (gallery % 14 == 12) {
+                        shot(mc, "13_race_" + race.id());
+                    }
+                }
             }
         }
     }

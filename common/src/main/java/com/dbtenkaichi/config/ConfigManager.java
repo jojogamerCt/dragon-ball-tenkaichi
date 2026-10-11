@@ -16,7 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 public final class ConfigManager {
-    public static final int COMMON_SCHEMA = 1;
+    public static final int COMMON_SCHEMA = 2;
     public static final int CLIENT_SCHEMA = 1;
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().serializeSpecialFloatingPointValues().create();
 
@@ -110,6 +110,19 @@ public final class ConfigManager {
     }
 
     static JsonObject migrateCommon(JsonObject obj, int fromVersion) {
+        if (fromVersion < 2 && obj.has("gameplay") && obj.get("gameplay").isJsonObject()) {
+            JsonObject gameplay = obj.getAsJsonObject("gameplay");
+            if (gameplay.has("enabledRaces") && gameplay.get("enabledRaces").isJsonArray()) {
+                com.google.gson.JsonArray races = gameplay.getAsJsonArray("enabledRaces");
+                boolean oldDefault = races.size() == 2 && races.contains(new com.google.gson.JsonPrimitive("saiyan")) && races.contains(new com.google.gson.JsonPrimitive("human"));
+                if (oldDefault) {
+                    com.google.gson.JsonArray all = new com.google.gson.JsonArray();
+                    GameplayConfig.ALL_RACES.forEach(all::add);
+                    gameplay.add("enabledRaces", all);
+                }
+            }
+        }
+        obj.addProperty("schemaVersion", COMMON_SCHEMA);
         return obj;
     }
 

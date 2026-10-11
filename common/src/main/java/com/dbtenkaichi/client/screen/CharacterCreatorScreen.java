@@ -31,6 +31,14 @@ public class CharacterCreatorScreen extends Screen {
     private static final int[] AURA_COLORS = {0xE8F4FF, 0x9FD8FF, 0x3FA8FF, 0x7CFFB0, 0xFFD43B, 0xFF7A3A, 0xE8343F, 0xC24BFF, 0xFF8AD8, 0xFFFFFF};
     private static final int[] OUTFIT_COLORS = {0xF07A1A, 0x1F3FAE, 0x1C1C2A, 0xEDE7D6, 0x7A1C1C, 0x2F6B3A, 0x5A2F8A, 0xD9B21A, 0x3A3A3A, 0x8FB8E8, 0xC8C8C8, 0xF2F2F2};
 
+    private static final int[] NAMEKIAN_SKIN = {0x6DBF4A, 0x5AA63C, 0x7FD05A, 0x4E8F34, 0x8CC86A, 0x3F7A2C};
+    private static final int[] FRIEZA_SKIN = {0xF2F0F4, 0xE4DCEC, 0xD8D8E0, 0xC8B8D8, 0xB8A0C8, 0xE8E0D0};
+    private static final int[] MAJIN_SKIN = {0xF4A0C0, 0xE88AB0, 0xF8B8D0, 0xD8789E, 0xC890D8, 0x9A9AA6};
+    private static final int[] BIO_SKIN = {0x7FB45A, 0x6A9E48, 0x92C46E, 0x5A8A3E, 0x9AB070};
+    private static final int[] KAIOSHIN_SKIN = {0xC8A0E8, 0xB890DC, 0xD8B8F0, 0x9AA8E8, 0xA8D0F0, 0xE0B8D8};
+    private static final int[] DEMON_SKIN = {0xC8484A, 0xA83034, 0x4A6ED8, 0x3A4AA8, 0x7A3A9A, 0xD87050, 0x5A5A6A};
+    private static final int[] FEATURE_COLORS = {0xD8789A, 0x8E3FB8, 0xE07AA4, 0x2E4A1E, 0x9AA7B4, 0xF0D040, 0x2A1A30, 0xB0141E, 0x3FA8FF, 0xF2F2F2, 0x1C1C2A, 0xE8902A};
+
     private final List<Race> races = new ArrayList<>();
     private final float minHeight;
     private final float maxHeight;
@@ -44,7 +52,7 @@ public class CharacterCreatorScreen extends Screen {
 
     public CharacterCreatorScreen(CompoundTag data) {
         super(Component.translatable("screen.dbtenkaichi.creator"));
-        for (String id : data.getStringOr("races", "saiyan,human").split(",")) {
+        for (String id : data.getStringOr("races", "saiyan").split(",")) {
             Race r = Race.byId(id.trim());
             if (r != null && r.implemented()) {
                 races.add(r);
@@ -67,6 +75,7 @@ public class CharacterCreatorScreen extends Screen {
 
     @Override
     protected void init() {
+        publishPreview();
         int panelX = this.width / 2 + 10;
         int panelW = Math.min(220, this.width / 2 - 20);
         int y = 34;
@@ -98,7 +107,10 @@ public class CharacterCreatorScreen extends Screen {
                 y += 24;
                 y = cycleRow(panelX, y, panelW, "build", () -> appearance.build, Appearance.BODY_BUILDS, i -> appearance.build = i,
                         i -> Component.translatable("screen.dbtenkaichi.creator.build." + i));
-                y = colorRow(panelX, y, panelW, "skin", SKIN_TONES, () -> appearance.skinColor, c -> appearance.skinColor = c);
+                y = colorRow(panelX, y, panelW, "skin", withValue(skinTones(race), Appearance.defaultsFor(race).skinColor), () -> appearance.skinColor, c -> appearance.skinColor = c);
+                if (hasFeatureColor(race)) {
+                    y = colorRow(panelX, y, panelW, "feature_color", withValue(FEATURE_COLORS, Appearance.defaultsFor(race).featureColor), () -> appearance.featureColor, c -> appearance.featureColor = c);
+                }
                 y = cycleRow(panelX, y, panelW, "voice", () -> appearance.voice, Appearance.VOICES, i -> appearance.voice = i,
                         i -> Component.translatable("screen.dbtenkaichi.creator.voice_value", i + 1));
                 y = cycleRow(panelX, y, panelW, "own_skin", () -> appearance.useOwnSkin ? 1 : 0, 2, i -> appearance.useOwnSkin = i == 1,
@@ -161,6 +173,37 @@ public class CharacterCreatorScreen extends Screen {
                 i -> Component.literal(String.format(Locale.ROOT, "#%06X", palette[i])).withColor(palette[i]));
     }
 
+    private static int[] skinTones(Race race) {
+        return switch (race) {
+            case NAMEKIAN -> NAMEKIAN_SKIN;
+            case FRIEZA_RACE -> FRIEZA_SKIN;
+            case MAJIN -> MAJIN_SKIN;
+            case BIO_ANDROID -> BIO_SKIN;
+            case KAIOSHIN -> KAIOSHIN_SKIN;
+            case DEMON -> DEMON_SKIN;
+            default -> SKIN_TONES;
+        };
+    }
+
+    private static boolean hasFeatureColor(Race race) {
+        return switch (race) {
+            case SAIYAN, HALF_SAIYAN, HUMAN -> false;
+            default -> true;
+        };
+    }
+
+    private static int[] withValue(int[] palette, int value) {
+        for (int c : palette) {
+            if (c == value) {
+                return palette;
+            }
+        }
+        int[] out = new int[palette.length + 1];
+        out[0] = value;
+        System.arraycopy(palette, 0, out, 1, palette.length);
+        return out;
+    }
+
     private static int indexOf(int[] palette, int value) {
         for (int i = 0; i < palette.length; i++) {
             if (palette[i] == value) {
@@ -185,7 +228,11 @@ public class CharacterCreatorScreen extends Screen {
         appearance.presentation = random.nextInt(Appearance.PRESENTATIONS);
         appearance.height = minHeight + random.nextFloat() * (maxHeight - minHeight);
         appearance.build = random.nextInt(Appearance.BODY_BUILDS);
-        appearance.skinColor = SKIN_TONES[random.nextInt(SKIN_TONES.length)];
+        int[] tones = skinTones(race);
+        appearance.skinColor = tones[random.nextInt(tones.length)];
+        if (hasFeatureColor(race)) {
+            appearance.featureColor = FEATURE_COLORS[random.nextInt(FEATURE_COLORS.length)];
+        }
         appearance.eyeStyle = random.nextInt(Appearance.EYE_STYLES);
         appearance.eyeColor = EYE_COLORS[random.nextInt(EYE_COLORS.length)];
         appearance.eyebrowStyle = random.nextInt(Appearance.EYEBROW_STYLES);
@@ -203,7 +250,7 @@ public class CharacterCreatorScreen extends Screen {
         appearance.sanitize(race, minHeight, maxHeight);
         Services.NETWORK.sendToServer(new Packets.CreateCharacter(race.ordinal(), appearance.presentation, appearance.height, appearance.build, appearance.skinColor,
                 appearance.eyeStyle, appearance.eyeColor, appearance.eyebrowStyle, appearance.hairStyle, appearance.hairColor, appearance.expression, appearance.voice,
-                appearance.auraColor, appearance.outfit, appearance.outfitPrimary, appearance.outfitSecondary, appearance.tail, appearance.useOwnSkin));
+                appearance.auraColor, appearance.outfit, appearance.outfitPrimary, appearance.outfitSecondary, appearance.featureColor, appearance.tail, appearance.useOwnSkin));
         onClose();
     }
 
