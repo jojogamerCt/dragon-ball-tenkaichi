@@ -1,0 +1,17 @@
+{
+  "name": "form.dbtenkaichi.raider_rage",
+  "races": ["npc"],
+  "parent": "dbtenkaichi:base",
+  "order": 1000,
+  "bpMultiplier": 3.0,
+  "speedMultiplier": 1.25,
+  "kiDrainPerSecond": 0.0,
+  "visual": {
+    "eyeColor": "#FF2A2A",
+    "auraColor": "#E8343F",
+    "auraSecondary": "#FFB0A8",
+    "auraStyle": "flame",
+    "auraScale": 1.1,
+    "auraIntensity": 1.1
+  }
+}

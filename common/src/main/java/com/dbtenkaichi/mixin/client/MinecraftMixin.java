@@ -1,0 +1,33 @@
+package com.dbtenkaichi.mixin.client;
+
+import com.dbtenkaichi.client.input.ClientController;
+import net.minecraft.client.Minecraft;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+@Mixin(Minecraft.class)
+public abstract class MinecraftMixin {
+    @Inject(method = "startAttack", at = @At("HEAD"), cancellable = true)
+    private void dbtenkaichi$stanceAttack(CallbackInfoReturnable<Boolean> cir) {
+        if (ClientController.inStance()) {
+            cir.setReturnValue(false);
+        }
+    }
+
+    @Inject(method = "continueAttack", at = @At("HEAD"), cancellable = true)
+    private void dbtenkaichi$stanceContinue(boolean down, CallbackInfo ci) {
+        if (ClientController.inStance()) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "startUseItem", at = @At("HEAD"), cancellable = true)
+    private void dbtenkaichi$stanceUse(CallbackInfo ci) {
+        if (ClientController.inStance()) {
+            ci.cancel();
+        }
+    }
+}

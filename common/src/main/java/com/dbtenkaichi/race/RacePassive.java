@@ -1,0 +1,19 @@
+package com.dbtenkaichi.race;
+
+public enum RacePassive {
+    ZENKAI,
+    BATTLE_HUNGER,
+    TAIL,
+    TECHNIQUE_MASTERY,
+    KI_EFFICIENCY,
+    REGENERATION,
+    STRETCH_LIMBS,
+    ENERGY_RESERVE,
+    UNSENSABLE,
+    ELASTIC_BODY,
+    ABSORPTION,
+    DIVINE_KI,
+    DEMONIC_RAGE,
+    SPACE_SURVIVAL,
+    HIDDEN_POTENTIAL
+}

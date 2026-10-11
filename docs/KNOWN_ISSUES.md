@@ -1,0 +1,23 @@
+# Problemi noti e limitazioni — 0.1.0
+
+Classificazione: **Alta** (blocca funzioni importanti), **Media** (degrada l'esperienza),
+**Bassa** (cosmetica o marginale).
+
+| Gravità | Problema | Note |
+|---|---|---|
+| Media | Prestazioni non misurate | L'aura e i raggi generano geometria per frame (fino a ~20 fiamme × 6 segmenti × 4 strati). Livelli Low/Medium riducono il carico ma mancano benchmark. |
+| Media | Multiplayer con più giocatori reali non provato | La logica è autoritativa e i pacchetti sono inviati ai tracker, ma il test reale è stato fatto con un solo client. |
+| Media | Solo 2 razze giocabili, 1 trasformazione giocabile, 2 tecniche giocatore | Le altre 8 razze hanno tratti definiti ma sono disabilitate (`implemented=false`). |
+| Media | Spawn naturale del Predone non implementato | Si ottiene con uovo o `/summon dbtenkaichi:saiyan_raider`. |
+| Bassa | Capelli Super Saiyan visivamente compatti | Le punte si fondono in un'unica sagoma conica da alcune angolazioni. |
+| Bassa | Skin personalizzata non usata per le mani in prima persona | La mano in prima persona usa la skin Minecraft del giocatore. |
+| Bassa | Corpo intero inclinato in volo anche per gli altri giocatori sulla base della velocità stimata | Su connessioni con forte jitter l'inclinazione può tremolare. |
+| Bassa | La modalità di distruzione `regenerating` usa una coda in memoria | Allo spegnimento del server i blocchi vengono ripristinati; un crash del server li lascerebbe distrutti. |
+| Bassa | Integrazione con mod di protezione | Passa per `PlayerBlockBreakEvents.BEFORE` (Fabric) e `BreakBlockEvent` (NeoForge); nessuna integrazione esplicita con mod di claim specifiche. |
+| Bassa | NeoForge per 26.3 è solo in beta | Non esiste ancora una NeoForge stabile per 26.3. |
+| Bassa | Il mixin anti-kick del volo usa `tick()` | Il primo tentativo con `@ModifyExpressionValue` dentro `handleMovePlayer` falliva solo su Fabric ("Scanned 0 target(s)"); sostituito con un'iniezione in `tick()` che azzera il contatore di galleggiamento, verificata su entrambi i loader. |
+| Bassa | Gli smoke test sono inclusi nel JAR | Restano inattivi senza le proprietà di sistema `dbtenkaichi.smokeTest` / `dbtenkaichi.clientSmoke`. |
+
+Ambiente di sviluppo (non della mod): un antivirus che intercetta HTTPS impedisce a Java di
+scaricare dipendenze; `scripts/gw.sh`/`gw.ps1` usano il trust store di Windows. I messaggi
+"Perflib"/"PerfCounter" nei log provengono da OSHI e sono innocui.

@@ -1,0 +1,35 @@
+{
+  "name": "form.dbtenkaichi.super_saiyan",
+  "races": ["saiyan", "half_saiyan"],
+  "parent": "dbtenkaichi:base",
+  "order": 10,
+  "requirements": {
+    "battlePower": 9000,
+    "stats": {
+      "potential": 8
+    },
+    "unlock": "rage"
+  },
+  "bpMultiplier": 50.0,
+  "speedMultiplier": 1.15,
+  "kiDrainPerSecond": 3.0,
+  "staminaDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.0012,
+  "masteryDrainReduction": 0.7,
+  "lowMasteryControlPenalty": 0.12,
+  "kiActivationCost": 20.0,
+  "cinematicTicks": 70,
+  "quickTicks": 8,
+  "visual": {
+    "hairStyle": "super_spikes",
+    "hairColor": "#FFE25A",
+    "hairGlow": true,
+    "eyeColor": "#33D6B0",
+    "auraColor": "#FFD43B",
+    "auraSecondary": "#FFF6B8",
+    "auraStyle": "flame",
+    "lightning": false,
+    "auraScale": 1.15,
+    "auraIntensity": 1.0
+  }
+}

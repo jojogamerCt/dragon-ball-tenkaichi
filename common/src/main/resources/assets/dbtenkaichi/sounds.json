@@ -1,0 +1,215 @@
+{
+  "combat.punch_light": {
+    "sounds": [
+      "dbtenkaichi:combat/punch_light_1",
+      "dbtenkaichi:combat/punch_light_2",
+      "dbtenkaichi:combat/punch_light_3"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.combat.punch_light"
+  },
+  "combat.punch_heavy": {
+    "sounds": [
+      "dbtenkaichi:combat/punch_heavy_1",
+      "dbtenkaichi:combat/punch_heavy_2",
+      "dbtenkaichi:combat/punch_heavy_3"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.combat.punch_heavy"
+  },
+  "combat.kick": {
+    "sounds": [
+      "dbtenkaichi:combat/kick_1",
+      "dbtenkaichi:combat/kick_2"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.combat.kick"
+  },
+  "combat.swing": {
+    "sounds": [
+      "dbtenkaichi:combat/swing_1",
+      "dbtenkaichi:combat/swing_2",
+      "dbtenkaichi:combat/swing_3"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.combat.swing"
+  },
+  "combat.guard": {
+    "sounds": [
+      "dbtenkaichi:combat/guard_1",
+      "dbtenkaichi:combat/guard_2"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.combat.guard"
+  },
+  "combat.perfect_guard": {
+    "sounds": [
+      "dbtenkaichi:combat/perfect_guard_1"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.combat.perfect_guard"
+  },
+  "combat.guard_break": {
+    "sounds": [
+      "dbtenkaichi:combat/guard_break_1"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.combat.guard_break"
+  },
+  "combat.clash": {
+    "sounds": [
+      "dbtenkaichi:combat/clash_1"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.combat.clash"
+  },
+  "combat.dodge": {
+    "sounds": [
+      "dbtenkaichi:combat/dodge_1",
+      "dbtenkaichi:combat/dodge_2"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.combat.dodge"
+  },
+  "combat.dash": {
+    "sounds": [
+      "dbtenkaichi:combat/dash_1",
+      "dbtenkaichi:combat/dash_2"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.combat.dash"
+  },
+  "combat.vanish": {
+    "sounds": [
+      "dbtenkaichi:combat/vanish_1"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.combat.vanish"
+  },
+  "ki.charge_start": {
+    "sounds": [
+      "dbtenkaichi:ki/charge_start_1"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.ki.charge_start"
+  },
+  "ki.charge_loop": {
+    "sounds": [
+      "dbtenkaichi:ki/charge_loop_1"
+    ]
+  },
+  "ki.blast": {
+    "sounds": [
+      "dbtenkaichi:ki/blast_1",
+      "dbtenkaichi:ki/blast_2",
+      "dbtenkaichi:ki/blast_3"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.ki.blast"
+  },
+  "ki.impact": {
+    "sounds": [
+      "dbtenkaichi:ki/impact_1",
+      "dbtenkaichi:ki/impact_2"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.ki.impact"
+  },
+  "ki.beam_charge": {
+    "sounds": [
+      "dbtenkaichi:ki/beam_charge_1"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.ki.beam_charge"
+  },
+  "ki.beam_fire": {
+    "sounds": [
+      "dbtenkaichi:ki/beam_fire_1"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.ki.beam_fire"
+  },
+  "ki.beam_loop": {
+    "sounds": [
+      "dbtenkaichi:ki/beam_loop_1"
+    ]
+  },
+  "ki.explosion": {
+    "sounds": [
+      "dbtenkaichi:ki/explosion_1",
+      "dbtenkaichi:ki/explosion_2"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.ki.explosion"
+  },
+  "ki.clash_loop": {
+    "sounds": [
+      "dbtenkaichi:ki/clash_loop_1"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.ki.clash_loop"
+  },
+  "flight.takeoff": {
+    "sounds": [
+      "dbtenkaichi:flight/takeoff_1"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.flight.takeoff"
+  },
+  "flight.loop": {
+    "sounds": [
+      "dbtenkaichi:flight/loop_1"
+    ]
+  },
+  "flight.sonic": {
+    "sounds": [
+      "dbtenkaichi:flight/sonic_1"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.flight.sonic"
+  },
+  "flight.land": {
+    "sounds": [
+      "dbtenkaichi:flight/land_1"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.flight.land"
+  },
+  "aura.burst": {
+    "sounds": [
+      "dbtenkaichi:aura/burst_1"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.aura.burst"
+  },
+  "aura.loop": {
+    "sounds": [
+      "dbtenkaichi:aura/loop_1"
+    ]
+  },
+  "transform.power_up": {
+    "sounds": [
+      "dbtenkaichi:transform/power_up_1"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.transform.power_up"
+  },
+  "transform.scream": {
+    "sounds": [
+      "dbtenkaichi:transform/scream_1",
+      "dbtenkaichi:transform/scream_2"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.transform.scream"
+  },
+  "transform.revert": {
+    "sounds": [
+      "dbtenkaichi:transform/revert_1"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.transform.revert"
+  },
+  "ui.click": {
+    "sounds": [
+      "dbtenkaichi:ui/click_1"
+    ]
+  },
+  "ui.confirm": {
+    "sounds": [
+      "dbtenkaichi:ui/confirm_1"
+    ]
+  },
+  "training.beat": {
+    "sounds": [
+      "dbtenkaichi:training/beat_1"
+    ]
+  },
+  "training.success": {
+    "sounds": [
+      "dbtenkaichi:training/success_1"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.training.success"
+  },
+  "voice.grunt": {
+    "sounds": [
+      "dbtenkaichi:voice/grunt_1",
+      "dbtenkaichi:voice/grunt_2"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.voice.grunt"
+  }
+}
