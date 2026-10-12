@@ -3,7 +3,8 @@
     "sounds": [
       "dbtenkaichi:combat/punch_light_1",
       "dbtenkaichi:combat/punch_light_2",
-      "dbtenkaichi:combat/punch_light_3"
+      "dbtenkaichi:combat/punch_light_3",
+      "dbtenkaichi:combat/punch_light_4"
     ],
     "subtitle": "subtitles.dbtenkaichi.combat.punch_light"
   },
@@ -18,7 +19,8 @@
   "combat.kick": {
     "sounds": [
       "dbtenkaichi:combat/kick_1",
-      "dbtenkaichi:combat/kick_2"
+      "dbtenkaichi:combat/kick_2",
+      "dbtenkaichi:combat/kick_3"
     ],
     "subtitle": "subtitles.dbtenkaichi.combat.kick"
   },
@@ -26,14 +28,16 @@
     "sounds": [
       "dbtenkaichi:combat/swing_1",
       "dbtenkaichi:combat/swing_2",
-      "dbtenkaichi:combat/swing_3"
+      "dbtenkaichi:combat/swing_3",
+      "dbtenkaichi:combat/swing_4"
     ],
     "subtitle": "subtitles.dbtenkaichi.combat.swing"
   },
   "combat.guard": {
     "sounds": [
       "dbtenkaichi:combat/guard_1",
-      "dbtenkaichi:combat/guard_2"
+      "dbtenkaichi:combat/guard_2",
+      "dbtenkaichi:combat/guard_3"
     ],
     "subtitle": "subtitles.dbtenkaichi.combat.guard"
   },
@@ -51,14 +55,16 @@
   },
   "combat.clash": {
     "sounds": [
-      "dbtenkaichi:combat/clash_1"
+      "dbtenkaichi:combat/clash_1",
+      "dbtenkaichi:combat/clash_2"
     ],
     "subtitle": "subtitles.dbtenkaichi.combat.clash"
   },
   "combat.dodge": {
     "sounds": [
       "dbtenkaichi:combat/dodge_1",
-      "dbtenkaichi:combat/dodge_2"
+      "dbtenkaichi:combat/dodge_2",
+      "dbtenkaichi:combat/dodge_3"
     ],
     "subtitle": "subtitles.dbtenkaichi.combat.dodge"
   },
@@ -71,7 +77,8 @@
   },
   "combat.vanish": {
     "sounds": [
-      "dbtenkaichi:combat/vanish_1"
+      "dbtenkaichi:combat/vanish_1",
+      "dbtenkaichi:combat/vanish_2"
     ],
     "subtitle": "subtitles.dbtenkaichi.combat.vanish"
   },
@@ -90,14 +97,16 @@
     "sounds": [
       "dbtenkaichi:ki/blast_1",
       "dbtenkaichi:ki/blast_2",
-      "dbtenkaichi:ki/blast_3"
+      "dbtenkaichi:ki/blast_3",
+      "dbtenkaichi:ki/blast_4"
     ],
     "subtitle": "subtitles.dbtenkaichi.ki.blast"
   },
   "ki.impact": {
     "sounds": [
       "dbtenkaichi:ki/impact_1",
-      "dbtenkaichi:ki/impact_2"
+      "dbtenkaichi:ki/impact_2",
+      "dbtenkaichi:ki/impact_3"
     ],
     "subtitle": "subtitles.dbtenkaichi.ki.impact"
   },
@@ -121,7 +130,8 @@
   "ki.explosion": {
     "sounds": [
       "dbtenkaichi:ki/explosion_1",
-      "dbtenkaichi:ki/explosion_2"
+      "dbtenkaichi:ki/explosion_2",
+      "dbtenkaichi:ki/explosion_3"
     ],
     "subtitle": "subtitles.dbtenkaichi.ki.explosion"
   },
@@ -133,7 +143,8 @@
   },
   "flight.takeoff": {
     "sounds": [
-      "dbtenkaichi:flight/takeoff_1"
+      "dbtenkaichi:flight/takeoff_1",
+      "dbtenkaichi:flight/takeoff_2"
     ],
     "subtitle": "subtitles.dbtenkaichi.flight.takeoff"
   },
@@ -150,13 +161,15 @@
   },
   "flight.land": {
     "sounds": [
-      "dbtenkaichi:flight/land_1"
+      "dbtenkaichi:flight/land_1",
+      "dbtenkaichi:flight/land_2"
     ],
     "subtitle": "subtitles.dbtenkaichi.flight.land"
   },
   "aura.burst": {
     "sounds": [
-      "dbtenkaichi:aura/burst_1"
+      "dbtenkaichi:aura/burst_1",
+      "dbtenkaichi:aura/burst_2"
     ],
     "subtitle": "subtitles.dbtenkaichi.aura.burst"
   },
@@ -174,7 +187,8 @@
   "transform.scream": {
     "sounds": [
       "dbtenkaichi:transform/scream_1",
-      "dbtenkaichi:transform/scream_2"
+      "dbtenkaichi:transform/scream_2",
+      "dbtenkaichi:transform/scream_3"
     ],
     "subtitle": "subtitles.dbtenkaichi.transform.scream"
   },
@@ -183,6 +197,21 @@
       "dbtenkaichi:transform/revert_1"
     ],
     "subtitle": "subtitles.dbtenkaichi.transform.revert"
+  },
+  "transform.thunder": {
+    "sounds": [
+      "dbtenkaichi:transform/thunder_1",
+      "dbtenkaichi:transform/thunder_2",
+      "dbtenkaichi:transform/thunder_3"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.transform.thunder"
+  },
+  "transform.rumble": {
+    "sounds": [
+      "dbtenkaichi:transform/rumble_1",
+      "dbtenkaichi:transform/rumble_2"
+    ],
+    "subtitle": "subtitles.dbtenkaichi.transform.rumble"
   },
   "ui.click": {
     "sounds": [
@@ -208,7 +237,8 @@
   "voice.grunt": {
     "sounds": [
       "dbtenkaichi:voice/grunt_1",
-      "dbtenkaichi:voice/grunt_2"
+      "dbtenkaichi:voice/grunt_2",
+      "dbtenkaichi:voice/grunt_3"
     ],
     "subtitle": "subtitles.dbtenkaichi.voice.grunt"
   }

@@ -1,4 +1,5 @@
 {
+  "cinematic": "dark_rage",
   "name": "form.dbtenkaichi.raider_rage",
   "races": ["npc"],
   "parent": "dbtenkaichi:base",

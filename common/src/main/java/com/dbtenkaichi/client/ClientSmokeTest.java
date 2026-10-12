@@ -153,13 +153,19 @@ public final class ClientSmokeTest {
                 shot(mc, "04_flight");
             }
             case 220 -> action(ActionType.TRANSFORM_UP, TransformationSystem.CINEMATIC_AUTO);
-            case 250 -> shot(mc, "05_transformation_cinematic");
-            case 320 -> {
+            case 227 -> shot(mc, "05a_ssj_face_closeup");
+            case 249 -> shot(mc, "05b_ssj_lightning_wide");
+            case 271 -> shot(mc, "05c_ssj_full_body_rocks");
+            case 297 -> shot(mc, "05d_ssj_hair_flicker");
+            case 314 -> shot(mc, "05e_ssj_scream");
+            case 336 -> shot(mc, "05f_ssj_aura_back");
+            case 361 -> shot(mc, "05g_ssj_reveal");
+            case 385 -> {
                 LOG.add("form after transformation: " + data.form());
                 Tenkaichi.LOG.info("[DBT-CLIENT] form: {}", data.form());
                 shot(mc, "06_super_saiyan");
             }
-            case 330 -> {
+            case 430 -> {
                 mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
                 Vec3 look = mc.player.getLookAngle().multiply(1, 0, 1).normalize();
                 Vec3 at = mc.player.position().add(look.scale(30));
@@ -167,46 +173,50 @@ public final class ClientSmokeTest {
                 Vec3 side = mc.player.position().add(look.cross(new Vec3(0, 1, 0)).scale(5));
                 command(mc, String.format(java.util.Locale.ROOT, "summon dbtenkaichi:master %.1f %.1f %.1f {NoGravity:1b}", side.x, mc.player.getY(), side.z));
             }
-            case 360 -> shot(mc, "07_npcs");
-            case 370 -> {
+            case 460 -> shot(mc, "07_npcs");
+            case 470 -> {
                 LockOn.toggle();
                 LOG.add("locked target: " + LockOn.target());
             }
-            case 380 -> {
+            case 480 -> {
                 int slot = kamehamehaSlot(data);
                 LOG.add("kamehameha slot: " + slot);
                 if (slot >= 0) {
                     action(ActionType.SKILL_PRESS, slot);
                 }
             }
-            case 396 -> mc.options.setCameraType(CameraType.THIRD_PERSON_FRONT);
-            case 402 -> shot(mc, "08a_kamehameha_pose_front");
-            case 404 -> {
+            case 496 -> mc.options.setCameraType(CameraType.THIRD_PERSON_FRONT);
+            case 502 -> shot(mc, "08a_kamehameha_pose_front");
+            case 504 -> {
                 mc.player.getInventory().setSelectedSlot(8);
                 mc.options.setCameraType(CameraType.FIRST_PERSON);
             }
-            case 409 -> shot(mc, "08b_kamehameha_pose_first_person");
-            case 411 -> mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
-            case 412 -> mc.gui.setScreen(new PosePreview(-60.0f));
-            case 415 -> shot(mc, "08c_kamehameha_pose_three_quarter");
-            case 416 -> mc.gui.setScreen(new PosePreview(-100.0f));
-            case 418 -> shot(mc, "08d_kamehameha_pose_side");
-            case 419 -> mc.gui.setScreen(null);
-            case 420 -> shot(mc, "08_kamehameha_charge");
-            case 430 -> {
+            case 509 -> shot(mc, "08b_kamehameha_pose_first_person");
+            case 511 -> mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+            case 512 -> mc.gui.setScreen(new PosePreview(0.0f));
+            case 514 -> shot(mc, "08c_kamehameha_pose_view_front");
+            case 515 -> mc.gui.setScreen(new PosePreview(-90.0f));
+            case 517 -> shot(mc, "08d_kamehameha_pose_view_left");
+            case 518 -> mc.gui.setScreen(new PosePreview(180.0f));
+            case 520 -> shot(mc, "08e_kamehameha_pose_view_back");
+            case 521 -> mc.gui.setScreen(new PosePreview(90.0f));
+            case 523 -> shot(mc, "08f_kamehameha_pose_view_right");
+            case 524 -> mc.gui.setScreen(null);
+            case 528 -> shot(mc, "08_kamehameha_charge");
+            case 530 -> {
                 int slot = kamehamehaSlot(data);
                 if (slot >= 0) {
                     action(ActionType.SKILL_RELEASE, slot);
                 }
             }
-            case 431 -> {
+            case 531 -> {
                 LockOn.release();
                 mc.player.setYRot(mc.player.getYRot() + 70.0f);
                 mc.player.setXRot(10.0f);
                 mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
             }
-            case 435 -> shot(mc, "09_kamehameha_fire");
-            case 436 -> {
+            case 535 -> shot(mc, "09_kamehameha_fire");
+            case 536 -> {
                 IntegratedServer server = mc.getSingleplayerServer();
                 if (server != null) {
                     server.execute(() -> {
@@ -225,26 +235,26 @@ public final class ClientSmokeTest {
                     });
                 }
             }
-            case 446 -> shot(mc, "10b_beam_clash_side");
-            case 452 -> {
+            case 546 -> shot(mc, "10b_beam_clash_side");
+            case 552 -> {
                 LOG.add("beam clash active on client: " + (ClientState.clashId >= 0) + " balance " + ClientState.clashBalance);
                 Tenkaichi.LOG.info("[DBT-CLIENT] beam clash active: {} balance {}", ClientState.clashId >= 0, ClientState.clashBalance);
                 shot(mc, "10_beam_clash");
             }
-            case 458, 466 -> action(ActionType.CLASH_PULSE, 0);
-            case 468 -> {
+            case 558, 566 -> action(ActionType.CLASH_PULSE, 0);
+            case 568 -> {
                 int slot = kamehamehaSlot(data);
                 if (slot >= 0) {
                     action(ActionType.SKILL_RELEASE, slot);
                 }
                 command(mc, "kill @e[type=dbtenkaichi:saiyan_raider]");
             }
-            case 474 -> {
+            case 574 -> {
                 Vec3 look = mc.player.getLookAngle().multiply(1, 0, 1).normalize();
                 Vec3 near = mc.player.position().add(look.scale(3));
                 command(mc, String.format(java.util.Locale.ROOT, "summon dbtenkaichi:saiyan_raider %.1f %.1f %.1f {NoAI:1b,NoGravity:1b}", near.x, mc.player.getY(), near.z));
             }
-            case 476 -> {
+            case 576 -> {
                 action(ActionType.COMBAT_STANCE, 1);
                 IntegratedServer server = mc.getSingleplayerServer();
                 if (server != null) {
@@ -263,32 +273,32 @@ public final class ClientSmokeTest {
                     });
                 }
             }
-            case 480, 486, 492, 498, 506 -> action(ActionType.LIGHT_ATTACK, 0);
-            case 500 -> {
+            case 580, 586, 592, 598, 606 -> action(ActionType.LIGHT_ATTACK, 0);
+            case 600 -> {
                 mc.player.getInventory().setSelectedSlot(8);
                 mc.options.setCameraType(CameraType.FIRST_PERSON);
             }
-            case 508 -> shot(mc, "11b_first_person_punch");
-            case 512 -> mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
-            case 488 -> shot(mc, "11_melee_combo");
-            case 520 -> {
+            case 608 -> shot(mc, "11b_first_person_punch");
+            case 612 -> mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+            case 588 -> shot(mc, "11_melee_combo");
+            case 620 -> {
                 mc.gui.setScreen(new CharacterScreen());
             }
-            case 530 -> shot(mc, "12_character_menu");
-            case 535 -> {
+            case 630 -> shot(mc, "12_character_menu");
+            case 635 -> {
                 mc.gui.setScreen(null);
                 action(ActionType.TRANSFORM_DOWN, 0);
                 action(ActionType.COMBAT_STANCE, 0);
                 command(mc, "kill @e[type=dbtenkaichi:saiyan_raider]");
             }
-            case 760 -> {
+            case 860 -> {
                 mc.gui.setScreen(null);
                 finished = true;
                 Tenkaichi.LOG.info("[DBT-CLIENT] RESULT {}", LOG);
                 mc.stop();
             }
             default -> {
-                int gallery = tick - 600;
+                int gallery = tick - 700;
                 if (gallery >= 0 && gallery < Race.values().length * 14) {
                     Race race = Race.values()[gallery / 14];
                     if (gallery % 14 == 0) {

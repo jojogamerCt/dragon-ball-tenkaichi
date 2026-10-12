@@ -34,7 +34,9 @@ la colonna "Verifica" indica come è stata provata (vedi `TESTING.md`).
 | Ki | Aura 3D procedurale con fiamme a bordi sfumati e sagoma a goccia (senza guscio a cubi), 4 livelli di qualità | Implementata | client scriptato |
 | Effetti | 8 particelle custom (scintille Ki, fiamme d'aura, sfere di energia, stelle d'impatto, onde d'urto, polvere, fulmini, linee di velocità) per colpi, parate, schivate, aura, trasformazioni, carica e raggio della Kamehameha, esplosioni, clash | Implementata | client scriptato |
 | Ki | Kamehameha sempre blu, indipendentemente dal colore dell'aura del giocatore | Implementata | client scriptato |
-| Ki | Posa iconica di carica della Kamehameha (busto ruotato, gambe aperte, mani a coppa sul fianco destro, tremito) in terza e in prima persona, con l'energia raccolta fra le mani | Implementata | client scriptato (screenshot frontale, di lato e in prima persona) |
+| Ki | Posa iconica di carica della Kamehameha: tutto il corpo ruotato di lato con la testa verso il bersaglio, braccia davanti al busto con le mani unite sul fianco destro, gambe larghe, tremito; mani a coppa in prima persona | Implementata | client scriptato (4 viste + prima persona) |
+| Trasformazioni | Cutscene data-driven per forma (campo `cinematic` nel JSON): regia con inquadrature e movimenti di camera, fulmini, rocce che levitano, oscuramento del cielo, lampi a schermo, capelli che lampeggiano, colonna d'aura, suoni sincronizzati | Implementata | client scriptato (7 screenshot della cutscene) |
+| Trasformazioni | Tre cutscene distinte: `super_saiyan_awakening` (ispirata alla prima trasformazione su Namek, ~7,5 s), `dark_rage` (Predone), `power_up` (predefinita per le forme future) | Implementata | Super Saiyan provata; `dark_rage` e `power_up` solo codice |
 | Ki | Ki Blast con homing, Kamehameha con carica/sterzata/trincea | Implementata | smoke server + client |
 | Ki | Beam Clash autoritativo con battiti, stagger, vittoria/pareggio | Implementata | non verificata in gioco |
 | Mondo | Distruzione off/visual/real/regenerating, budget, protezioni | Implementata | smoke server (aria aperta) |
@@ -46,7 +48,7 @@ la colonna "Verifica" indica come è stata provata (vedi `TESTING.md`).
 | UI | Menu personaggio (statistiche/tecniche/forme/impostazioni), creator, allenamento con il nuovo stile | Implementata | client scriptato |
 | Oggetti | Fagiolo Senzu, uova di NPC (texture 32×32 ombreggiate), tab creativa | Implementata | client scriptato (hotbar) |
 | Lingue | Inglese e italiano (258 chiavi) | Implementata | script di controllo chiavi |
-| Audio | 34 eventi, 50 suoni sintetizzati originali | Implementata | generazione verificata |
+| Audio | 36 eventi, 70 suoni sintetizzati originali con sintesi stratificata (filtri risonanti, FM, supersaw, crepitii granulari, riverbero a convoluzione, voce con formanti per l'urlo, tuoni, boati) | Implementata | generazione e analisi spettrale verificate; ascolto non verificabile dall'autore |
 
 ## Passive razziali
 

@@ -111,6 +111,8 @@ SOUNDS = {
     "transform.power_up": ("Power rises", "La potenza cresce"),
     "transform.scream": ("Transformation roar", "Urlo di trasformazione"),
     "transform.revert": ("Power fades", "La potenza svanisce"),
+    "transform.thunder": ("Thunder strikes", "Un fulmine si abbatte"),
+    "transform.rumble": ("The ground rumbles", "Il terreno trema"),
     "ui.click": ("Click", "Clic"),
     "ui.confirm": ("Confirm", "Conferma"),
     "training.beat": ("Training beat", "Battito dell'allenamento"),

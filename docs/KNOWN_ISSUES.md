@@ -12,6 +12,9 @@ Classificazione: **Alta** (blocca funzioni importanti), **Media** (degrada l'esp
 | Media | Durata delle sessioni di sparring/schivata non provata dal vivo | La causa dell'interruzione precoce (Maestro cercato entro 8 blocchi) è stata corretta (40 blocchi, sessioni da 60 s e 45 s), ma non è stata giocata una sessione reale. |
 | Bassa | Le kick non hanno animazione in prima persona | In prima persona sono visibili solo pugni e parata; i calci danno solo un leggero scossone della camera. |
 | Bassa | Particelle traslucide, non additive | Minecraft 26.3 non offre una pipeline additiva per le particelle; il bagliore usa texture morbide a piena luminosità. |
+| Media | Qualità dei suoni non ascoltata | I suoni sono generati e verificati solo con misure (picchi, livelli, spettrogrammi): vanno ascoltati e, se serve, ritoccati in `tools/gen_sounds.py`. |
+| Bassa | Braccia senza gomiti nella posa della Kamehameha | Il modello di Minecraft ha braccia rigide: la posa usa braccia dritte che convergono sul fianco destro. |
+| Bassa | Camera della cutscene | La camera evita i blocchi accorciando la distanza, ma in spazi stretti alcune inquadrature risultano molto vicine. |
 | Media | Bilanciamento delle passive razziali non provato in gioco | Gli effetti sono attivi lato server e le razze risultano distinte nei test JUnit, ma i valori non sono stati provati in partite reali. |
 | Bassa | Modelli razziali a cubi | Antenne, corna, cresta e orecchie sono composte da cubi segmentati (stile Minecraft), non da mesh curve. |
 | Media | Spawn naturale del Predone non implementato | Si ottiene con uovo o `/summon dbtenkaichi:saiyan_raider`. |

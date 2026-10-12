@@ -38,8 +38,15 @@ public final class EntityVisual {
         return PlayerData.BASE_FORM.equals(form) ? null : FormRegistry.get(form, true);
     }
 
+    public @Nullable FormDefinition visualForm() {
+        if (com.dbtenkaichi.client.cinematic.CinematicDirector.active(this)) {
+            return com.dbtenkaichi.client.cinematic.CinematicDirector.showsTargetForm(this) ? com.dbtenkaichi.client.cinematic.CinematicDirector.targetForm(this) : formDefinition();
+        }
+        return formDefinition();
+    }
+
     public HairStyle hairStyle() {
-        FormDefinition def = formDefinition();
+        FormDefinition def = visualForm();
         HairStyle formStyle = def == null ? null : def.hairStyle();
         if (formStyle != null && race.hasHair()) {
             return formStyle;
@@ -48,42 +55,46 @@ public final class EntityVisual {
     }
 
     public int hairColor() {
-        FormDefinition def = formDefinition();
+        FormDefinition def = visualForm();
         return def == null ? appearance.hairColor : FormDefinition.parseColor(def.visual.hairColor, appearance.hairColor);
     }
 
     public boolean hairGlow() {
-        FormDefinition def = formDefinition();
+        FormDefinition def = visualForm();
         return def != null && def.visual.hairGlow;
     }
 
     public int eyeColor() {
-        FormDefinition def = formDefinition();
+        FormDefinition def = visualForm();
         return def == null ? appearance.eyeColor : FormDefinition.parseColor(def.visual.eyeColor, appearance.eyeColor);
     }
 
     public int auraColor() {
-        FormDefinition def = formDefinition();
+        FormDefinition def = visualForm();
         return def == null ? appearance.auraColor : FormDefinition.parseColor(def.visual.auraColor, appearance.auraColor);
     }
 
     public int auraSecondary() {
-        FormDefinition def = formDefinition();
+        FormDefinition def = visualForm();
         int fallback = mix(auraColor(), 0xFFFFFF, 0.55f);
         return def == null ? fallback : FormDefinition.parseColor(def.visual.auraSecondary, fallback);
     }
 
     public float auraScale() {
-        FormDefinition def = formDefinition();
+        FormDefinition def = visualForm();
         return def == null ? 1.0f : def.visual.auraScale;
     }
 
     public boolean auraLightning() {
-        FormDefinition def = formDefinition();
+        FormDefinition def = visualForm();
         return def != null && def.visual.lightning;
     }
 
     public float auraTarget(long now) {
+        float scripted = com.dbtenkaichi.client.cinematic.CinematicDirector.auraLevel(this);
+        if (!Float.isNaN(scripted)) {
+            return scripted;
+        }
         float target = 0.0f;
         if (has(RuntimeState.FLAG_CHARGING)) {
             target = 1.0f;

@@ -43,7 +43,7 @@ public final class CombatFxHandler {
         return Math.max(1, Math.round(base * budget()));
     }
 
-    private static void spawn(Supplier<ParticleType<ColorParticleOption>> type, int color, double x, double y, double z, double dx, double dy, double dz, float scale) {
+    public static void spawn(Supplier<ParticleType<ColorParticleOption>> type, int color, double x, double y, double z, double dx, double dy, double dz, float scale) {
         Particle particle = Minecraft.getInstance().particleEngine.createParticle(ModParticles.of(type, color), x, y, z, dx, dy, dz);
         if (particle != null && scale != 1.0f) {
             particle.scale(scale);
@@ -252,6 +252,29 @@ public final class CombatFxHandler {
         }
     }
 
+    public static void groundBreak(ClientLevel level, Vec3 pos, float strength) {
+        spawn(ModParticles.SHOCK_RING, 0xFFF0D0, pos.add(0, 0.3, 0), 1.5f + strength);
+        ring(ModParticles.DUST_PUFF, DUST, pos.add(0, 0.15, 0), count((int) (10 + strength * 5)), 0.25 + strength * 0.15, 0.03, 1.0f + strength * 0.15f);
+        debris(level, pos, 1.0f + strength, count((int) (10 + strength * 8)));
+    }
+
+    public static void transformBurst(ClientLevel level, Entity entity, int color, float strength) {
+        Vec3 center = entity.position().add(0, entity.getBbHeight() * 0.55, 0);
+        spawn(ModParticles.IMPACT_STAR, 0xFFFFFF, center, 3.0f + strength);
+        for (int i = 0; i < 3; i++) {
+            spawn(ModParticles.SHOCK_RING, i == 0 ? 0xFFFFFF : color, center.x, center.y - 0.3 + i * 0.4, center.z, 0, 0, 0, 3.0f + strength * (1.0f + i * 0.6f));
+        }
+        ring(ModParticles.AURA_FLAME, color, entity.position().add(0, 0.1, 0), count(36), 0.45 + strength * 0.1, 0.25, 2.0f);
+        burst(ModParticles.KI_SPARK, color, center, count(40), 0.9 + strength * 0.2, 1.6f);
+        burst(ModParticles.ENERGY_ORB, color, center, count(16), 0.35, 2.2f);
+        for (int i = 0; i < count(6); i++) {
+            RandomSource random = level.getRandom();
+            spawn(ModParticles.LIGHTNING, 0xFFF4B0, center.x + (random.nextDouble() - 0.5) * 2.5, center.y + (random.nextDouble() - 0.5) * 2.5, center.z + (random.nextDouble() - 0.5) * 2.5,
+                    0, 0, 0, 1.6f);
+        }
+        CameraEffects.addShake(1.6f * strength * 0.5f);
+    }
+
     public static void clashTick(Packets.Clash packet) {
         Minecraft mc = Minecraft.getInstance();
         ClientLevel level = mc.level;
@@ -274,7 +297,7 @@ public final class CombatFxHandler {
             return;
         }
         Entity entity = mc.level.getEntity(packet.entityId());
-        if (entity != null && packet.full()) {
+        if (entity != null && !packet.full()) {
             int color = ClientState.forEntity(entity).auraColor();
             ring(ModParticles.DUST_PUFF, DUST, entity.position().add(0, 0.1, 0), count(24), 0.4, 0.0, 1.5f);
             spawn(ModParticles.SHOCK_RING, color, entity.position().add(0, 1.0, 0), 3.0f);
@@ -288,7 +311,7 @@ public final class CombatFxHandler {
         }
         look = look.normalize();
         Vec3 side = new Vec3(-look.z, 0, look.x);
-        Vec3 hands = entity.position().add(0, entity.getBbHeight() * 0.45, 0).add(look.scale(-0.25)).add(side.scale(0.5));
+        Vec3 hands = entity.position().add(0, entity.getBbHeight() * 0.42, 0).add(look.scale(-0.45)).add(side.scale(0.1));
         int n = Math.max(1, Math.round(3 * quality.particleBudget));
         for (int i = 0; i < n; i++) {
             Vec3 from = hands.add((random.nextDouble() - 0.5) * 2.4, (random.nextDouble() - 0.5) * 2.4, (random.nextDouble() - 0.5) * 2.4);

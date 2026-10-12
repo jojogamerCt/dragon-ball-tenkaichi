@@ -63,6 +63,10 @@ public final class TenkaichiHud {
         try {
             float scale = Math.max(0.5f, Math.min(2.0f, ConfigManager.client().hudScale));
             EntityVisual visual = ClientState.visual(player.getId());
+            if (com.dbtenkaichi.client.cinematic.CinematicDirector.active(visual)) {
+                cinematic(g, mc, visual);
+                return;
+            }
             cinematic(g, mc, visual);
             g.pose().pushMatrix();
             g.pose().scale(scale, scale);
@@ -331,13 +335,25 @@ public final class TenkaichiHud {
             return;
         }
         float t = Math.min(1.0f, elapsed / 8.0f) * Math.min(1.0f, (visual.cinematicTicks - elapsed) / 8.0f);
+        float partial = com.dbtenkaichi.client.anim.PoseApplier.partial();
+        float dark = com.dbtenkaichi.client.cinematic.CinematicDirector.darken(visual, partial);
+        if (dark > 0.0f) {
+            int a = Math.round(Math.min(1.0f, dark) * 235);
+            g.fillGradient(0, 0, g.guiWidth(), g.guiHeight() / 2, a << 24 | 0x06100A, (a * 2 / 3) << 24 | 0x0A140C);
+            g.fillGradient(0, g.guiHeight() / 2, g.guiWidth(), g.guiHeight(), (a * 2 / 3) << 24 | 0x0A140C, a << 24 | 0x06100A);
+        }
+        float flash = com.dbtenkaichi.client.cinematic.CinematicDirector.flash(visual, partial);
+        if (flash > 0.0f) {
+            int a = Math.round(Math.min(1.0f, flash) * 255);
+            g.fill(0, 0, g.guiWidth(), g.guiHeight(), a << 24 | 0xFFFFFF);
+        }
         int bar = (int) (g.guiHeight() * 0.11f * t);
         g.fill(0, 0, g.guiWidth(), bar, 0xFF000000);
         g.fill(0, g.guiHeight() - bar, g.guiWidth(), g.guiHeight(), 0xFF000000);
         g.fill(0, bar, g.guiWidth(), bar + 1, TenkaichiUi.GOLD);
         g.fill(0, g.guiHeight() - bar - 1, g.guiWidth(), g.guiHeight() - bar, TenkaichiUi.GOLD);
         FormDefinition form = com.dbtenkaichi.form.FormRegistry.get(visual.cinematicForm, true);
-        if (form != null && elapsed > visual.cinematicTicks * 0.6f) {
+        if (form != null && com.dbtenkaichi.client.cinematic.CinematicDirector.revealed(visual)) {
             int color = 0xFF000000 | FormDefinition.parseColor(form.visual.auraColor, 0xFFFFFF);
             g.pose().pushMatrix();
             g.pose().translate(g.guiWidth() / 2.0f, g.guiHeight() - bar - 22);

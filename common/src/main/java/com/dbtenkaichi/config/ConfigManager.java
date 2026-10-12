@@ -16,7 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 public final class ConfigManager {
-    public static final int COMMON_SCHEMA = 2;
+    public static final int COMMON_SCHEMA = 3;
     public static final int CLIENT_SCHEMA = 1;
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().serializeSpecialFloatingPointValues().create();
 
@@ -120,6 +120,12 @@ public final class ConfigManager {
                     GameplayConfig.ALL_RACES.forEach(all::add);
                     gameplay.add("enabledRaces", all);
                 }
+            }
+        }
+        if (fromVersion < 3 && obj.has("gameplay") && obj.get("gameplay").isJsonObject()) {
+            JsonObject gameplay = obj.getAsJsonObject("gameplay");
+            if (gameplay.has("cinematicTicks") && gameplay.get("cinematicTicks").getAsInt() == 70) {
+                gameplay.addProperty("cinematicTicks", 200);
             }
         }
         obj.addProperty("schemaVersion", COMMON_SCHEMA);

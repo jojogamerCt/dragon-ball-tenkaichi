@@ -85,6 +85,10 @@ public final class PoseApplier {
             model.head.yRot += (float) Math.sin(ageInTicks * 3.7f) * tremble * 0.5f;
             model.body.zRot += (float) Math.sin(ageInTicks * 4.3f) * tremble * 0.25f;
         }
+        float skill = anim.weight(AnimPlayer.BaseState.SKILL_CHARGE, partial);
+        if (skill > 0.0f) {
+            model.head.yRot += (float) Math.toRadians(KAMEHAMEHA_TURN) * skill;
+        }
         float hover = anim.weight(AnimPlayer.BaseState.HOVER, partial);
         if (hover > 0.0f) {
             model.rightLeg.xRot += (float) Math.sin(ageInTicks * 0.09f) * 0.08f * hover;
@@ -141,6 +145,8 @@ public final class PoseApplier {
         }
     }
 
+    public static final float KAMEHAMEHA_TURN = 78.0f;
+
     public static void applyBodyTransform(PoseStack poseStack, Entity entity, EntityVisual visual, float bodyRotDegrees, float height) {
         float partial = partial();
         AnimPlayer anim = visual.anim;
@@ -148,6 +154,10 @@ public final class PoseApplier {
         float fly = anim.weight(AnimPlayer.BaseState.FLY, partial);
         float hover = anim.weight(AnimPlayer.BaseState.HOVER, partial);
         float meditate = anim.weight(AnimPlayer.BaseState.MEDITATE, partial);
+        float skill = anim.weight(AnimPlayer.BaseState.SKILL_CHARGE, partial);
+        if (skill > 0.001f) {
+            poseStack.rotateDegrees(Axis.YP, KAMEHAMEHA_TURN * skill);
+        }
         if (fast + fly + hover + meditate < 0.001f) {
             return;
         }

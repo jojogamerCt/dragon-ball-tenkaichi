@@ -29,6 +29,7 @@ public final class FormDefinition {
     public double lowMasteryControlPenalty = 0.15;
     public double kiActivationCost = 15.0;
     public int cinematicTicks = 70;
+    public String cinematic = "power_up";
     public int quickTicks = 8;
     public Visual visual = new Visual();
 

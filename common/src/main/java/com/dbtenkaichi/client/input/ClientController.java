@@ -61,6 +61,7 @@ public final class ClientController {
             }
         }
         CombatFxHandler.tick(mc);
+        com.dbtenkaichi.client.cinematic.CinematicDirector.tick(mc);
         PlayerData data = Services.PLATFORM.playerData(player);
         if (!data.isCreated()) {
             while (Keybinds.MENU.consumeClick()) {

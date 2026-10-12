@@ -120,3 +120,19 @@ Nessuna verifica automatica fallisce allo stato attuale.
   (`docs/screenshots/kamehameha_charge_pose.png`).
 - Tentativi intermedi: braccia che pendevano, poi braccia sollevate (la rotazione laterale con il busto molto ruotato
   avviene negli assi del mondo) → angoli ricalcolati con torsione moderata; mani in prima persona fuori inquadratura → riposizionate.
+
+### Aggiornamento — Cutscene, suoni, posa Kamehameha
+- Posa della Kamehameha rifatta ruotando tutto il modello (non solo il busto) e controruotando la testa: le braccia
+  restano davanti al busto e le mani si uniscono sul fianco destro (confronto con il riferimento del proprietario).
+- Nuovo sistema di cutscene (`client/cinematic`): script per forma con camera libera, eventi e tracce. Super Saiyan:
+  primo piano tremante → campo lungo con fulmini → figura intera con terreno che si spacca e rocce che levitano →
+  capelli che lampeggiano → urlo con lampo bianco → di spalle nella colonna d'aura dorata → rivelazione.
+  Il riferimento è stato studiato da fotogrammi del video fornito (non inclusi nel progetto).
+- Nuova particella "roccia", fulmini a colonna, oscuramento del cielo, flash; durata cinematica massima portata a
+  200 tick (migrazione della config comune allo schema 3).
+- Generatore audio riscritto (`tools/gen_sounds.py`, richiede numpy, scipy, soundfile); due nuovi eventi
+  (`transform.thunder`, `transform.rumble`).
+- Problemi trovati: polvere con bordi quadrati e troppo densa, cielo poco scuro, troppe rocce, urlo troppo rumoroso
+  nello spettro, picco del tuono oltre 0 dBFS → tutti corretti e ricontrollati.
+- Verificato su Fabric e NeoForge: smoke server PASS, test client completo (36 screenshot), forma Super Saiyan applicata
+  al termine della cutscene.

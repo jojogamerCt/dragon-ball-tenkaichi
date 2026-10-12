@@ -23,6 +23,7 @@ public final class ModParticles {
     public static final Supplier<ParticleType<ColorParticleOption>> DUST_PUFF = register("dust_puff");
     public static final Supplier<ParticleType<ColorParticleOption>> LIGHTNING = register("lightning");
     public static final Supplier<ParticleType<ColorParticleOption>> SPEED_LINE = register("speed_line");
+    public static final Supplier<ParticleType<ColorParticleOption>> ROCK = register("rock");
 
     private ModParticles() {
     }

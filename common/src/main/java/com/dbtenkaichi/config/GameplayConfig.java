@@ -46,7 +46,7 @@ public final class GameplayConfig {
     public float maxBlockHardness = 50.0f;
 
     public int maxActionsPerSecond = 40;
-    public int cinematicTicks = 70;
+    public int cinematicTicks = 200;
     public boolean allowNpcSpawning = true;
     public double npcDifficulty = 1.0;
     public double npcMultiplayerScaling = 0.35;

@@ -18,8 +18,9 @@ public class TenkaichiParticle extends SingleQuadParticle {
         IMPACT_STAR(0.7f, 1.0f, 5, 7, 0.0f, 0.5f, 1.8f, 1.0f, true, false),
         SHOCK_RING(0.4f, 0.6f, 9, 12, 0.0f, 0.5f, 6.0f, 0.9f, true, false),
         DUST_PUFF(0.35f, 0.6f, 20, 34, -0.002f, 0.9f, 2.2f, 0.7f, false, true),
-        LIGHTNING(0.35f, 0.6f, 3, 5, 0.0f, 0.5f, 1.0f, 1.0f, true, false),
-        SPEED_LINE(0.25f, 0.4f, 5, 8, 0.0f, 0.95f, 0.6f, 0.8f, true, false);
+        LIGHTNING(0.35f, 0.6f, 5, 9, 0.0f, 0.5f, 1.0f, 1.0f, true, false),
+        SPEED_LINE(0.25f, 0.4f, 5, 8, 0.0f, 0.95f, 0.6f, 0.8f, true, false),
+        ROCK(0.09f, 0.16f, 50, 80, -0.12f, 0.97f, 0.0f, 1.0f, false, false);
 
         final float minSize;
         final float maxSize;
@@ -70,7 +71,7 @@ public class TenkaichiParticle extends SingleQuadParticle {
         this.alpha = style.startAlpha;
         this.roll = random.nextFloat() * Mth.TWO_PI;
         this.oRoll = roll;
-        this.spin = style == Style.SHOCK_RING || style == Style.SPEED_LINE ? 0.0f : (random.nextFloat() - 0.5f) * 0.3f;
+        this.spin = style == Style.SHOCK_RING || style == Style.SPEED_LINE ? 0.0f : (random.nextFloat() - 0.5f) * (style == Style.ROCK ? 0.12f : 0.3f);
         if (style == Style.SPEED_LINE) {
             this.roll = (float) Math.atan2(dy, Math.sqrt(dx * dx + dz * dz)) + Mth.HALF_PI;
             this.oRoll = roll;
@@ -95,7 +96,7 @@ public class TenkaichiParticle extends SingleQuadParticle {
         if (style == Style.KI_SPARK || style == Style.LIGHTNING) {
             quadSize = baseSize * (1.0f - t * 0.8f);
         }
-        float fade = style == Style.AURA_FLAME || style == Style.ENERGY_ORB ? Mth.clamp((1.0f - t) * 1.6f, 0.0f, 1.0f) : 1.0f - t * t;
+        float fade = style == Style.ROCK ? Mth.clamp((1.0f - t) * 5.0f, 0.0f, 1.0f) : style == Style.AURA_FLAME || style == Style.ENERGY_ORB ? Mth.clamp((1.0f - t) * 1.6f, 0.0f, 1.0f) : 1.0f - t * t;
         alpha = style.startAlpha * fade;
         if (style == Style.LIGHTNING && random.nextInt(2) == 0) {
             setSprite(sprites.get(random));
@@ -118,7 +119,7 @@ public class TenkaichiParticle extends SingleQuadParticle {
 
     @Override
     protected SingleQuadParticle.Layer getLayer() {
-        return SingleQuadParticle.Layer.TRANSLUCENT;
+        return style == Style.ROCK ? SingleQuadParticle.Layer.OPAQUE : SingleQuadParticle.Layer.TRANSLUCENT;
     }
 
     @Override

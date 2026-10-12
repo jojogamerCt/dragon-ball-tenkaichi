@@ -108,8 +108,10 @@ public final class TransformationSystem {
         Services.NETWORK.sendToTrackingAndSelf(player, new Packets.Cinematic(player.getId(), form.id, ticks, full));
         CombatSystem.anim(player, full ? AnimClip.TRANSFORM : AnimClip.POWER_UP, ticks, 0);
         ServerLevel level = player.level();
-        CombatSystem.playSound(level, player, full ? ModSounds.TRANSFORM_SCREAM.get() : ModSounds.TRANSFORM.get(), 1.4f, 1.0f);
-        CombatSystem.fx(player, CombatFxKind.AURA_BURST, player, player, player.position(), full ? 0.6f : 1.0f);
+        if (!full) {
+            CombatSystem.playSound(level, player, ModSounds.TRANSFORM.get(), 1.4f, 1.0f);
+            CombatSystem.fx(player, CombatFxKind.AURA_BURST, player, player, player.position(), 1.0f);
+        }
     }
 
     public static void tickTransforming(ServerPlayer player, PlayerData data, long now) {

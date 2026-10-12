@@ -144,7 +144,8 @@ def dust_puff():
                 d = math.hypot(u - bx, v - by) / br
                 a = max(a, clamp(1.0 - d * d))
             shade = 0.75 + 0.25 * clamp(-v * 0.5 + 0.5)
-            return a * (1.0 - i * 0.15), shade
+            edge = clamp(1.0 - (u * u + v * v)) ** 1.5
+            return a * edge * (1.0 - i * 0.15), shade
         save_particle("dust_puff", i, white_alpha(16, fn).filter(ImageFilter.GaussianBlur(0.4)))
     particle_json("dust_puff", frames)
 
@@ -184,6 +185,36 @@ def speed_line():
         return across * along, 1.0
     save_particle("speed_line", 0, white_alpha(16, fn))
     particle_json("speed_line", 1)
+
+
+def rock():
+    variants = 3
+    for i in range(variants):
+        rng = random.Random(150 + i)
+        pts = []
+        n = 7
+        for k in range(n):
+            ang = k / n * math.pi * 2 + rng.uniform(-0.25, 0.25)
+            rad = rng.uniform(0.55, 0.95)
+            pts.append((math.cos(ang) * rad, math.sin(ang) * rad))
+
+        def inside(u, v):
+            c = False
+            for k in range(n):
+                x1, y1 = pts[k]
+                x2, y2 = pts[(k + 1) % n]
+                if (y1 > v) != (y2 > v) and u < (x2 - x1) * (v - y1) / (y2 - y1 + 1e-9) + x1:
+                    c = not c
+            return c
+
+        def fn(u, v):
+            if not inside(u, v):
+                return 0.0, 0.0
+            light = 0.7 + 0.3 * clamp(-(u * 0.6 + v * 0.8) * 0.5 + 0.5)
+            grain = 0.9 + 0.1 * math.sin(u * 23 + v * 17 + i)
+            return 1.0, light * grain
+        save_particle("rock", i, white_alpha(16, fn))
+    particle_json("rock", variants)
 
 
 def shaded_item(size, mask_fn, color_fn, light=(-0.6, -0.7), outline=0.38):
@@ -371,6 +402,7 @@ if __name__ == "__main__":
     dust_puff()
     lightning()
     speed_line()
+    rock()
     senzu()
     egg("master_spawn_egg", (240, 122, 26), (31, 63, 174), (250, 250, 250))
     egg("saiyan_raider_spawn_egg", (44, 40, 66), (176, 75, 255), (230, 220, 200))
