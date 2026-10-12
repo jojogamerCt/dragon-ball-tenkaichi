@@ -102,17 +102,17 @@ public final class TenkaichiModels {
             case SUPER_SPIKES -> {
                 b.cap(true);
                 b.spike(-1.2f, -7.8f, -3.9f, 2.55f, 0.1f, 0.15f, 5.0f, 2.4f);
-                b.spike(-3.2f, -8.0f, 0.0f, -0.32f, 0.0f, 0.35f, 9.0f, 3.4f);
-                b.spike(-1.2f, -8.3f, 0.6f, -0.18f, 0.0f, 0.1f, 10.0f, 3.6f);
-                b.spike(1.2f, -8.3f, 0.6f, -0.2f, 0.0f, -0.12f, 9.6f, 3.6f);
-                b.spike(3.2f, -8.0f, 0.0f, -0.34f, 0.0f, -0.38f, 8.6f, 3.4f);
-                b.spike(0.0f, -7.5f, 2.8f, -0.6f, 0.0f, 0.0f, 8.4f, 3.4f);
+                b.spike(-3.2f, -8.0f, 0.0f, -0.4f, 0.0f, 0.68f, 9.0f, 3.4f);
+                b.spike(-1.2f, -8.3f, 0.6f, -0.52f, 0.0f, 0.26f, 10.0f, 3.6f);
+                b.spike(1.2f, -8.3f, 0.6f, -0.58f, 0.0f, -0.28f, 9.6f, 3.6f);
+                b.spike(3.2f, -8.0f, 0.0f, -0.42f, 0.0f, -0.7f, 8.6f, 3.4f);
+                b.spike(0.0f, -7.5f, 2.8f, -0.9f, 0.0f, 0.0f, 8.4f, 3.4f);
                 b.spike(-2.4f, -6.0f, 3.6f, -0.95f, 0.0f, 0.35f, 6.8f, 3.0f);
                 b.spike(2.4f, -6.0f, 3.6f, -0.95f, 0.0f, -0.35f, 6.8f, 3.0f);
                 b.spike(-4.2f, -6.8f, -0.5f, 0.0f, 0.0f, 0.75f, 5.0f, 2.6f);
                 b.spike(4.2f, -6.8f, -0.5f, 0.0f, 0.0f, -0.75f, 5.0f, 2.6f);
-                b.spike(-1.8f, -7.6f, -2.0f, -0.12f, 0.0f, 0.25f, 7.0f, 3.0f);
-                b.spike(1.8f, -7.6f, -2.0f, -0.12f, 0.0f, -0.25f, 7.0f, 3.0f);
+                b.spike(-1.8f, -7.6f, -2.0f, 0.08f, 0.0f, 0.5f, 7.0f, 3.0f);
+                b.spike(1.8f, -7.6f, -2.0f, 0.08f, 0.0f, -0.5f, 7.0f, 3.0f);
             }
             case ASCENDED_SPIKES -> {
                 b.cap(true);

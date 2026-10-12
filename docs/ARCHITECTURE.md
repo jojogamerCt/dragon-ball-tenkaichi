@@ -1,4 +1,4 @@
-# Architettura — Dragon Ball: Tenkaichi
+# Architettura — Dragon Block: Tenkaichi
 
 ## Toolchain verificata (11 ottobre 2026)
 

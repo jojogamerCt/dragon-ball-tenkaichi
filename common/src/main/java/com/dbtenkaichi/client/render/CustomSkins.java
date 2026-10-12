@@ -522,6 +522,26 @@ public final class CustomSkins {
             faceRows(48, 48, 4, 12, 4, 7, 10, accent, 0.05f);
             faceRows(40, 16, 4, 12, 4, 7, 10, accent, 0.05f);
             faceRows(32, 48, 4, 12, 4, 7, 10, accent, 0.05f);
+            faceRows(40, 16, 4, 12, 4, 0, 4, main, 0.08f);
+            faceRows(32, 48, 4, 12, 4, 0, 4, main, 0.08f);
+            faceRows(40, 32, 4, 12, 4, 0, 4, main, 0.08f);
+            faceRows(48, 48, 4, 12, 4, 0, 4, main, 0.08f);
+            faceRows(40, 32, 4, 12, 4, 3, 4, shade(main, 0.75f), 0.04f);
+            faceRows(48, 48, 4, 12, 4, 3, 4, shade(main, 0.75f), 0.04f);
+            coverTops(main, main);
+        }
+
+        private void coverTops(int shirt, int pants) {
+            hd(44, 16, 4, 4, shirt, 1.05f, 0.95f, 0.05f);
+            hd(36, 48, 4, 4, shirt, 1.05f, 0.95f, 0.05f);
+            hd(44, 32, 4, 4, shirt, 1.08f, 1.0f, 0.05f);
+            hd(52, 48, 4, 4, shirt, 1.08f, 1.0f, 0.05f);
+            hd(4, 16, 4, 4, pants, 0.8f, 0.75f, 0.05f);
+            hd(20, 48, 4, 4, pants, 0.8f, 0.75f, 0.05f);
+            hd(4, 32, 4, 4, pants, 0.85f, 0.8f, 0.05f);
+            hd(4, 48, 4, 4, pants, 0.85f, 0.8f, 0.05f);
+            hd(28, 16, 8, 4, pants, 0.7f, 0.65f, 0.05f);
+            hd(28, 32, 8, 4, pants, 0.72f, 0.66f, 0.05f);
         }
 
         private void emblem(int x, int y, int color) {
@@ -583,6 +603,9 @@ public final class CustomSkins {
             faceRows(0, 48, 4, 12, 4, 6, 7, trim, 0.03f);
             hd(8, 32, 4, 4, shade(plate, 0.6f), 1.0f, 0.9f, 0.03f);
             hd(8, 48, 4, 4, shade(plate, 0.6f), 1.0f, 0.9f, 0.03f);
+            coverTops(suit, suit);
+            hd(44, 32, 4, 4, plate, 1.1f, 1.0f, 0.03f);
+            hd(52, 48, 4, 4, plate, 1.1f, 1.0f, 0.03f);
         }
 
         private void casual() {
@@ -614,6 +637,9 @@ public final class CustomSkins {
             faceRows(48, 48, 4, 12, 4, 0, 6, jacket, 0.06f);
             folds(0, 16, 4, 12, 4, pants);
             folds(16, 48, 4, 12, 4, pants);
+            coverTops(shirt, pants);
+            hd(44, 32, 4, 4, jacket, 1.05f, 0.95f, 0.05f);
+            hd(52, 48, 4, 4, jacket, 1.05f, 0.95f, 0.05f);
         }
     }
 }

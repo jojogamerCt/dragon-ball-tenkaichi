@@ -1,6 +1,8 @@
-# Dragon Ball: Tenkaichi
+# Dragon Block: Tenkaichi
 
-> 🤖 **This project was created by Claude** (Claude Opus 5.5, an AI model by Anthropic) using
+**Authors:** Sh4d0wJ0J0 and Claude
+
+> 🤖 **This mod was created entirely with Claude** (Claude Opus 5.5, an AI model by Anthropic) using
 > [Claude Code](https://claude.com/claude-code): the code, multi-loader architecture, script-generated
 > assets (textures, sounds, translations), tests and documentation were written by Claude at the
 > request of the repository owner.
@@ -16,11 +18,14 @@ Version **0.1.0 — vertical slice**: character creation with all 10 playable ra
 Human, Namekian, Frieza Race, Majin, Android, Bio-Android, Kaioshin, Demon Realm Race), each with its own
 server-side passives, 3D features and HD procedural skin, 12 stats, Battle Power,
 melee combat with combos/guards/dodges, lock-on, flight, Ki charging, 3D aura, Ki Blast, Kamehameha,
-Beam Clash, Super Saiyan, a trainer Master, a Saiyan Raider with AI, HUD, multiplayer sync, saving and
-configuration. Details in `docs/FEATURES.md`, verification status in `docs/PROGRESS.md` and
+Beam Clash, Super Saiyan, a trainer Master, a Saiyan Raider with AI, a fully custom UI (HUD with portrait,
+gauges and technique icons, themed menus), custom particles, first-person combat arms, multiplayer sync,
+saving and configuration. Details in `docs/FEATURES.md`, verification status in `docs/PROGRESS.md` and
 `docs/TESTING.md`, limitations in `docs/KNOWN_ISSUES.md` (project docs are currently in Italian).
 
 ![The 10 playable races](docs/screenshots/race_gallery.png)
+
+![Custom HUD, Kamehameha and particles](docs/screenshots/neoforge_11_kamehameha_hud.png)
 
 ## Requirements
 
@@ -37,8 +42,8 @@ configuration. Details in `docs/FEATURES.md`, verification status in `docs/PROGR
 On Windows PowerShell: `scripts\gw.ps1 build`. The script sets up Java 25 and the Windows trust store
 (needed when an antivirus intercepts HTTPS). The two final JARs are copied to `build/release/`:
 
-- `dragon-ball-tenkaichi-0.1.0-26.3-fabric.jar`
-- `dragon-ball-tenkaichi-0.1.0-26.3-neoforge.jar`
+- `dragon-block-tenkaichi-0.1.0-26.3-fabric.jar`
+- `dragon-block-tenkaichi-0.1.0-26.3-neoforge.jar`
 
 ## Testing
 
@@ -69,4 +74,8 @@ Smoke tests are only enabled with `-PdbtSmoke` (system properties `dbtenkaichi.s
 
 ## License
 
-All rights reserved (see `LICENSE`). The build template is derived from MultiLoader-Template (CC0).
+**Dragon Block: Tenkaichi License** (see `LICENSE`): you may play the mod and build **addons** on top of it
+(including paid ones, as long as they do not include the mod itself), and include it in free modpacks that
+download it from an official source. You may **not** reupload or redistribute the mod, publish forks of it,
+or make money from the mod itself without written permission. The build template is derived from
+MultiLoader-Template (CC0).

@@ -10,6 +10,8 @@ import com.dbtenkaichi.race.RacePassive;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractSliderButton;
+import com.dbtenkaichi.client.ui.TenkaichiButton;
+import com.dbtenkaichi.client.ui.TenkaichiUi;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
@@ -83,11 +85,12 @@ public class CharacterCreatorScreen extends Screen {
         int tabW = panelW / 3;
         for (int i = 0; i < tabs.length; i++) {
             final int index = i;
-            Button button = Button.builder(Component.translatable(tabs[i]), b -> {
+            Button button = TenkaichiButton.create(Component.translatable(tabs[i]), b -> {
                 tab = index;
                 rebuildWidgets();
             }).bounds(panelX + i * tabW, 12, tabW - 2, 18).build();
             button.active = tab != i;
+            ((TenkaichiButton) button).selected = tab == i;
             addRenderableWidget(button);
         }
         switch (tab) {
@@ -143,25 +146,26 @@ public class CharacterCreatorScreen extends Screen {
             }
         }
         int bottom = this.height - 28;
-        addRenderableWidget(Button.builder(Component.translatable("screen.dbtenkaichi.creator.random"), b -> randomize()).bounds(panelX, bottom, panelW / 2 - 2, 20).build());
-        addRenderableWidget(Button.builder(Component.translatable("screen.dbtenkaichi.creator.confirm"), b -> confirm()).bounds(panelX + panelW / 2 + 2, bottom, panelW / 2 - 2, 20).build());
+        addRenderableWidget(TenkaichiButton.create(Component.translatable("screen.dbtenkaichi.creator.random"), b -> randomize()).bounds(panelX, bottom, panelW / 2 - 2, 20).build());
+        addRenderableWidget(TenkaichiButton.create(Component.translatable("screen.dbtenkaichi.creator.confirm"), b -> confirm()).bounds(panelX + panelW / 2 + 2, bottom, panelW / 2 - 2, 20).build());
         int px = this.width / 4;
-        addRenderableWidget(Button.builder(Component.literal("<"), b -> yaw -= 30).bounds(px - 60, bottom, 20, 20).build());
-        addRenderableWidget(Button.builder(Component.literal(">"), b -> yaw += 30).bounds(px + 40, bottom, 20, 20).build());
-        addRenderableWidget(Button.builder(Component.literal("-"), b -> zoom = Math.max(40, zoom - 10)).bounds(px - 30, bottom, 20, 20).build());
-        addRenderableWidget(Button.builder(Component.literal("+"), b -> zoom = Math.min(130, zoom + 10)).bounds(px + 10, bottom, 20, 20).build());
+        addRenderableWidget(TenkaichiButton.create(Component.literal("<"), b -> yaw -= 30).bounds(px - 60, bottom, 20, 20).build());
+        addRenderableWidget(TenkaichiButton.create(Component.literal(">"), b -> yaw += 30).bounds(px + 40, bottom, 20, 20).build());
+        addRenderableWidget(TenkaichiButton.create(Component.literal("-"), b -> zoom = Math.max(40, zoom - 10)).bounds(px - 30, bottom, 20, 20).build());
+        addRenderableWidget(TenkaichiButton.create(Component.literal("+"), b -> zoom = Math.min(130, zoom + 10)).bounds(px + 10, bottom, 20, 20).build());
     }
 
     private int cycleRow(int x, int y, int w, String key, IntSupplier current, int count, IntConsumer setter, java.util.function.IntFunction<Component> label) {
-        Button value = Button.builder(rowLabel(key, label.apply(current.getAsInt())), b -> {
+        Button value = TenkaichiButton.create(rowLabel(key, label.apply(current.getAsInt())), b -> {
         }).bounds(x + 22, y, w - 44, 20).build();
         value.active = false;
-        addRenderableWidget(Button.builder(Component.literal("<"), b -> {
+        ((TenkaichiButton) value).display = true;
+        addRenderableWidget(TenkaichiButton.create(Component.literal("<"), b -> {
             setter.accept(Math.floorMod(current.getAsInt() - 1, count));
             changed();
         }).bounds(x, y, 20, 20).build());
         addRenderableWidget(value);
-        addRenderableWidget(Button.builder(Component.literal(">"), b -> {
+        addRenderableWidget(TenkaichiButton.create(Component.literal(">"), b -> {
             setter.accept(Math.floorMod(current.getAsInt() + 1, count));
             changed();
         }).bounds(x + w - 20, y, 20, 20).build());
@@ -262,13 +266,17 @@ public class CharacterCreatorScreen extends Screen {
     }
 
     @Override
+    public void extractBackground(GuiGraphicsExtractor g, int mouseX, int mouseY, float partial) {
+        TenkaichiUi.background(g, this.width, this.height);
+    }
+
+    @Override
     public void extractRenderState(GuiGraphicsExtractor g, int mouseX, int mouseY, float partial) {
         super.extractRenderState(g, mouseX, mouseY, partial);
         Minecraft mc = Minecraft.getInstance();
         int previewW = this.width / 2;
-        g.fill(10, 10, previewW - 6, this.height - 34, 0x66000000);
-        g.outline(10, 10, previewW - 16, this.height - 44, 0x44FFD45A);
-        g.centeredText(this.font, this.title, previewW / 2, 16, 0xFFFFD45A);
+        TenkaichiUi.panel(g, 8, 8, previewW - 12, this.height - 40);
+        TenkaichiUi.header(g, this.font, this.title, previewW / 2, 16);
         g.centeredText(this.font, Component.translatable(race.translationKey()), previewW / 2, 28, 0xFFFFFFFF);
         g.textWithWordWrap(this.font, Component.translatable("race.dbtenkaichi." + race.id() + ".desc"), 16, this.height - 60, previewW - 32, 0xFFBBBBBB);
         if (mc.player != null) {
@@ -335,6 +343,15 @@ public class CharacterCreatorScreen extends Screen {
         protected void applyValue() {
             appearance.height = (float) (minHeight + value * (maxHeight - minHeight));
             publishPreview();
+        }
+
+        @Override
+        public void extractWidgetRenderState(GuiGraphicsExtractor g, int mouseX, int mouseY, float partial) {
+            TenkaichiUi.sprite(g, TenkaichiUi.SLOT, getX(), getY(), getWidth(), getHeight());
+            TenkaichiUi.gauge(g, getX() + 6, getY() + getHeight() - 7, getWidth() - 12, 4, (float) value, 0.0f, TenkaichiUi.GOLD);
+            int handle = getX() + 6 + (int) ((getWidth() - 16) * value);
+            TenkaichiUi.sprite(g, isHoveredOrFocused() ? TenkaichiUi.BUTTON_HOVER : TenkaichiUi.BUTTON, handle - 3, getY() + 2, 10, getHeight() - 4);
+            g.centeredText(font, getMessage(), getX() + getWidth() / 2, getY() + 4, isHoveredOrFocused() ? TenkaichiUi.GOLD_LIGHT : TenkaichiUi.TEXT);
         }
     }
 }

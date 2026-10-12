@@ -190,9 +190,14 @@ public class MasterEntity extends FighterNpc {
 
     private void drillTick(ServerLevel level, ServerPlayer partner, long now) {
         lookAtPoint(partner.getBoundingBox().getCenter());
-        if (distanceTo(partner) < 6.0) {
+        double distance = distanceTo(partner);
+        if (distance < 6.0) {
             Vec3 away = position().subtract(partner.position()).multiply(1, 0, 1).normalize();
-            getNavigation().moveTo(getX() + away.x * 4, getY(), getZ() + away.z * 4, 1.0);
+            getNavigation().moveTo(getX() + away.x * 3, getY(), getZ() + away.z * 3, 0.9);
+        } else if (distance > 14.0) {
+            getNavigation().moveTo(partner, 1.0);
+        } else {
+            getNavigation().stop();
         }
         if (now >= nextDrillShot) {
             nextDrillShot = now + 16 + getRandom().nextInt(10);

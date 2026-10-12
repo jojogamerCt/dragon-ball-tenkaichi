@@ -49,6 +49,7 @@ public final class TenkaichiNeoForgeClient {
                 event.register(key);
             }
         });
+        modBus.addListener((net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent event) -> TenkaichiClient.registerParticles((type, factory) -> event.registerSpriteSet(type, factory::apply)));
         modBus.addListener((RegisterGuiLayersEvent event) -> event.registerAboveAll(TenkaichiClient.HUD_ID, TenkaichiHud::render));
         modBus.addListener((EntityRenderersEvent.RegisterLayerDefinitions event) -> TenkaichiModels.registerLayers(event::registerLayerDefinition));
         modBus.addListener((EntityRenderersEvent.RegisterRenderers event) -> TenkaichiClient.registerRenderers(new TenkaichiClient.RendererRegistrar() {
@@ -65,6 +66,13 @@ public final class TenkaichiNeoForgeClient {
                         renderer.addLayer(layer);
                     }
                 }
+            }
+        });
+        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.client.event.RenderGuiLayerEvent.Pre event) -> {
+            net.minecraft.resources.Identifier name = event.getName();
+            if ((name.equals(net.neoforged.neoforge.client.gui.VanillaGuiLayers.PLAYER_HEALTH) || name.equals(net.neoforged.neoforge.client.gui.VanillaGuiLayers.FOOD_LEVEL)
+                    || name.equals(net.neoforged.neoforge.client.gui.VanillaGuiLayers.ARMOR_LEVEL)) && TenkaichiHud.replacesVanillaBars()) {
+                event.setCanceled(true);
             }
         });
         NeoForge.EVENT_BUS.addListener((ClientTickEvent.Pre event) -> ClientController.startTick(Minecraft.getInstance()));

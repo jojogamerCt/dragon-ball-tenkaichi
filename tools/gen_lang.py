@@ -127,7 +127,7 @@ def build():
         en[key] = e
         it[key] = i
 
-    add("itemGroup.dbtenkaichi.main", "Dragon Ball: Tenkaichi", "Dragon Ball: Tenkaichi")
+    add("itemGroup.dbtenkaichi.main", "Dragon Block: Tenkaichi", "Dragon Block: Tenkaichi")
     add("item.dbtenkaichi.senzu_bean", "Senzu Bean", "Fagiolo Senzu")
     add("item.dbtenkaichi.master_spawn_egg", "Martial Arts Master Spawn Egg", "Uovo generatore Maestro di arti marziali")
     add("item.dbtenkaichi.saiyan_raider_spawn_egg", "Saiyan Raider Spawn Egg", "Uovo generatore Predone Saiyan")
@@ -135,7 +135,7 @@ def build():
     add("entity.dbtenkaichi.saiyan_raider", "Saiyan Raider", "Predone Saiyan")
     add("entity.dbtenkaichi.ki_beam", "Ki Beam", "Raggio Ki")
     add("entity.dbtenkaichi.ki_blast", "Ki Blast", "Sfera Ki")
-    add("key.category.dbtenkaichi.tenkaichi", "Dragon Ball: Tenkaichi", "Dragon Ball: Tenkaichi")
+    add("key.category.dbtenkaichi.tenkaichi", "Dragon Block: Tenkaichi", "Dragon Block: Tenkaichi")
     for k, (e, i) in KEYS.items():
         add("key.dbtenkaichi." + k, e, i)
     for k, (e, i) in STATS.items():
@@ -189,7 +189,7 @@ def build():
         "Non sei pronto: allena Controllo Ki (6) e Potenza Ki (5) e completa due sessioni.")
     add("message.dbtenkaichi.tp_gained", "+%s TP", "+%s TP")
     add("command.dbtenkaichi.done", "Done.", "Fatto.")
-    add("command.dbtenkaichi.reloaded", "Dragon Ball: Tenkaichi data reloaded.", "Dati di Dragon Ball: Tenkaichi ricaricati.")
+    add("command.dbtenkaichi.reloaded", "Dragon Block: Tenkaichi data reloaded.", "Dati di Dragon Block: Tenkaichi ricaricati.")
     add("command.dbtenkaichi.no_character", "That player has no character yet.", "Quel giocatore non ha ancora un personaggio.")
     add("command.dbtenkaichi.unknown_form", "Unknown transformation: %s", "Trasformazione sconosciuta: %s")
     add("command.dbtenkaichi.unknown_stat", "Unknown statistic.", "Statistica sconosciuta.")

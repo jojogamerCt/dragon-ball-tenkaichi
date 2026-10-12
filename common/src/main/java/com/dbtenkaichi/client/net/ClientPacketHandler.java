@@ -93,6 +93,10 @@ public final class ClientPacketHandler {
         EntityVisual visual = ClientState.visual(packet.entityId());
         AnimClip clip = AnimClip.byOrdinal(packet.clip());
         visual.anim.play(clip, packet.durationTicks(), packet.variant(), ClientState.clientTicks);
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player != null && packet.entityId() == mc.player.getId()) {
+            com.dbtenkaichi.client.anim.FirstPersonCombat.onLocalAnim(clip, packet.durationTicks());
+        }
     }
 
     public static void combatFx(Packets.CombatFx packet) {

@@ -20,7 +20,7 @@ plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
 }
 
-rootProject.name = 'dragon-ball-tenkaichi'
+rootProject.name = 'dragon-block-tenkaichi'
 includeBuild('build-logic')
 include('common')
 include('fabric')

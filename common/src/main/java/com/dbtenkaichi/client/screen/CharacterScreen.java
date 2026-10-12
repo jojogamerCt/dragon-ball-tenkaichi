@@ -16,6 +16,8 @@ import com.dbtenkaichi.race.RacePassive;
 import com.dbtenkaichi.stats.StatType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import com.dbtenkaichi.client.ui.TenkaichiButton;
+import com.dbtenkaichi.client.ui.TenkaichiUi;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -43,11 +45,12 @@ public class CharacterScreen extends Screen {
         String[] tabs = {"stats", "skills", "forms", "settings"};
         for (int i = 0; i < tabs.length; i++) {
             final int index = i;
-            Button button = Button.builder(Component.translatable("screen.dbtenkaichi.character.tab." + tabs[i]), b -> {
+            Button button = TenkaichiButton.create(Component.translatable("screen.dbtenkaichi.character.tab." + tabs[i]), b -> {
                 tab = index;
                 rebuildWidgets();
             }).bounds(left + i * 86, 8, 84, 18).build();
             button.active = tab != i;
+            ((TenkaichiButton) button).selected = tab == i;
             addRenderableWidget(button);
         }
         PlayerData data = data();
@@ -56,7 +59,7 @@ public class CharacterScreen extends Screen {
                 int y = 44;
                 for (StatType type : StatType.all()) {
                     final StatType stat = type;
-                    addRenderableWidget(Button.builder(Component.literal("+"), b -> Services.NETWORK.sendToServer(new Packets.Action(ActionType.UPGRADE_STAT.ordinal(), stat.ordinal())))
+                    addRenderableWidget(TenkaichiButton.create(Component.literal("+"), b -> Services.NETWORK.sendToServer(new Packets.Action(ActionType.UPGRADE_STAT.ordinal(), stat.ordinal())))
                             .bounds(left + 300, y - 3, 20, 12).build());
                     y += 13;
                 }
@@ -65,7 +68,7 @@ public class CharacterScreen extends Screen {
                 int y = 50;
                 for (String skill : data.skills()) {
                     final String id = skill;
-                    addRenderableWidget(Button.builder(Component.translatable(technique(skill)), b -> {
+                    addRenderableWidget(TenkaichiButton.create(Component.translatable(technique(skill)), b -> {
                         selectedSkill = id;
                         rebuildWidgets();
                     }).bounds(left, y, 150, 18).build()).active = !skill.equals(selectedSkill);
@@ -76,7 +79,7 @@ public class CharacterScreen extends Screen {
                     String current = data.skillInSlot(slot);
                     Component label = Component.translatable("screen.dbtenkaichi.character.slot", slot + 1)
                             .append(": ").append(current.isEmpty() ? Component.literal("-") : Component.translatable(technique(current)));
-                    addRenderableWidget(Button.builder(label, b -> {
+                    addRenderableWidget(TenkaichiButton.create(label, b -> {
                         Services.NETWORK.sendToServer(new Packets.AssignSlot(s, selectedSkill));
                     }).bounds(left + 180, 50 + slot * 22, 160, 18).build());
                 }
@@ -84,14 +87,14 @@ public class CharacterScreen extends Screen {
             case 3 -> {
                 ClientConfig cfg = ConfigManager.client();
                 int y = 50;
-                addRenderableWidget(Button.builder(Component.translatable("screen.dbtenkaichi.settings.quality", Component.translatable("quality.dbtenkaichi." + cfg.quality().name().toLowerCase(Locale.ROOT))), b -> {
+                addRenderableWidget(TenkaichiButton.create(Component.translatable("screen.dbtenkaichi.settings.quality", Component.translatable("quality.dbtenkaichi." + cfg.quality().name().toLowerCase(Locale.ROOT))), b -> {
                     ClientConfig.Quality[] values = ClientConfig.Quality.values();
                     cfg.graphicsQuality = values[(cfg.quality().ordinal() + 1) % values.length].name().toLowerCase(Locale.ROOT);
                     ConfigManager.saveClient();
                     rebuildWidgets();
                 }).bounds(left, y, 220, 20).build());
                 y += 24;
-                addRenderableWidget(Button.builder(Component.translatable("screen.dbtenkaichi.settings.cinematics", Component.translatable("cinematics.dbtenkaichi." + cfg.cinematics)), b -> {
+                addRenderableWidget(TenkaichiButton.create(Component.translatable("screen.dbtenkaichi.settings.cinematics", Component.translatable("cinematics.dbtenkaichi." + cfg.cinematics)), b -> {
                     cfg.cinematics = switch (cfg.cinematics) {
                         case "full" -> "short";
                         case "short" -> "off";
@@ -101,19 +104,19 @@ public class CharacterScreen extends Screen {
                     rebuildWidgets();
                 }).bounds(left, y, 220, 20).build());
                 y += 24;
-                addRenderableWidget(Button.builder(Component.translatable("screen.dbtenkaichi.settings.shake", Math.round(cfg.cameraShake * 100)), b -> {
+                addRenderableWidget(TenkaichiButton.create(Component.translatable("screen.dbtenkaichi.settings.shake", Math.round(cfg.cameraShake * 100)), b -> {
                     cfg.cameraShake = cfg.cameraShake >= 1.0f ? 0.0f : cfg.cameraShake + 0.25f;
                     ConfigManager.saveClient();
                     rebuildWidgets();
                 }).bounds(left, y, 220, 20).build());
                 y += 24;
-                addRenderableWidget(Button.builder(Component.translatable("screen.dbtenkaichi.settings.hitstop", Component.translatable(cfg.hitstop ? "options.on" : "options.off")), b -> {
+                addRenderableWidget(TenkaichiButton.create(Component.translatable("screen.dbtenkaichi.settings.hitstop", Component.translatable(cfg.hitstop ? "options.on" : "options.off")), b -> {
                     cfg.hitstop = !cfg.hitstop;
                     ConfigManager.saveClient();
                     rebuildWidgets();
                 }).bounds(left, y, 220, 20).build());
                 y += 24;
-                addRenderableWidget(Button.builder(Component.translatable("screen.dbtenkaichi.settings.bp", Component.translatable(cfg.showBattlePower ? "options.on" : "options.off")), b -> {
+                addRenderableWidget(TenkaichiButton.create(Component.translatable("screen.dbtenkaichi.settings.bp", Component.translatable(cfg.showBattlePower ? "options.on" : "options.off")), b -> {
                     cfg.showBattlePower = !cfg.showBattlePower;
                     ConfigManager.saveClient();
                     rebuildWidgets();
@@ -138,9 +141,14 @@ public class CharacterScreen extends Screen {
     }
 
     @Override
+    public void extractBackground(GuiGraphicsExtractor g, int mouseX, int mouseY, float partial) {
+        TenkaichiUi.background(g, this.width, this.height);
+    }
+
+    @Override
     public void extractRenderState(GuiGraphicsExtractor g, int mouseX, int mouseY, float partial) {
-        g.fill(this.width / 2 - 178, 4, this.width / 2 + 178, this.height - 8, 0xC0101018);
-        g.outline(this.width / 2 - 178, 4, 356, this.height - 12, 0x66FFD45A);
+        TenkaichiUi.panel(g, this.width / 2 - 180, 2, 360, this.height - 6);
+        TenkaichiUi.divider(g, this.width / 2 - 172, 41, 344);
         super.extractRenderState(g, mouseX, mouseY, partial);
         PlayerData data = data();
         int left = this.width / 2 - 170;
@@ -158,8 +166,7 @@ public class CharacterScreen extends Screen {
                     g.text(this.font, Component.translatable(type.translationKey()), left, y, 0xFFDDDDDD, true);
                     g.text(this.font, String.valueOf(level), left + 120, y, 0xFFFFFFFF, true);
                     float practice = data.practice(type);
-                    g.fill(left + 150, y + 2, left + 200, y + 5, 0xFF303030);
-                    g.fill(left + 150, y + 2, left + 150 + (int) (50 * practice), y + 5, 0xFF7CFFB0);
+                    TenkaichiUi.gauge(g, left + 150, y + 1, 52, 6, practice, 0.0f, 0xFF7CFFB0);
                     g.text(this.font, Component.translatable("screen.dbtenkaichi.character.cost", cost), left + 210, y, color, true);
                     y += 13;
                 }
@@ -185,8 +192,7 @@ public class CharacterScreen extends Screen {
                     int color = unlocked ? 0xFF000000 | FormDefinition.parseColor(form.visual.auraColor, 0xFFFFFF) : 0xFF777777;
                     g.text(this.font, Component.translatable(form.name).append(" x" + (int) form.bpMultiplier), left, y, color, true);
                     float mastery = data.mastery(form.id);
-                    g.fill(left + 180, y + 2, left + 280, y + 6, 0xFF303030);
-                    g.fill(left + 180, y + 2, left + 180 + (int) (100 * mastery), y + 6, 0xFFFFE25A);
+                    TenkaichiUi.gauge(g, left + 180, y + 1, 102, 7, mastery, 0.0f, 0xFFFFE25A);
                     String req = unlocked ? Component.translatable("screen.dbtenkaichi.character.unlocked").getString()
                             : Component.translatable("screen.dbtenkaichi.character.requires", form.requirements.battlePower).getString();
                     g.text(this.font, req, left + 10, y + 11, 0xFFAAAAAA, true);

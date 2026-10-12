@@ -1,4 +1,4 @@
-# Roadmap — Dragon Ball: Tenkaichi
+# Roadmap — Dragon Block: Tenkaichi
 
 Stato aggiornato all'11 ottobre 2026. "Fatto" significa: codice presente, integrato, compilato su
 entrambi i loader e verificato nei limiti indicati in `TESTING.md`.

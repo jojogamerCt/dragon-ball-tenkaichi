@@ -1,4 +1,4 @@
-# Testing — Dragon Ball: Tenkaichi
+# Testing — Dragon Block: Tenkaichi
 
 Tutte le prove sotto sono state eseguite davvero l'11 ottobre 2026 su Windows 11, Java 25.0.1,
 Minecraft 26.3, Fabric Loader 0.19.5 + Fabric API 0.162.0+26.3, NeoForge 26.3.0.71-beta.
@@ -10,7 +10,7 @@ Minecraft 26.3, Fabric Loader 0.19.5 + Fabric API 0.162.0+26.3, NeoForge 26.3.0.
 ```
 
 Esito: **BUILD SUCCESSFUL**, 151 classi per JAR, asset/dati/mixin/servizi presenti in entrambi:
-`build/release/dragon-ball-tenkaichi-0.1.0-26.3-fabric.jar`, `...-neoforge.jar`.
+`build/release/dragon-block-tenkaichi-0.1.0-26.3-fabric.jar`, `...-neoforge.jar`.
 
 ## 2. Test unitari (JUnit 5, modulo common)
 
@@ -54,7 +54,7 @@ Il client entra nel mondo con Quick Play ed esegue `ClientSmokeTest`: apertura a
 creator al primo accesso, creazione Saiyan via pacchetto, comandi `/tenkaichi`, carica del Ki,
 volo, trasformazione Super Saiyan con cinematica, NPC, lock-on, carica e sparo del Kamehameha,
 contro-raggio del Predone → **Beam Clash** sincronizzato, combo in posizione di combattimento,
-menu personaggio, galleria delle 10 razze nel creator; salva screenshot in `runs/client/screenshots/dbt_*.png` e chiude il gioco.
+menu personaggio, pugno in prima persona in posizione di combattimento, galleria delle 10 razze nel creator; salva screenshot in `runs/client/screenshots/dbt_*.png` e chiude il gioco.
 
 Esito: **Fabric e NeoForge completano tutti i passaggi** (character created: true, flying: true,
 form: super_saiyan, beam clash active: true). Nessuna eccezione di rendering registrata
@@ -67,6 +67,10 @@ form: super_saiyan, beam clash active: true). Nessuna eccezione di rendering reg
 - Aura in carica e aura Super Saiyan; capelli dorati e occhi verdi in forma Super Saiyan.
 - Kamehameha (raggio multistrato con esplosioni lungo la traiettoria) e Beam Clash.
 - Raggio viola del Predone, Maestro con barba, menu statistiche.
+- Nuova UI: HUD con ritratto, barre inclinate, icone delle tecniche (X/C), hotbar con Senzu e uova; cuori e fame
+  vanilla nascosti; menu e creator con pannelli/pulsanti custom (`docs/screenshots/neoforge_*`).
+- Prima persona in posizione di combattimento: entrambe le braccia visibili con la skin custom (manica del gi).
+- Aura Super Saiyan senza guscio a cubi; Kamehameha blu anche in forma Super Saiyan.
 - Galleria delle 10 razze (`docs/screenshots/race_gallery.png`, da NeoForge; identica su Fabric):
   ogni razza ha colori, skin HD e modelli razziali distinti e riconoscibili.
 

@@ -14,6 +14,7 @@ import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -48,6 +49,33 @@ public abstract class AvatarRendererMixin {
         } catch (RuntimeException e) {
             RenderGuard.report("outfit", e);
         }
+    }
+
+    private static EntityVisual dbtenkaichi$localCustomVisual() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) {
+            return null;
+        }
+        EntityVisual visual = com.dbtenkaichi.client.ClientState.forEntity(mc.player);
+        return visual.created && !visual.appearance.useOwnSkin ? visual : null;
+    }
+
+    @ModifyVariable(method = "renderHand", at = @At("HEAD"), argsOnly = true)
+    private Identifier dbtenkaichi$handSkin(Identifier texture) {
+        try {
+            EntityVisual visual = dbtenkaichi$localCustomVisual();
+            if (visual != null) {
+                return CustomSkins.textureFor(visual.race, visual.appearance, visual.eyeColor(), visual.hairColor());
+            }
+        } catch (RuntimeException e) {
+            RenderGuard.report("hand_skin", e);
+        }
+        return texture;
+    }
+
+    @ModifyVariable(method = "renderHand", at = @At("HEAD"), argsOnly = true)
+    private boolean dbtenkaichi$handSleeve(boolean sleeve) {
+        return sleeve || dbtenkaichi$localCustomVisual() != null;
     }
 
     @Inject(method = "setupRotations(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;FF)V", at = @At("TAIL"))

@@ -77,14 +77,7 @@ public class KiBeamEntity extends Entity {
         Vec3 look = owner.getViewVector(1.0f);
         beam.setDirection(look);
         beam.entityData.set(CORE, technique.coreColor());
-        int glow = technique.glowColor();
-        if (owner instanceof net.minecraft.world.entity.player.Player player) {
-            glow = com.dbtenkaichi.server.PlayerManager.data(player).appearance().auraColor;
-            if (glow == 0xE8F4FF || glow == 0xF2F6FF) {
-                glow = technique.glowColor();
-            }
-        }
-        beam.entityData.set(GLOW, glow);
+        beam.entityData.set(GLOW, technique.glowColor());
         beam.setPos(origin(owner, look));
         return beam;
     }

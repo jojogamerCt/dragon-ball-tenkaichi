@@ -167,7 +167,9 @@ public class KiBlastEntity extends Entity {
                 if (rt != null) {
                     rt.lastCombat = now;
                     rt.charging = false;
-                    rt.stunnedUntil = Math.max(rt.stunnedUntil, now + (guard == DamageMath.GuardState.GUARD ? 2 : 5));
+                    if (rt.poiseUntil <= now) {
+                        rt.stunnedUntil = Math.max(rt.stunnedUntil, now + (guard == DamageMath.GuardState.GUARD ? 2 : 5));
+                    }
                 }
                 if (owner != null) {
                     RuntimeState ownerRt = CombatSystem.runtime(owner);

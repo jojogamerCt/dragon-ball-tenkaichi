@@ -5,8 +5,12 @@
     "name": "${mod_name}",
     "description": "${description}",
     "authors": [
-        "${mod_author}"
+        "Sh4d0wJ0J0",
+        "Claude"
     ],
+    "contact": {
+        "sources": "https://github.com/jojogamerCt/dragon-ball-tenkaichi"
+    },
     "license": "${license}",
     "icon": "assets/${mod_id}/icon.png",
     "environment": "*",

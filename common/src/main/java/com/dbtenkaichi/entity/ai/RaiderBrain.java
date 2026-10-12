@@ -70,7 +70,7 @@ public final class RaiderBrain {
         }
         if (next == State.COMBO) {
             comboHits = 0;
-            comboTarget = 3 + npc.getRandom().nextInt(enraged ? 3 : 2);
+            comboTarget = 2 + npc.getRandom().nextInt(enraged ? 3 : 2);
         }
         if (next == State.VOLLEY) {
             volleyShots = 3 + npc.getRandom().nextInt(enraged ? 4 : 2);
@@ -214,7 +214,7 @@ public final class RaiderBrain {
             hit = CombatSystem.lightAttack(npc, now);
             if (hit) {
                 comboHits++;
-                rt.nextAttackAllowed += enraged ? 0 : 2;
+                rt.nextAttackAllowed += enraged ? 3 : 6;
             }
         }
         if (targetRt != null && targetRt.lastAttack >= now - 1 && comboHits > 0 && npc.getRandom().nextFloat() < 0.18f + (enraged ? 0.1f : 0.0f)) {

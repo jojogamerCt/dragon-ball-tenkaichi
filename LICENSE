@@ -1,11 +1,45 @@
-Dragon Ball: Tenkaichi
-Copyright (c) 2026 Dragon Ball: Tenkaichi Team. All rights reserved.
+Dragon Block: Tenkaichi License (Addon-Friendly, Non-Commercial, No Reupload)
+Version 1.0
 
-The source code, textures, models, sounds and other original assets in this
-repository are original works created for this project. No redistribution or
-modification is permitted without explicit written permission from the authors.
+Copyright (c) 2026 Sh4d0wJ0J0 and Claude. All rights reserved except as granted below.
 
-Dragon Ball and all related names and characters are trademarks of their
-respective owners (Bird Studio, Shueisha, Toei Animation, Bandai Namco). This is
-an unofficial, non-commercial fan project and is not affiliated with or endorsed
-by any of them. No assets have been extracted from official games or anime.
+"The Mod" means Dragon Block: Tenkaichi: its source code, compiled files, textures, models,
+sounds, translations, data files and documentation as published by the copyright holders.
+"Addon" means a separate project that depends on, extends or integrates with the Mod without
+containing the Mod itself.
+
+1. Use. You may download, install and play the Mod, on single-player worlds and on servers
+   (including servers that accept donations, as long as access to the Mod's content is not sold).
+
+2. Addons. You may create, publish and distribute Addons for the Mod, free of charge or not, provided
+   that:
+   a) the Addon does not include, bundle or reupload the Mod or any substantial part of its code or
+      assets; it must require users to obtain the Mod from an official source;
+   b) the Addon is clearly labelled as unofficial and not made by the authors of the Mod;
+   c) the Addon may call the Mod's public classes, events and data formats, and may reference its
+      identifiers (for example "dbtenkaichi:...") and datapack formats.
+
+3. Modpacks. You may include the Mod in a modpack only if the pack downloads the unmodified Mod
+   from an official distribution page (for example via CurseForge or Modrinth references) and the
+   modpack is distributed free of charge.
+
+4. Restrictions. Unless you have prior written permission from the copyright holders, you may NOT:
+   a) reupload, mirror or redistribute the Mod or modified versions of it;
+   b) publish a fork or derivative of the Mod as a standalone mod;
+   c) sell the Mod, put it behind a paywall, or otherwise make money from the Mod itself, including
+      through ad-gated download links;
+   d) claim the Mod, or any part of it, as your own work.
+
+5. Contributions. Contributions submitted to the official repository (for example pull requests)
+   are licensed to the copyright holders under the terms of this license and may be included in
+   the Mod.
+
+6. Third-party rights. Dragon Ball and all related names and characters are trademarks of their
+   respective owners (Bird Studio, Shueisha, Toei Animation, Bandai Namco). This is an unofficial,
+   non-commercial fan project and is not affiliated with or endorsed by any of them. No assets have
+   been extracted from official games or anime. This license grants no rights over those trademarks.
+
+7. No warranty. The Mod is provided "as is", without warranty of any kind. In no event shall the
+   authors be liable for any claim, damages or other liability arising from the use of the Mod.
+
+The copyright holders may grant additional permissions on request.

@@ -4,6 +4,7 @@ import com.dbtenkaichi.config.ConfigManager;
 import com.dbtenkaichi.platform.Services;
 import com.dbtenkaichi.registry.ModEntities;
 import com.dbtenkaichi.registry.ModItems;
+import com.dbtenkaichi.registry.ModParticles;
 import com.dbtenkaichi.registry.ModSounds;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
@@ -23,8 +24,9 @@ public final class Tenkaichi {
     public static void init() {
         ConfigManager.init(Services.PLATFORM.configDirectory());
         ModSounds.init();
+        ModParticles.init();
         ModEntities.init();
         ModItems.init();
-        LOG.info("Dragon Ball: Tenkaichi initialised on {}", Services.PLATFORM.loaderName());
+        LOG.info("Dragon Block: Tenkaichi initialised on {}", Services.PLATFORM.loaderName());
     }
 }

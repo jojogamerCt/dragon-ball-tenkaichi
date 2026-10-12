@@ -86,7 +86,7 @@ public class RaiderEntity extends FighterNpc implements Enemy {
         StatBlock block = new StatBlock();
         for (StatType type : StatType.all()) {
             double jitter = 0.85 + getRandom().nextDouble() * 0.35;
-            block.set(type, (int) Math.max(2, Math.round(reference * 1.05 * jitter * scale)));
+            block.set(type, (int) Math.max(2, Math.round(reference * 0.92 * jitter * scale)));
         }
         block.add(StatType.STRENGTH, 2);
         block.add(StatType.KI_OUTPUT, 2);
@@ -105,6 +105,11 @@ public class RaiderEntity extends FighterNpc implements Enemy {
         }
         ki = maxKi();
         heal(getMaxHealth() * 0.15f);
+    }
+
+    @Override
+    public double outgoingDamageScale() {
+        return 0.6;
     }
 
     public RaiderBrain brain() {

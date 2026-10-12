@@ -1,10 +1,10 @@
-# Progress — Dragon Ball: Tenkaichi
+# Progress — Dragon Block: Tenkaichi
 
 ## Sessione 1 — 11 ottobre 2026
 
 ### Implementato
 - Repository multi-loader (common/fabric/neoforge/build-logic/tools/scripts/docs) su toolchain
-  verificata per Minecraft 26.3; due JAR di release con nome `dragon-ball-tenkaichi-<ver>-26.3-<loader>.jar`.
+  verificata per Minecraft 26.3; due JAR di release con nome `dragon-block-tenkaichi-<ver>-26.3-<loader>.jar`.
 - Seam piattaforma via ServiceLoader (registrazioni, rete, allegati persistenti, permessi blocchi).
 - Dati giocatore persistenti e versionati; stato runtime autoritativo; sincronizzazione differenziale.
 - Statistiche (12), Battle Power, progressione anti-grinding, fatica, pratica, Zenkai.
@@ -66,3 +66,32 @@ Nessuna verifica automatica fallisce allo stato attuale.
 ### Problemi trovati e risolti
 - Il creator sostituito da un altro creator azzerava l'anteprima (`removed()` dopo il costruttore)
   → l'anteprima viene ripubblicata in `init()`.
+
+## Sessione 3 — 12 ottobre 2026
+
+### Implementato
+- Mod rinominata in **Dragon Block: Tenkaichi** (mod id invariato `dbtenkaichi`), autori Sh4d0wJ0J0 e Claude,
+  descrizione "creata interamente con Claude"; JAR `dragon-block-tenkaichi-0.1.0-26.3-<loader>.jar`; versione
+  lasciata a 0.1.0 su richiesta.
+- Nuova licenza: addon consentiti, ripubblicazione e guadagno sulla mod vietati.
+- UI completamente personalizzata (sprite GUI a 9-slice, `TenkaichiUi`, `TenkaichiButton`), HUD ridisegnato con
+  ritratto e icone delle tecniche, barre vanilla di vita/fame/armatura nascoste.
+- 8 tipi di particelle registrati (`ModParticles`, provider su Fabric e NeoForge) al posto di quelle vanilla.
+- Aura ridisegnata con fiamme sfumate, rimosso il guscio a cubi.
+- Kamehameha di colore fisso; nuove texture per Senzu e uova; icone delle tecniche.
+- Skin: spalle, parte superiore delle gambe e base del busto coperte dagli abiti; maniche corte nel gi.
+- Prima persona: braccia in guardia e colpi visibili in posizione di combattimento; mani con skin custom.
+- `/tenkaichi setstat <giocatore> all <valore>`.
+- Bilanciamento: Predone con danni ×0,6, statistiche ridotte e combo più lente; stordimento dei colpi NPC sui
+  giocatori ridotto del 45% e combo breaker dopo 3 colpi.
+- Allenamento: il Maestro viene cercato entro 40 blocchi durante una sessione (prima 8, causa della fine
+  prematura); sparring 60 s, schivata 45 s; il Maestro della schivata mantiene una distanza fra 6 e 14 blocchi.
+
+### Testato
+- Build pulita, 19/19 JUnit; smoke server Fabric e NeoForge: PASS.
+- Test client su entrambi i loader: tutti i passaggi completati (24 screenshot), nessun errore di rendering o mixin.
+
+### Problemi trovati e risolti
+- Aura base che formava un "cappuccio" conico sopra la testa → raggio non più rastremato e dissolvenza anticipata.
+- Bagliori del raggio troppo grandi → ridotti.
+- Testo troncato nei pulsanti stretti → ridimensionamento automatico del testo.

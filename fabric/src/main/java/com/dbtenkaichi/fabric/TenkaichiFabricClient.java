@@ -57,7 +57,18 @@ public class TenkaichiFabricClient implements ClientModInitializer {
                 }
             }
         });
+        TenkaichiClient.registerParticles((type, factory) -> net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry.getInstance().register(type, factory::apply));
         HudElementRegistry.addLast(TenkaichiClient.HUD_ID, TenkaichiHud::render);
+        for (net.minecraft.resources.Identifier vanilla : new net.minecraft.resources.Identifier[]{
+                net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements.HEALTH_BAR,
+                net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements.FOOD_BAR,
+                net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements.ARMOR_BAR}) {
+            HudElementRegistry.replaceElement(vanilla, original -> (graphics, delta) -> {
+                if (!TenkaichiHud.replacesVanillaBars()) {
+                    original.extractRenderState(graphics, delta);
+                }
+            });
+        }
         ClientTickEvents.START_CLIENT_TICK.register(ClientController::startTick);
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> client.execute(ClientController::onDisconnect));
     }

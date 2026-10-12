@@ -323,6 +323,9 @@ public final class CombatSystem {
 
         if (defRt != null) {
             int stun = guard == DamageMath.GuardState.GUARD ? Math.max(3, move.hitstun / 3) : move.hitstun;
+            if (target instanceof Player) {
+                stun = playerHitstun(defRt, attacker, attRt, stun, now);
+            }
             defRt.stunnedUntil = Math.max(defRt.stunnedUntil, now + stun);
             defRt.lastCombat = now;
             defRt.charging = false;
@@ -364,6 +367,34 @@ public final class CombatSystem {
         if (target instanceof ServerPlayer defender && guard == DamageMath.GuardState.GUARD) {
             TrainingSystem.passiveGain(defender, PlayerManager.data(defender), "guarding", StatType.DEFENSE, 0.3);
         }
+    }
+
+    public static final int COMBO_BREAK_HITS = 3;
+    public static final int POISE_TICKS = 40;
+
+    private static int playerHitstun(RuntimeState defRt, LivingEntity attacker, @Nullable RuntimeState attRt, int stun, long now) {
+        if (now - defRt.lastHitTaken > 30) {
+            defRt.hitStreak = 0;
+        }
+        defRt.lastHitTaken = now;
+        if (defRt.poiseUntil > now) {
+            return 0;
+        }
+        int scaled = attacker instanceof Player ? stun : Math.max(2, Math.round(stun * 0.55f));
+        if (attacker instanceof Player) {
+            return scaled;
+        }
+        defRt.hitStreak++;
+        if (defRt.hitStreak >= COMBO_BREAK_HITS) {
+            defRt.hitStreak = 0;
+            defRt.poiseUntil = now + POISE_TICKS;
+            defRt.stunnedUntil = Math.min(defRt.stunnedUntil, now + scaled);
+            if (attRt != null) {
+                attRt.comboIndex = 0;
+                attRt.nextAttackAllowed = Math.max(attRt.nextAttackAllowed, now + 24);
+            }
+        }
+        return scaled;
     }
 
     public static boolean facing(LivingEntity defender, Entity attacker) {

@@ -237,11 +237,8 @@ public final class TenkaichiLayers {
     }
 
     static final class AuraLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
-        private final PlayerModel shell;
-
         AuraLayer(RenderLayerParent<AvatarRenderState, PlayerModel> parent, EntityModelSet set) {
             super(parent);
-            this.shell = new PlayerModel(set.bakeLayer(TenkaichiModels.AURA_SHELL), false);
         }
 
         @Override
@@ -263,10 +260,6 @@ public final class TenkaichiLayers {
                 int primary = visual.auraColor();
                 int secondary = visual.auraSecondary();
                 float time = state.ageInTicks;
-                float swirlAlpha = Math.min(1.0f, level) * 0.3f;
-                int swirlColor = argb(swirlAlpha, primary);
-                collector.order(1).submitModel(shell, state, poseStack, RenderTypes.energySwirl(AURA_TEXTURE, (time * 0.004f) % 1.0f, (time * -0.02f) % 1.0f),
-                        LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, swirlColor, null, 0);
                 ClientConfig.Quality quality = ConfigManager.client().quality();
                 float scale = visual.auraScale();
                 long seed = state.id * 31L;
@@ -289,18 +282,22 @@ public final class TenkaichiLayers {
 
         public static void flames(Matrix4fc pose, VertexConsumer buffer, int flames, int layers, float level, float scale, float time, int primary, int secondary, long seed) {
             float intensity = Math.min(1.25f, level);
-            int segments = 6;
-            for (int layer = 0; layer < layers; layer++) {
-                float layerScale = 1.0f + layer * 0.22f;
-                float layerAlpha = (0.2f - layer * 0.035f) * intensity;
-                int count = flames + layer * 2;
+            int segments = 12;
+            int count = Math.max(8, flames + 6);
+            int shells = Math.max(2, layers + 1);
+            for (int layer = 0; layer < shells; layer++) {
+                float layerScale = 1.0f + layer * 0.16f;
+                float layerAlpha = (0.16f - layer * 0.025f) * intensity;
+                if (layerAlpha <= 0.01f) {
+                    continue;
+                }
                 for (int i = 0; i < count; i++) {
                     float phase = (float) ((seed + i * 977L + layer * 131L) % 1000) / 1000.0f;
-                    double angle = Math.PI * 2 * i / count + time * (0.015 + layer * 0.006) + phase;
-                    float radius = (0.42f + phase * 0.12f) * scale * layerScale;
-                    float height = (2.2f + intensity * 0.9f + (float) Math.sin(time * 0.2f + phase * 6.0f) * 0.25f) * scale * (0.85f + layer * 0.1f);
-                    float width = (0.24f + phase * 0.1f) * scale * layerScale;
-                    float bottom = 1.62f * scale;
+                    double angle = Math.PI * 2 * (i + layer * 0.5) / count + time * (0.01 + layer * 0.004) + phase * 0.6;
+                    float flicker = 0.85f + 0.15f * (float) Math.sin(time * 0.3f + phase * 11.0f);
+                    float height = (2.15f + intensity * 0.75f) * scale * (0.9f + layer * 0.08f) * flicker;
+                    float width = (0.42f + phase * 0.12f) * scale * layerScale;
+                    float bottom = 1.75f * scale;
                     double cos = Math.cos(angle);
                     double sin = Math.sin(angle);
                     double tx = -sin;
@@ -310,47 +307,72 @@ public final class TenkaichiLayers {
                         float t1 = (float) (s + 1) / segments;
                         float y0 = bottom - height * t0;
                         float y1 = bottom - height * t1;
-                        float bulge0 = (float) Math.sin(t0 * Math.PI) * 0.18f * scale;
-                        float bulge1 = (float) Math.sin(t1 * Math.PI) * 0.18f * scale;
-                        float wave0 = (float) Math.sin(time * 0.35f + phase * 9.0f + t0 * 5.0f) * 0.09f * scale * t0;
-                        float wave1 = (float) Math.sin(time * 0.35f + phase * 9.0f + t1 * 5.0f) * 0.09f * scale * t1;
-                        float r0 = radius + bulge0 - t0 * t0 * radius * 0.55f;
-                        float r1 = radius + bulge1 - t1 * t1 * radius * 0.55f;
-                        float w0 = width * (1.0f - t0 * 0.85f);
-                        float w1 = width * (1.0f - t1 * 0.85f);
-                        float a0 = layerAlpha * (1.0f - t0 * 0.9f);
-                        float a1 = layerAlpha * (1.0f - t1 * 0.9f);
-                        int c0 = lerp(primary, secondary, t0 * 0.7f);
-                        int c1 = lerp(primary, secondary, t1 * 0.7f);
+                        float r0 = radius(t0, scale, layerScale);
+                        float r1 = radius(t1, scale, layerScale);
+                        float wave0 = (float) Math.sin(time * 0.22f + phase * 9.0f + t0 * 4.0f) * 0.07f * scale * t0;
+                        float wave1 = (float) Math.sin(time * 0.22f + phase * 9.0f + t1 * 4.0f) * 0.07f * scale * t1;
+                        float w0 = width * profile(t0);
+                        float w1 = width * profile(t1);
+                        float a0 = layerAlpha * fade(t0);
+                        float a1 = layerAlpha * fade(t1);
+                        int c0 = lerp(primary, secondary, t0 * 0.8f);
+                        int c1 = lerp(primary, secondary, t1 * 0.8f);
                         float cx0 = (float) (cos * r0 + tx * wave0);
                         float cz0 = (float) (sin * r0 + tz * wave0);
                         float cx1 = (float) (cos * r1 + tx * wave1);
                         float cz1 = (float) (sin * r1 + tz * wave1);
-                        quad(pose, buffer,
-                                cx0 - (float) tx * w0, y0, cz0 - (float) tz * w0,
-                                cx0 + (float) tx * w0, y0, cz0 + (float) tz * w0,
-                                cx1 + (float) tx * w1, y1, cz1 + (float) tz * w1,
-                                cx1 - (float) tx * w1, y1, cz1 - (float) tz * w1,
-                                c0, a0, c1, a1);
+                        softQuad(pose, buffer, cx0, y0, cz0, cx1, y1, cz1, (float) tx * w0, (float) tz * w0, (float) tx * w1, (float) tz * w1, c0, a0, c1, a1);
                     }
                 }
             }
         }
 
-        static int lerp(int a, int b, float t) {
-            return EntityVisual.mix(a, b, Math.max(0.0f, Math.min(1.0f, t)));
+        private static float radius(float t, float scale, float layerScale) {
+            float belly = (float) Math.sin(Math.min(1.0f, t * 1.6f) * Math.PI * 0.5f);
+            float taper = 1.0f - t * t * 0.3f;
+            return (0.42f + belly * 0.18f) * taper * scale * layerScale;
+        }
+
+        private static float profile(float t) {
+            return (1.0f - t * 0.8f) * (0.6f + 0.4f * (float) Math.sin(Math.min(1.0f, t * 3.0f) * Math.PI * 0.5f));
+        }
+
+        private static float fade(float t) {
+            float in = Math.min(1.0f, t * 6.0f);
+            float out = Math.max(0.0f, 1.0f - t * 1.15f);
+            return in * out * out * out;
+        }
+
+        static void softQuad(Matrix4fc pose, VertexConsumer buffer, float cx0, float y0, float cz0, float cx1, float y1, float cz1,
+                             float ox0, float oz0, float ox1, float oz1, int c0, float a0, int c1, float a1) {
+            quad(pose, buffer,
+                    cx0 - ox0, y0, cz0 - oz0,
+                    cx0, y0, cz0,
+                    cx1, y1, cz1,
+                    cx1 - ox1, y1, cz1 - oz1,
+                    c0, 0.0f, a0, c1, 0.0f, a1);
+            quad(pose, buffer,
+                    cx0, y0, cz0,
+                    cx0 + ox0, y0, cz0 + oz0,
+                    cx1 + ox1, y1, cz1 + oz1,
+                    cx1, y1, cz1,
+                    c0, a0, 0.0f, c1, a1, 0.0f);
         }
 
         static void quad(Matrix4fc pose, VertexConsumer buffer, float x0, float y0, float z0, float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3,
-                         int c0, float a0, int c1, float a1) {
-            vertex(pose, buffer, x0, y0, z0, c0, a0);
-            vertex(pose, buffer, x1, y1, z1, c0, a0);
-            vertex(pose, buffer, x2, y2, z2, c1, a1);
-            vertex(pose, buffer, x3, y3, z3, c1, a1);
-            vertex(pose, buffer, x3, y3, z3, c1, a1);
-            vertex(pose, buffer, x2, y2, z2, c1, a1);
-            vertex(pose, buffer, x1, y1, z1, c0, a0);
-            vertex(pose, buffer, x0, y0, z0, c0, a0);
+                         int c0, float a0l, float a0r, int c1, float a1l, float a1r) {
+            vertex(pose, buffer, x0, y0, z0, c0, a0l);
+            vertex(pose, buffer, x1, y1, z1, c0, a0r);
+            vertex(pose, buffer, x2, y2, z2, c1, a1r);
+            vertex(pose, buffer, x3, y3, z3, c1, a1l);
+            vertex(pose, buffer, x3, y3, z3, c1, a1l);
+            vertex(pose, buffer, x2, y2, z2, c1, a1r);
+            vertex(pose, buffer, x1, y1, z1, c0, a0r);
+            vertex(pose, buffer, x0, y0, z0, c0, a0l);
+        }
+
+        static int lerp(int a, int b, float t) {
+            return EntityVisual.mix(a, b, Math.max(0.0f, Math.min(1.0f, t)));
         }
 
         static void vertex(Matrix4fc pose, VertexConsumer buffer, float x, float y, float z, int rgb, float alpha) {

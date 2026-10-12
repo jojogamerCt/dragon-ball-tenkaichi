@@ -110,6 +110,9 @@ public final class ClientSmokeTest {
                 command(mc, "tenkaichi learn " + name + " dbtenkaichi:kamehameha");
                 command(mc, "tenkaichi unlockform " + name + " dbtenkaichi:super_saiyan");
                 command(mc, "tenkaichi restore " + name);
+                command(mc, "give " + name + " dbtenkaichi:senzu_bean 8");
+                command(mc, "give " + name + " dbtenkaichi:master_spawn_egg");
+                command(mc, "give " + name + " dbtenkaichi:saiyan_raider_spawn_egg");
                 mc.options.setCameraType(CameraType.THIRD_PERSON_FRONT);
             }
             case 110 -> {
@@ -225,7 +228,13 @@ public final class ClientSmokeTest {
                     });
                 }
             }
-            case 480, 486, 492, 498 -> action(ActionType.LIGHT_ATTACK, 0);
+            case 480, 486, 492, 498, 506 -> action(ActionType.LIGHT_ATTACK, 0);
+            case 500 -> {
+                mc.player.getInventory().setSelectedSlot(8);
+                mc.options.setCameraType(CameraType.FIRST_PERSON);
+            }
+            case 508 -> shot(mc, "11b_first_person_punch");
+            case 512 -> mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
             case 488 -> shot(mc, "11_melee_combo");
             case 520 -> {
                 mc.gui.setScreen(new CharacterScreen());

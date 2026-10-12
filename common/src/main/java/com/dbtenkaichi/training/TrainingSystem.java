@@ -30,7 +30,10 @@ public final class TrainingSystem {
     public static final int PHASE_LEARN = 3;
 
     public static final int MEDITATION_PERIOD = 30;
-    public static final int SESSION_TICKS = 500;
+    public static final int SESSION_TICKS = 600;
+    public static final int SPARRING_TICKS = 1200;
+    public static final int DODGE_TICKS = 900;
+    private static final double SESSION_RANGE_SQR = 40.0 * 40.0;
 
     private TrainingSystem() {
     }
@@ -94,6 +97,23 @@ public final class TrainingSystem {
         return null;
     }
 
+    private static MasterEntity sessionMaster(ServerPlayer player, int entityId) {
+        if (player.level().getEntity(entityId) instanceof MasterEntity master && master.isAlive() && master.distanceToSqr(player) < SESSION_RANGE_SQR) {
+            return master;
+        }
+        return null;
+    }
+
+    public static int sessionTicks(String activity) {
+        if (SPARRING.equals(activity)) {
+            return SPARRING_TICKS;
+        }
+        if (DODGE_DRILL.equals(activity)) {
+            return DODGE_TICKS;
+        }
+        return SESSION_TICKS;
+    }
+
     private static void start(ServerPlayer player, PlayerData data, String activity, int masterId, long now) {
         RuntimeState rt = data.runtime();
         MasterEntity master = nearbyMaster(player, masterId);
@@ -118,7 +138,7 @@ public final class TrainingSystem {
         tag.putString("activity", activity);
         tag.putString("mode", "run");
         tag.putInt("period", MEDITATION_PERIOD);
-        tag.putInt("duration", SESSION_TICKS);
+        tag.putInt("duration", sessionTicks(activity));
         if (KI_CONTROL.equals(activity)) {
             data.setKi(rt.cachedMaxKi * 0.2);
             rerollBand(player, rt);
@@ -199,8 +219,8 @@ public final class TrainingSystem {
         if (rt.trainingActivity == null) {
             return;
         }
-        MasterEntity master = nearbyMaster(player, rt.trainingMaster);
-        if (master == null || now - rt.trainingStart > SESSION_TICKS) {
+        MasterEntity master = sessionMaster(player, rt.trainingMaster);
+        if (master == null || now - rt.trainingStart > sessionTicks(rt.trainingActivity)) {
             finish(player, data, now, master == null);
             return;
         }
@@ -215,7 +235,7 @@ public final class TrainingSystem {
         if (activity == null) {
             return;
         }
-        MasterEntity master = nearbyMaster(player, rt.trainingMaster);
+        MasterEntity master = sessionMaster(player, rt.trainingMaster);
         if (master != null) {
             master.stopSession(player);
         }

@@ -1,4 +1,4 @@
-# Funzionalità — Dragon Ball: Tenkaichi 0.1.0 (vertical slice)
+# Funzionalità — Dragon Block: Tenkaichi 0.1.0 (vertical slice)
 
 Legenda: **Implementata** = codice + risorse + registrazioni + build verde su entrambi i loader;
 la colonna "Verifica" indica come è stata provata (vedi `TESTING.md`).
@@ -7,7 +7,7 @@ la colonna "Verifica" indica come è stata provata (vedi `TESTING.md`).
 |---|---|---|---|
 | Base | Build multi-loader, due JAR separati | Implementata | build |
 | Base | Config comune/client versionate con migrazione e backup | Implementata | server dedicato |
-| Base | Comandi `/tenkaichi stats|setstat|givetp|reset|unlockform|learn|restore|reload` | Implementata | client scriptato |
+| Base | Comandi `/tenkaichi stats|setstat|givetp|reset|unlockform|learn|restore|reload`; `setstat <giocatore> all <valore>` imposta tutte le statistiche | Implementata | client scriptato (singola stat), codice (all) |
 | Personaggio | Editor con 3 schede, anteprima 3D, rotazione/zoom, casuale | Implementata | client scriptato (screenshot) |
 | Personaggio | 10 razze giocabili: Saiyan, Mezzo-Saiyan, Umano, Namecciano, Razza di Freezer, Majin, Androide, Bio-Androide, Kaioshin, Razza del Regno Demoniaco | Implementata | JUnit + client (galleria) |
 | Personaggio | Passive razziali con effetto reale lato server (vedi tabella sotto) | Implementata | JUnit (distinzione), codice; effetti non provati in gioco |
@@ -26,17 +26,23 @@ la colonna "Verifica" indica come è stata provata (vedi `TESTING.md`).
 | Combattimento | Schivata i-frame, vanish, teleport alle spalle, dash, recupero aereo | Implementata | codice, non verificata in gioco |
 | Combattimento | Hitstop, scossa camera, particelle, suoni d'impatto | Implementata | client scriptato |
 | Combattimento | Lock-on con cambio bersaglio, reticolo, rilascio automatico | Implementata | client scriptato |
+| Combattimento | Braccia visibili in prima persona in posizione di combattimento: guardia, pugni alternati, montante, parata | Implementata | client scriptato (screenshot) |
+| Combattimento | Combo breaker: dopo 3 colpi consecutivi di un NPC il giocatore è immune allo stordimento per 2 s; stordimento dei colpi NPC ridotto | Implementata | codice |
 | Volo | Hover/normale/supersonico, inerzia, bang sonico, atterraggio con onda d'urto | Implementata | client scriptato |
 | Ki | Carica, rigenerazione, esaurimento, Ki/stamina/BP in HUD | Implementata | client scriptato |
-| Ki | Aura 3D procedurale (swirl + fiamme additive), 4 livelli di qualità | Implementata | client scriptato |
+| Ki | Aura 3D procedurale con fiamme a bordi sfumati e sagoma a goccia (senza guscio a cubi), 4 livelli di qualità | Implementata | client scriptato |
+| Effetti | 8 particelle custom (scintille Ki, fiamme d'aura, sfere di energia, stelle d'impatto, onde d'urto, polvere, fulmini, linee di velocità) per colpi, parate, schivate, aura, trasformazioni, carica e raggio della Kamehameha, esplosioni, clash | Implementata | client scriptato |
+| Ki | Kamehameha sempre blu, indipendentemente dal colore dell'aura del giocatore | Implementata | client scriptato |
 | Ki | Ki Blast con homing, Kamehameha con carica/sterzata/trincea | Implementata | smoke server + client |
 | Ki | Beam Clash autoritativo con battiti, stagger, vittoria/pareggio | Implementata | non verificata in gioco |
 | Mondo | Distruzione off/visual/real/regenerating, budget, protezioni | Implementata | smoke server (aria aperta) |
 | Trasformazioni | Sistema data-driven + Super Saiyan (rabbia, cinematica, padronanza, drenaggio) | Implementata | client scriptato |
 | NPC | Maestro: meditazione, controllo Ki, sparring, schivate, insegna il Kamehameha | Implementata | codice, verifica parziale |
 | NPC | Predone Saiyan: FSM 10 stati, raffiche, cannone, schivate, seconda fase | Implementata | smoke server su entrambi i loader |
-| UI | HUD, menu personaggio (statistiche/tecniche/forme/impostazioni), allenamento | Implementata | client scriptato |
-| Oggetti | Fagiolo Senzu, uova di NPC, tab creativa | Implementata | registrazione verificata |
+| UI | Interfaccia completamente personalizzata: pannelli e pulsanti a 9-slice, sfondo animato, intestazioni, barre inclinate, slider | Implementata | client scriptato (screenshot) |
+| UI | HUD: ritratto del personaggio, BP, barre vita/Ki/stamina/fame con scia, armatura, icone delle tecniche, reticolo di lock-on; cuori/fame/armatura vanilla nascosti | Implementata | client scriptato (screenshot) |
+| UI | Menu personaggio (statistiche/tecniche/forme/impostazioni), creator, allenamento con il nuovo stile | Implementata | client scriptato |
+| Oggetti | Fagiolo Senzu, uova di NPC (texture 32×32 ombreggiate), tab creativa | Implementata | client scriptato (hotbar) |
 | Lingue | Inglese e italiano (258 chiavi) | Implementata | script di controllo chiavi |
 | Audio | 34 eventi, 50 suoni sintetizzati originali | Implementata | generazione verificata |
 

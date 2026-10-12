@@ -159,6 +159,6 @@ public final class ServerEvents {
     }
 
     public static void logStartup() {
-        Tenkaichi.LOG.info("Dragon Ball: Tenkaichi server hooks ready on {}", Services.PLATFORM.loaderName());
+        Tenkaichi.LOG.info("Dragon Block: Tenkaichi server hooks ready on {}", Services.PLATFORM.loaderName());
     }
 }

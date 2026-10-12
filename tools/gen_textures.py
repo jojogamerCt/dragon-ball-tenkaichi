@@ -196,8 +196,4 @@ if __name__ == "__main__":
     thick_tail()
     armor_pad()
     aura_swirl()
-    senzu()
-    egg("master_spawn_egg", (240, 122, 26), (31, 63, 174))
-    egg("saiyan_raider_spawn_egg", (40, 40, 60), (194, 75, 255))
-    item_models()
     print("textures and item models generated")

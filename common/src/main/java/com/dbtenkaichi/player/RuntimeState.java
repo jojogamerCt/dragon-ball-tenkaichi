@@ -31,6 +31,9 @@ public final class RuntimeState {
     public long nextAttackAllowed;
     public long stunnedUntil;
     public long smashedUntil;
+    public long poiseUntil;
+    public long lastHitTaken;
+    public int hitStreak;
     public long invulnerableUntil;
     public long dodgeStart;
     public long nextDodge;

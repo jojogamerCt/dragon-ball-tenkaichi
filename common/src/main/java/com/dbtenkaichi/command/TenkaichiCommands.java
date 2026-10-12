@@ -42,7 +42,7 @@ public final class TenkaichiCommands {
         root.then(Commands.literal("setstat").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(Commands.argument("player", EntityArgument.player())
                         .then(Commands.argument("stat", StringArgumentType.word())
-                                .suggests((ctx, b) -> SharedSuggestionProvider.suggest(Arrays.stream(StatType.all()).map(StatType::id), b))
+                                .suggests((ctx, b) -> SharedSuggestionProvider.suggest(java.util.stream.Stream.concat(java.util.stream.Stream.of("all"), Arrays.stream(StatType.all()).map(StatType::id)), b))
                                 .then(Commands.argument("level", IntegerArgumentType.integer(1, 100000))
                                         .executes(TenkaichiCommands::setStat)))));
         root.then(Commands.literal("givetp").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
@@ -132,14 +132,22 @@ public final class TenkaichiCommands {
 
     private static int setStat(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         ServerPlayer player = EntityArgument.getPlayer(ctx, "player");
-        StatType type = StatType.byId(StringArgumentType.getString(ctx, "stat").toLowerCase(Locale.ROOT));
-        if (type == null) {
+        String id = StringArgumentType.getString(ctx, "stat").toLowerCase(Locale.ROOT);
+        StatType type = StatType.byId(id);
+        boolean all = "all".equals(id);
+        if (type == null && !all) {
             ctx.getSource().sendFailure(Component.translatable("command.dbtenkaichi.unknown_stat"));
             return 0;
         }
         int level = Math.min(IntegerArgumentType.getInteger(ctx, "level"), ConfigManager.balance().statHardCap);
         PlayerData data = PlayerManager.data(player);
-        data.stats().set(type, level);
+        if (all) {
+            for (StatType each : StatType.all()) {
+                data.stats().set(each, level);
+            }
+        } else {
+            data.stats().set(type, level);
+        }
         PlayerManager.refreshCaches(player, data);
         PlayerManager.applyAttributes(player, data);
         data.runtime().dataDirty = true;

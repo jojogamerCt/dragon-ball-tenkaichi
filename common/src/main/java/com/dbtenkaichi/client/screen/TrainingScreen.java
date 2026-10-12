@@ -9,6 +9,8 @@ import com.dbtenkaichi.platform.Services;
 import com.dbtenkaichi.training.TrainingSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import com.dbtenkaichi.client.ui.TenkaichiButton;
+import com.dbtenkaichi.client.ui.TenkaichiUi;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
@@ -68,22 +70,22 @@ public class TrainingScreen extends Screen {
             case "menu" -> {
                 String[] activities = {TrainingSystem.MEDITATION, TrainingSystem.KI_CONTROL, TrainingSystem.SPARRING, TrainingSystem.DODGE_DRILL};
                 for (String id : activities) {
-                    addRenderableWidget(Button.builder(Component.translatable("training.dbtenkaichi." + id), b -> send(id, TrainingSystem.PHASE_START, master))
+                    addRenderableWidget(TenkaichiButton.create(Component.translatable("training.dbtenkaichi." + id), b -> send(id, TrainingSystem.PHASE_START, master))
                             .bounds(cx - 100, y, 200, 20).build());
                     y += 24;
                 }
                 boolean known = data.getBooleanOr("kamehameha_known", false);
-                Button learn = addRenderableWidget(Button.builder(Component.translatable(known ? "training.dbtenkaichi.learned" : "training.dbtenkaichi.learn",
+                Button learn = addRenderableWidget(TenkaichiButton.create(Component.translatable(known ? "training.dbtenkaichi.learned" : "training.dbtenkaichi.learn",
                                 Component.translatable(Techniques.KAMEHAMEHA.translationKey())),
                         b -> {
                             send(Techniques.KAMEHAMEHA.id(), TrainingSystem.PHASE_LEARN, master);
                             onClose();
                         }).bounds(cx - 100, y + 6, 200, 20).build());
                 learn.active = !known && data.getBooleanOr("kamehameha_ready", false);
-                addRenderableWidget(Button.builder(Component.translatable("gui.done"), b -> onClose()).bounds(cx - 100, y + 34, 200, 20).build());
+                addRenderableWidget(TenkaichiButton.create(Component.translatable("gui.done"), b -> onClose()).bounds(cx - 100, y + 34, 200, 20).build());
             }
-            case "summary" -> addRenderableWidget(Button.builder(Component.translatable("gui.done"), b -> onClose()).bounds(cx - 60, this.height / 2 + 40, 120, 20).build());
-            default -> addRenderableWidget(Button.builder(Component.translatable("training.dbtenkaichi.stop"), b -> {
+            case "summary" -> addRenderableWidget(TenkaichiButton.create(Component.translatable("gui.done"), b -> onClose()).bounds(cx - 60, this.height / 2 + 40, 120, 20).build());
+            default -> addRenderableWidget(TenkaichiButton.create(Component.translatable("training.dbtenkaichi.stop"), b -> {
                 send(activity, TrainingSystem.PHASE_STOP, 0);
             }).bounds(cx - 60, this.height / 2 + 60, 120, 20).build());
         }
@@ -131,11 +133,16 @@ public class TrainingScreen extends Screen {
     }
 
     @Override
+    public void extractBackground(GuiGraphicsExtractor g, int mouseX, int mouseY, float partial) {
+        TenkaichiUi.background(g, this.width, this.height);
+    }
+
+    @Override
     public void extractRenderState(GuiGraphicsExtractor g, int mouseX, int mouseY, float partial) {
         int cx = this.width / 2;
         int cy = this.height / 2;
-        g.fill(cx - 150, cy - 110, cx + 150, cy + 90, 0xC0101018);
-        g.outline(cx - 150, cy - 110, 300, 200, 0x66FFD45A);
+        TenkaichiUi.panel(g, cx - 154, cy - 116, 308, 210);
+        TenkaichiUi.header(g, this.font, this.title, cx, cy - 128);
         super.extractRenderState(g, mouseX, mouseY, partial);
         switch (mode) {
             case "menu" -> {
@@ -154,8 +161,7 @@ public class TrainingScreen extends Screen {
                 g.centeredText(this.font, Component.translatable("training.dbtenkaichi." + activity), cx, cy - 100, 0xFFFFD45A);
                 float elapsed = ClientState.clientTicks - started + partial;
                 int duration = data.getIntOr("duration", TrainingSystem.SESSION_TICKS);
-                g.fill(cx - 120, cy + 46, cx + 120, cy + 50, 0xFF303030);
-                g.fill(cx - 120, cy + 46, cx - 120 + (int) (240 * Math.min(1.0f, elapsed / duration)), cy + 50, 0xFF9FD8FF);
+                TenkaichiUi.gauge(g, cx - 120, cy + 44, 240, 6, Math.min(1.0f, elapsed / duration), 0.0f, 0xFF9FD8FF);
                 if (TrainingSystem.MEDITATION.equals(activity)) {
                     meditation(g, cx, cy, elapsed);
                 } else if (TrainingSystem.KI_CONTROL.equals(activity)) {
@@ -184,9 +190,9 @@ public class TrainingScreen extends Screen {
         int x0 = cx - 120;
         int w = 240;
         int y = cy - 30;
-        g.fill(x0, y, x0 + w, y + 14, 0xFF202030);
-        g.fill(x0 + (int) (w * min), y - 3, x0 + (int) (w * max), y + 17, 0x887CFFB0);
-        g.fillGradient(x0, y + 2, x0 + (int) (w * ratio), y + 12, 0xFF9FD8FF, 0xFF3FA8FF);
+        TenkaichiUi.gauge(g, x0, y, w, 14, ratio, 0.0f, 0xFF3FA8FF);
+        g.fill(x0 + (int) (w * min), y - 4, x0 + (int) (w * max), y + 18, 0x667CFFB0);
+        g.outline(x0 + (int) (w * min), y - 4, Math.max(2, (int) (w * (max - min))), 22, 0xFF7CFFB0);
         g.centeredText(this.font, Component.translatable("screen.dbtenkaichi.training.ki_hint", Keybinds.CHARGE.getTranslatedKeyMessage()), cx, cy + 4, 0xFFBBBBBB);
         g.centeredText(this.font, Component.translatable("screen.dbtenkaichi.training.score", data.getIntOr("score", 0)), cx, cy - 86, 0xFFFFFFFF);
     }
