@@ -27,6 +27,10 @@ saving and configuration. Details in `docs/FEATURES.md`, verification status in 
 
 ![Custom HUD, Kamehameha and particles](docs/screenshots/neoforge_11_kamehameha_hud.png)
 
+## Changelog
+
+One file per version in [`changelog/`](changelog/): [0.1.0](changelog/0.1.0.md).
+
 ## Requirements
 
 - JDK 25 (the script automatically uses the Minecraft launcher's Java 25 runtime if present)
