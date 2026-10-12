@@ -166,11 +166,12 @@ public final class Appearance {
                 a.outfitSecondary = 0x1F3F7A;
             }
             case BIO_ANDROID -> {
-                a.skinColor = 0x7FB45A;
-                a.featureColor = 0x2E4A1E;
+                a.skinColor = 0x86BE5E;
+                a.featureColor = 0x23361A;
                 a.eyeColor = 0xC01A6A;
                 a.auraColor = 0xB8F070;
-                a.outfit = 1;
+                a.eyebrowStyle = 1;
+                a.outfit = OUTFIT_NATURAL;
                 a.outfitPrimary = 0x1E3A16;
                 a.outfitSecondary = 0x9C6FB8;
             }

@@ -103,3 +103,11 @@ Nessuna verifica automatica fallisce allo stato attuale.
 - Nuovo outfit "Naturale" (default per questa razza); placche e gemme del corpo visibili solo con esso.
 - Verificato con la galleria del test client su Fabric e NeoForge (`docs/screenshots/frieza_race_first_form.png`).
 - Primo tentativo: corna ruotate verso l'interno della testa → corretta la rotazione.
+
+### Aggiornamento — Bio-Androide
+- Aspetto ridisegnato sullo stile di Cell (forma imperfetta): macchie scure su tutto il corpo, viso pallido
+  con segni viola sulle guance e bocca a becco, cresta nera a corona, esoscheletro scuro e segmentato su
+  petto/addome/spalle/ginocchia, ali-guscio sulla schiena, coda a pungiglione dedicata; outfit Naturale di default.
+- Area di anteprima del creator allargata (le creste e le corna alte venivano tagliate) e nome della razza
+  disegnato sopra il modello.
+- Verificato con la galleria del test client su Fabric e NeoForge (`docs/screenshots/bio_android_cell_style.png`).

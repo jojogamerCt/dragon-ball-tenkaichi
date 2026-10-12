@@ -130,11 +130,13 @@ public final class TenkaichiLayers {
     static final class TailLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         private final TailModel model;
         private final TailModel thick;
+        private final TailModel stinger;
 
         TailLayer(RenderLayerParent<AvatarRenderState, PlayerModel> parent, EntityModelSet set) {
             super(parent);
             this.model = new TailModel(set.bakeLayer(TenkaichiModels.TAIL), TenkaichiModels.TAIL_SEGMENTS, 1.0f);
             this.thick = new TailModel(set.bakeLayer(TenkaichiModels.THICK_TAIL), TenkaichiModels.THICK_TAIL_SEGMENTS, 0.6f);
+            this.stinger = new TailModel(set.bakeLayer(TenkaichiModels.STINGER_TAIL), TenkaichiModels.THICK_TAIL_SEGMENTS, 0.5f);
         }
 
         @Override
@@ -150,8 +152,8 @@ public final class TenkaichiLayers {
                 Race race = visual.race;
                 if (race == Race.FRIEZA_RACE || race == Race.BIO_ANDROID && visual.appearance.tail) {
                     int skin = visual.appearance.skinColor;
-                    int color = 0xFF000000 | (race == Race.BIO_ANDROID ? EntityVisual.mix(skin, visual.appearance.featureColor, 0.35f) : skin);
-                    collector.submitModel(thick, state, poseStack, RenderTypes.entityCutout(THICK_TAIL_TEXTURE), light, OverlayTexture.NO_OVERLAY, color, null, state.outlineColor);
+                    int color = 0xFF000000 | (race == Race.BIO_ANDROID ? EntityVisual.mix(skin, visual.appearance.featureColor, 0.25f) : skin);
+                    collector.submitModel(race == Race.BIO_ANDROID ? stinger : thick, state, poseStack, RenderTypes.entityCutout(THICK_TAIL_TEXTURE), light, OverlayTexture.NO_OVERLAY, color, null, state.outlineColor);
                     return;
                 }
                 if (!visual.appearance.tail || !race.has(RacePassive.TAIL) || !race.hasHair()) {
@@ -201,7 +203,7 @@ public final class TenkaichiLayers {
                         case SKIN -> visual.appearance.skinColor;
                         case ACCENT, GEM, BODY_GEM -> visual.appearance.featureColor;
                         case HORN -> visual.race == Race.FRIEZA_RACE ? 0x2A2430 : visual.appearance.featureColor;
-                        case PLATE, BODY_PLATE -> plateColor(visual.appearance.skinColor);
+                        case PLATE, BODY_PLATE -> visual.race == Race.BIO_ANDROID ? carapaceColor(visual.appearance.featureColor) : plateColor(visual.appearance.skinColor);
                     };
                     Identifier texture = tint.gem() ? GEM_TEXTURE : FEATURE_TEXTURE;
                     collector.submitModel(entry.getValue(), state, poseStack, RenderTypes.entityCutout(texture), light, OverlayTexture.NO_OVERLAY,
@@ -211,6 +213,10 @@ public final class TenkaichiLayers {
                 RenderGuard.report("feature", e);
             }
         }
+    }
+
+    public static int carapaceColor(int feature) {
+        return EntityVisual.mix(0x1A1C16, feature, 0.35f);
     }
 
     public static int plateColor(int skin) {

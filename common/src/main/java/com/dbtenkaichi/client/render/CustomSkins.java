@@ -95,6 +95,9 @@ public final class CustomSkins {
             body(32, 48, 4, 12, 4, false);
             body(0, 16, 4, 12, 4, false);
             body(16, 48, 4, 12, 4, false);
+            if (race == Race.BIO_ANDROID) {
+                bioBase();
+            }
             torsoAnatomy();
             limbAnatomy(40, 16);
             limbAnatomy(32, 48);
@@ -246,7 +249,7 @@ public final class CustomSkins {
         private void face() {
             int fx = 8 * S;
             int fy = 8 * S;
-            int brow = race == Race.FRIEZA_RACE ? 0x3A2440 : bald ? shade(skin, 0.6f) : shade(hairColor, 0.9f);
+            int brow = race == Race.FRIEZA_RACE ? 0x3A2440 : race == Race.BIO_ANDROID ? 0x1E2A16 : bald ? shade(skin, 0.6f) : shade(hairColor, 0.9f);
             int browY = fy + 6;
             switch (a.eyebrowStyle) {
                 case 1 -> {
@@ -439,15 +442,28 @@ public final class CustomSkins {
                     }
                 }
                 case BIO_ANDROID -> {
-                    for (int y = 0; y < 128; y++) {
-                        for (int x = 0; x < 128; x++) {
-                            int c = img.getPixel(x, y);
-                            if ((c >>> 24) != 0 && noise(x / 3, y / 3) > 222) {
-                                px(x, y, mix(c & 0xFFFFFF, feature, 0.75f));
-                            }
+                    int fx = 8 * S;
+                    int fy = 8 * S;
+                    int mark = 0x7A2E8C;
+                    line(fx + 3, fy + 11, fx + 2, fy + 14, mark);
+                    line(fx + 4, fy + 11, fx + 3, fy + 14, mark);
+                    line(fx + 12, fy + 11, fx + 13, fy + 14, mark);
+                    line(fx + 11, fy + 11, fx + 12, fy + 14, mark);
+                    line(fx + 6, fy + 13, fx + 9, fy + 13, 0x1A1C16);
+                    line(fx + 7, fy + 14, fx + 8, fy + 14, 0x1A1C16);
+                    px(fx + 7, fy + 15, 0x2A2C22);
+                    int shell = TenkaichiLayers.carapaceColor(feature);
+                    rect(8 * S, 0, 16, 16, shell, 1.1f, 0.9f, 0.04f);
+                    rect(fx, fy, 16, 4, shell, 1.0f, 0.85f, 0.04f);
+                    if (a.outfit == Appearance.OUTFIT_NATURAL) {
+                        rect(20 * S, 20 * S, 16, 11, shell, 1.15f, 0.9f, 0.04f);
+                        line(20 * S + 7, 20 * S + 1, 20 * S + 7, 20 * S + 10, shade(shell, 1.6f));
+                        for (int row = 0; row < 3; row++) {
+                            int ry = 20 * S + 12 + row * 4;
+                            rect(20 * S + 2 + row, ry, 12 - row * 2, 3, shell, 1.1f, 0.85f, 0.04f);
                         }
+                        rect(32 * S, 20 * S, 16, 8, shell, 0.9f, 0.8f, 0.04f);
                     }
-                    rect(8 * S + 2, 8 * S, 12, 3, feature, 0.9f, 1.0f, 0.05f);
                 }
                 case ANDROID -> {
                     px(0 * S + 7, 8 * S + 7, feature);
@@ -639,9 +655,38 @@ public final class CustomSkins {
             hd(52, 48, 4, 4, plate, 1.1f, 1.0f, 0.03f);
         }
 
+        private void bioBase() {
+            int feature = a.featureColor;
+            java.util.Random rng = new java.util.Random(race.ordinal() * 31L + skin);
+            int[][] regions = {{0, 16, 64, 32}, {32, 48, 32, 16}, {16, 48, 32, 16}, {0, 0, 64, 16}, {64, 0, 64, 16}};
+            for (int[] region : regions) {
+                int count = region[2] * region[3] / 26;
+                for (int i = 0; i < count; i++) {
+                    int cx = region[0] * S + rng.nextInt(region[2] * S);
+                    int cy = region[1] * S + rng.nextInt(region[3] * S);
+                    int r = 2 + rng.nextInt(3);
+                    for (int dy = -r; dy <= r; dy++) {
+                        for (int dx = -r; dx <= r; dx++) {
+                            if (dx * dx + dy * dy <= r * r + 1) {
+                                int x = cx + dx;
+                                int y = cy + dy;
+                                if (x >= 0 && y >= 0 && x < 128 && y < 128 && (img.getPixel(x, y) >>> 24) != 0) {
+                                    px(x, y, shade(feature, 0.9f + rng.nextFloat() * 0.3f));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            int face = mix(skin, 0xE8DCD4, 0.78f);
+            rect(8 * S, 8 * S + 4, 16, 12, face, 1.05f, 0.92f, 0.03f);
+            rect(0 * S + 10, 8 * S + 8, 6, 6, face, 0.9f, 0.85f, 0.03f);
+            rect(16 * S, 8 * S + 8, 6, 6, face, 0.9f, 0.85f, 0.03f);
+        }
+
         private void natural() {
             overlayClear();
-            if (race == Race.FRIEZA_RACE) {
+            if (race == Race.FRIEZA_RACE || race == Race.BIO_ANDROID) {
                 return;
             }
             int shorts = a.outfitPrimary;

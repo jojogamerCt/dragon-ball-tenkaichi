@@ -49,7 +49,7 @@ public class CharacterCreatorScreen extends Screen {
     private int tab;
     private float yaw = 20.0f;
     private float pitch = -5.0f;
-    private int zoom = 70;
+    private int zoom = 62;
     private boolean dragging;
 
     public CharacterCreatorScreen(CompoundTag data) {
@@ -277,11 +277,11 @@ public class CharacterCreatorScreen extends Screen {
         int previewW = this.width / 2;
         TenkaichiUi.panel(g, 8, 8, previewW - 12, this.height - 40);
         TenkaichiUi.header(g, this.font, this.title, previewW / 2, 16);
-        g.centeredText(this.font, Component.translatable(race.translationKey()), previewW / 2, 28, 0xFFFFFFFF);
         g.textWithWordWrap(this.font, Component.translatable("race.dbtenkaichi." + race.id() + ".desc"), 16, this.height - 60, previewW - 32, 0xFFBBBBBB);
         if (mc.player != null) {
-            EntityPreview.draw(g, 12, 40, previewW - 8, this.height - 52, zoom, yaw, pitch, appearance.height, mc.player);
+            EntityPreview.draw(g, 12, 32, previewW - 8, this.height - 52, zoom, yaw, pitch, appearance.height, mc.player);
         }
+        g.centeredText(this.font, Component.translatable(race.translationKey()), previewW / 2, 28, 0xFFFFFFFF);
     }
 
     @Override

@@ -24,6 +24,7 @@ public final class TenkaichiModels {
     public static final ModelLayerLocation AURA_SHELL = new ModelLayerLocation(Tenkaichi.id("aura_shell"), "main");
     public static final ModelLayerLocation FIGHTER = new ModelLayerLocation(Tenkaichi.id("fighter"), "main");
     public static final ModelLayerLocation THICK_TAIL = new ModelLayerLocation(Tenkaichi.id("thick_tail"), "main");
+    public static final ModelLayerLocation STINGER_TAIL = new ModelLayerLocation(Tenkaichi.id("stinger_tail"), "main");
     public static final ModelLayerLocation SHOULDER_PADS = new ModelLayerLocation(Tenkaichi.id("shoulder_pads"), "main");
     public static final ModelLayerLocation BEARD = new ModelLayerLocation(Tenkaichi.id("beard"), "main");
     public static final Map<Race, Map<FeatureTint, ModelLayerLocation>> FEATURES = new EnumMap<>(Race.class);
@@ -76,7 +77,8 @@ public final class TenkaichiModels {
         registrar.accept(TAIL, TenkaichiModels::tail);
         registrar.accept(AURA_SHELL, () -> LayerDefinition.create(PlayerModel.createMesh(new CubeDeformation(0.45f), false), 64, 64));
         registrar.accept(FIGHTER, () -> LayerDefinition.create(PlayerModel.createMesh(CubeDeformation.NONE, false), 64, 64));
-        registrar.accept(THICK_TAIL, TenkaichiModels::thickTail);
+        registrar.accept(THICK_TAIL, () -> thickTail(false));
+        registrar.accept(STINGER_TAIL, () -> thickTail(true));
         registrar.accept(SHOULDER_PADS, TenkaichiModels::shoulderPads);
         registrar.accept(BEARD, TenkaichiModels::beard);
         FEATURES.forEach((race, byTint) -> byTint.forEach((tint, location) ->
@@ -219,7 +221,7 @@ public final class TenkaichiModels {
         return LayerDefinition.create(mesh, 64, 32);
     }
 
-    public static LayerDefinition thickTail() {
+    public static LayerDefinition thickTail(boolean stinger) {
         MeshDefinition mesh = emptyPlayerMesh();
         PartDefinition parent = mesh.getRoot().getChild("body");
         float previous = 0.0f;
@@ -229,7 +231,13 @@ public final class TenkaichiModels {
             float length = 3.4f - t * 0.8f;
             CubeListBuilder cube = CubeListBuilder.create().texOffs(0, i * 7 % 56).addBox(-size / 2.0f, 0.0f, -size / 2.0f, size, length + 0.4f, size);
             if (i == THICK_TAIL_SEGMENTS - 1) {
-                cube.texOffs(32, 0).addBox(-0.5f, length, -0.5f, 1.0f, 2.2f, 1.0f);
+                if (stinger) {
+                    cube.texOffs(32, 0).addBox(-1.1f, length, -1.1f, 2.2f, 1.6f, 2.2f)
+                            .texOffs(32, 8).addBox(-0.7f, length + 1.6f, -0.7f, 1.4f, 1.8f, 1.4f)
+                            .texOffs(32, 16).addBox(-0.35f, length + 3.4f, -0.35f, 0.7f, 1.8f, 0.7f);
+                } else {
+                    cube.texOffs(32, 0).addBox(-0.5f, length, -0.5f, 1.0f, 2.2f, 1.0f);
+                }
             }
             PartPose pose = i == 0 ? PartPose.offsetAndRotation(0.0f, 10.8f, 1.6f, 1.05f, 0.0f, 0.0f)
                     : PartPose.offsetAndRotation(0.0f, previous, 0.0f, i < 4 ? 0.12f : -0.16f, 0.0f, 0.0f);
@@ -353,12 +361,54 @@ public final class TenkaichiModels {
                 }
             }
             case BIO_ANDROID -> {
-                if (tint == FeatureTint.ACCENT) {
-                    b.crest(-1, 0.42f);
-                    b.crest(1, 0.42f);
-                    head.addOrReplaceChild("brow_ridge", CubeListBuilder.create().texOffs(0, 40).addBox(-4.4f, -6.3f, -4.6f, 8.8f, 1.0f, 0.8f), PartPose.ZERO);
-                } else {
-                    any = false;
+                PartDefinition root = mesh.getRoot();
+                switch (tint) {
+                    case PLATE -> {
+                        for (int side = -1; side <= 1; side += 2) {
+                            PartDefinition crest = head.addOrReplaceChild("crest_" + (side < 0 ? "l" : "r"), CubeListBuilder.create().texOffs(0, 0)
+                                            .addBox(-0.7f, -7.5f, -1.9f, 1.4f, 7.5f, 3.8f)
+                                            .texOffs(12, 0).addBox(-0.5f, -6.5f, 1.9f, 1.0f, 5.5f, 1.2f),
+                                    PartPose.offsetAndRotation(side * 2.6f, -7.6f, -2.2f, -0.12f, 0.0f, side * 0.22f));
+                            PartDefinition mid = crest.addOrReplaceChild("mid", CubeListBuilder.create().texOffs(0, 12)
+                                    .addBox(-0.55f, -5.0f, -1.4f, 1.1f, 5.2f, 2.8f), PartPose.offsetAndRotation(0.0f, -7.3f, 0.0f, -0.32f, 0.0f, side * 0.1f));
+                            mid.addOrReplaceChild("tip", CubeListBuilder.create().texOffs(0, 22)
+                                    .addBox(-0.35f, -3.4f, -0.8f, 0.7f, 3.6f, 1.6f), PartPose.offsetAndRotation(0.0f, -4.9f, 0.0f, -0.45f, 0.0f, 0.0f));
+                        }
+                        head.addOrReplaceChild("crown", CubeListBuilder.create().texOffs(0, 30)
+                                .addBox(-4.45f, -8.6f, -4.5f, 8.9f, 1.4f, 8.9f)
+                                .texOffs(0, 42).addBox(-4.5f, -6.6f, -4.6f, 9.0f, 1.0f, 0.7f)
+                                .texOffs(0, 46).addBox(-1.0f, -9.2f, -4.0f, 2.0f, 0.8f, 7.0f), PartPose.ZERO);
+                        head.addOrReplaceChild("jaw_l", CubeListBuilder.create().texOffs(32, 30)
+                                .addBox(-4.6f, -4.6f, -4.0f, 0.6f, 3.6f, 3.0f), PartPose.ZERO);
+                        head.addOrReplaceChild("jaw_r", CubeListBuilder.create().texOffs(32, 30)
+                                .addBox(4.0f, -4.6f, -4.0f, 0.6f, 3.6f, 3.0f), PartPose.ZERO);
+                    }
+                    case BODY_PLATE -> {
+                        PartDefinition body = root.getChild("body");
+                        body.addOrReplaceChild("carapace", CubeListBuilder.create().texOffs(0, 0)
+                                .addBox(-4.3f, -0.2f, -2.55f, 8.6f, 5.4f, 0.7f)
+                                .texOffs(0, 8).addBox(-3.6f, 5.6f, -2.5f, 7.2f, 1.6f, 0.6f)
+                                .addBox(-3.3f, 7.5f, -2.5f, 6.6f, 1.6f, 0.6f)
+                                .addBox(-3.0f, 9.4f, -2.5f, 6.0f, 1.6f, 0.6f)
+                                .texOffs(0, 16).addBox(-4.3f, -0.3f, 1.85f, 8.6f, 4.0f, 0.7f), PartPose.ZERO);
+                        for (int side = -1; side <= 1; side += 2) {
+                            body.addOrReplaceChild("wing_" + (side < 0 ? "l" : "r"), CubeListBuilder.create().texOffs(0, 24)
+                                            .addBox(side < 0 ? -3.8f : 0.0f, 0.0f, 0.0f, 3.8f, 10.5f, 0.6f)
+                                            .texOffs(12, 24).addBox(side < 0 ? -2.6f : 0.6f, 10.5f, 0.0f, 2.0f, 2.2f, 0.6f),
+                                    PartPose.offsetAndRotation(side * 0.4f, 0.6f, 2.55f, 0.22f, side * -0.18f, side * -0.16f));
+                        }
+                        root.getChild("right_arm").addOrReplaceChild("shell", CubeListBuilder.create().texOffs(0, 40)
+                                .addBox(-3.6f, -2.6f, -2.5f, 4.4f, 2.0f, 5.0f)
+                                .texOffs(0, 48).addBox(-3.55f, 6.0f, -2.45f, 0.6f, 3.6f, 4.9f), PartPose.rotation(0.0f, 0.0f, 0.1f));
+                        root.getChild("left_arm").addOrReplaceChild("shell", CubeListBuilder.create().texOffs(0, 40).mirror()
+                                .addBox(-0.8f, -2.6f, -2.5f, 4.4f, 2.0f, 5.0f)
+                                .texOffs(0, 48).addBox(2.95f, 6.0f, -2.45f, 0.6f, 3.6f, 4.9f), PartPose.rotation(0.0f, 0.0f, -0.1f));
+                        root.getChild("right_leg").addOrReplaceChild("shell", CubeListBuilder.create().texOffs(0, 56)
+                                .addBox(-2.2f, 4.0f, -2.45f, 4.4f, 3.0f, 0.6f), PartPose.ZERO);
+                        root.getChild("left_leg").addOrReplaceChild("shell", CubeListBuilder.create().texOffs(0, 56)
+                                .addBox(-2.2f, 4.0f, -2.45f, 4.4f, 3.0f, 0.6f), PartPose.ZERO);
+                    }
+                    default -> any = false;
                 }
             }
             case ANDROID -> {
