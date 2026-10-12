@@ -132,7 +132,7 @@ public final class Clips {
         BASE.put(AnimPlayer.BaseState.FLY_FAST, p().rightArm(0.28f, 0, 0.12f).leftArm(0.28f, 0, -0.12f).rightLeg(0.06f, 0, 0.02f).leftLeg(0.06f, 0, -0.02f));
         BASE.put(AnimPlayer.BaseState.CHARGE, p().rightArm(0.18f, 0, 0.6f).leftArm(0.18f, 0, -0.6f).rightLeg(0, 0, 0.26f).leftLeg(0, 0, -0.26f).head(0.25f, 0, 0));
         BASE.put(AnimPlayer.BaseState.GUARD, p().rightArm(-1.62f, -0.68f, 0.1f).leftArm(-1.62f, 0.68f, -0.1f).head(0.18f, 0, 0));
-        BASE.put(AnimPlayer.BaseState.SKILL_CHARGE, p().rightArm(0.55f, 0.15f, 0.25f).leftArm(-0.15f, -0.95f, 0.15f).body(0, -0.55f, 0).rightLeg(0.35f, 0, 0.22f).leftLeg(-0.45f, 0, -0.15f));
+        BASE.put(AnimPlayer.BaseState.SKILL_CHARGE, p().body(0.05f, -0.5f, 0).rightArm(0.42f, 0.0f, 0.06f).leftArm(0.32f, 0.0f, 0.8f).rightLeg(0.55f, 0.2f, 0.32f).leftLeg(-0.6f, -0.15f, -0.3f));
         BASE.put(AnimPlayer.BaseState.BEAM_FIRE, p().rightArm(-1.58f, -0.16f, 0).leftArm(-1.58f, 0.16f, 0).rightLeg(0.35f, 0, 0.15f).leftLeg(-0.45f, 0, -0.1f).body(0, 0, 0));
         BASE.put(AnimPlayer.BaseState.STUNNED, p().head(-0.25f, 0, 0.12f).rightArm(0.25f, 0, 0.35f).leftArm(0.2f, 0, -0.35f));
         BASE.put(AnimPlayer.BaseState.TRANSFORM, p().rightArm(0.32f, 0, 0.62f).leftArm(0.32f, 0, -0.62f).head(-0.55f, 0, 0).rightLeg(0, 0, 0.3f).leftLeg(0, 0, -0.3f));

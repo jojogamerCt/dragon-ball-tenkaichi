@@ -77,7 +77,8 @@ public final class PoseApplier {
                 blend(model, Clips.base(state), w);
             }
         }
-        float tremble = anim.weight(AnimPlayer.BaseState.CHARGE, partial) * 0.035f + anim.weight(AnimPlayer.BaseState.TRANSFORM, partial) * 0.07f;
+        float tremble = anim.weight(AnimPlayer.BaseState.CHARGE, partial) * 0.035f + anim.weight(AnimPlayer.BaseState.TRANSFORM, partial) * 0.07f
+                + anim.weight(AnimPlayer.BaseState.SKILL_CHARGE, partial) * 0.025f;
         if (tremble > 0.0f) {
             model.rightArm.zRot += (float) Math.sin(ageInTicks * 2.7f) * tremble;
             model.leftArm.zRot -= (float) Math.sin(ageInTicks * 3.1f) * tremble;

@@ -288,7 +288,7 @@ public final class CombatFxHandler {
         }
         look = look.normalize();
         Vec3 side = new Vec3(-look.z, 0, look.x);
-        Vec3 hands = entity.position().add(0, entity.getBbHeight() * 0.55, 0).add(look.scale(0.35)).add(side.scale(-0.45));
+        Vec3 hands = entity.position().add(0, entity.getBbHeight() * 0.45, 0).add(look.scale(-0.25)).add(side.scale(0.5));
         int n = Math.max(1, Math.round(3 * quality.particleBudget));
         for (int i = 0; i < n; i++) {
             Vec3 from = hands.add((random.nextDouble() - 0.5) * 2.4, (random.nextDouble() - 0.5) * 2.4, (random.nextDouble() - 0.5) * 2.4);

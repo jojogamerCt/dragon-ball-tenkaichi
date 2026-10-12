@@ -54,7 +54,7 @@ Il client entra nel mondo con Quick Play ed esegue `ClientSmokeTest`: apertura a
 creator al primo accesso, creazione Saiyan via pacchetto, comandi `/tenkaichi`, carica del Ki,
 volo, trasformazione Super Saiyan con cinematica, NPC, lock-on, carica e sparo del Kamehameha,
 contro-raggio del Predone → **Beam Clash** sincronizzato, combo in posizione di combattimento,
-menu personaggio, pugno in prima persona in posizione di combattimento, galleria delle 10 razze nel creator; salva screenshot in `runs/client/screenshots/dbt_*.png` e chiude il gioco.
+menu personaggio, posa di carica della Kamehameha (tre quarti, lato, prima persona), pugno in prima persona in posizione di combattimento, galleria delle 10 razze nel creator; salva screenshot in `runs/client/screenshots/dbt_*.png` e chiude il gioco.
 
 Esito: **Fabric e NeoForge completano tutti i passaggi** (character created: true, flying: true,
 form: super_saiyan, beam clash active: true). Nessuna eccezione di rendering registrata

@@ -111,3 +111,12 @@ Nessuna verifica automatica fallisce allo stato attuale.
 - Area di anteprima del creator allargata (le creste e le corna alte venivano tagliate) e nome della razza
   disegnato sopra il modello.
 - Verificato con la galleria del test client su Fabric e NeoForge (`docs/screenshots/bio_android_cell_style.png`).
+
+### Aggiornamento — Posa di carica della Kamehameha
+- Nuova posa di carica: busto ruotato, gambe larghe, braccia tirate indietro con le mani unite sul fianco
+  destro, leggero tremito; in prima persona le mani a coppa in basso a destra; particelle di carica
+  spostate fra le mani.
+- Il test client cattura la posa di tre quarti, di lato (anteprima del giocatore durante la carica) e in prima persona
+  (`docs/screenshots/kamehameha_charge_pose.png`).
+- Tentativi intermedi: braccia che pendevano, poi braccia sollevate (la rotazione laterale con il busto molto ruotato
+  avviene negli assi del mondo) → angoli ricalcolati con torsione moderata; mani in prima persona fuori inquadratura → riposizionate.

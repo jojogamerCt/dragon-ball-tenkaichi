@@ -73,6 +73,28 @@ public final class ClientSmokeTest {
         return -1;
     }
 
+    private static final class PosePreview extends net.minecraft.client.gui.screens.Screen {
+        private final float yaw;
+
+        PosePreview(float yaw) {
+            super(net.minecraft.network.chat.Component.empty());
+            this.yaw = yaw;
+        }
+
+        @Override
+        public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor g, int mouseX, int mouseY, float partial) {
+            Minecraft mc = Minecraft.getInstance();
+            if (mc.player != null) {
+                com.dbtenkaichi.client.screen.EntityPreview.draw(g, 0, 0, this.width, this.height, 70, yaw, -5.0f, 1.0f, mc.player);
+            }
+        }
+
+        @Override
+        public boolean isPauseScreen() {
+            return false;
+        }
+    }
+
     private static void step(Minecraft mc) {
         String name = mc.player.getName().getString();
         PlayerData data = Services.PLATFORM.playerData(mc.player);
@@ -157,6 +179,19 @@ public final class ClientSmokeTest {
                     action(ActionType.SKILL_PRESS, slot);
                 }
             }
+            case 396 -> mc.options.setCameraType(CameraType.THIRD_PERSON_FRONT);
+            case 402 -> shot(mc, "08a_kamehameha_pose_front");
+            case 404 -> {
+                mc.player.getInventory().setSelectedSlot(8);
+                mc.options.setCameraType(CameraType.FIRST_PERSON);
+            }
+            case 409 -> shot(mc, "08b_kamehameha_pose_first_person");
+            case 411 -> mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+            case 412 -> mc.gui.setScreen(new PosePreview(-60.0f));
+            case 415 -> shot(mc, "08c_kamehameha_pose_three_quarter");
+            case 416 -> mc.gui.setScreen(new PosePreview(-100.0f));
+            case 418 -> shot(mc, "08d_kamehameha_pose_side");
+            case 419 -> mc.gui.setScreen(null);
             case 420 -> shot(mc, "08_kamehameha_charge");
             case 430 -> {
                 int slot = kamehamehaSlot(data);

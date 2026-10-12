@@ -34,6 +34,7 @@ la colonna "Verifica" indica come è stata provata (vedi `TESTING.md`).
 | Ki | Aura 3D procedurale con fiamme a bordi sfumati e sagoma a goccia (senza guscio a cubi), 4 livelli di qualità | Implementata | client scriptato |
 | Effetti | 8 particelle custom (scintille Ki, fiamme d'aura, sfere di energia, stelle d'impatto, onde d'urto, polvere, fulmini, linee di velocità) per colpi, parate, schivate, aura, trasformazioni, carica e raggio della Kamehameha, esplosioni, clash | Implementata | client scriptato |
 | Ki | Kamehameha sempre blu, indipendentemente dal colore dell'aura del giocatore | Implementata | client scriptato |
+| Ki | Posa iconica di carica della Kamehameha (busto ruotato, gambe aperte, mani a coppa sul fianco destro, tremito) in terza e in prima persona, con l'energia raccolta fra le mani | Implementata | client scriptato (screenshot frontale, di lato e in prima persona) |
 | Ki | Ki Blast con homing, Kamehameha con carica/sterzata/trincea | Implementata | smoke server + client |
 | Ki | Beam Clash autoritativo con battiti, stagger, vittoria/pareggio | Implementata | non verificata in gioco |
 | Mondo | Distruzione off/visual/real/regenerating, budget, protezioni | Implementata | smoke server (aria aperta) |

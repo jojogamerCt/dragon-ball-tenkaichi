@@ -56,7 +56,7 @@ public final class FirstPersonCombat {
     }
 
     public static boolean active() {
-        return ClientController.inStance() || ClientState.clientTicks - lastStrike < 30;
+        return ClientController.inStance() || ClientState.clientTicks - lastStrike < 30 || ClientState.localHas(RuntimeState.FLAG_SKILL_CHARGING);
     }
 
     private static float progress(Strike strike, float partial) {
@@ -67,6 +67,13 @@ public final class FirstPersonCombat {
     public static void transform(PoseStack pose, HumanoidArm arm, float partial) {
         float invert = arm == HumanoidArm.RIGHT ? 1.0f : -1.0f;
         float bob = Mth.sin((ClientState.clientTicks + partial) * 0.12f + (invert > 0 ? 0.0f : 1.7f)) * 0.012f;
+        if (ClientState.localHas(RuntimeState.FLAG_SKILL_CHARGING)) {
+            float shake = Mth.sin((ClientState.clientTicks + partial) * 2.3f + invert) * 0.01f;
+            pose.translate(invert > 0 ? -0.3f : 0.88f, 0.34f + shake, -0.15f);
+            pose.rotateDegrees(Axis.YP, invert > 0 ? -12.0f : 28.0f);
+            pose.rotateDegrees(Axis.ZP, invert > 0 ? -8.0f : 10.0f);
+            return;
+        }
         if (ClientState.localHas(RuntimeState.FLAG_GUARDING)) {
             pose.translate(-invert * 0.3f, 0.3f + bob, 0.05f);
             pose.rotateDegrees(Axis.ZP, invert * 35.0f);
