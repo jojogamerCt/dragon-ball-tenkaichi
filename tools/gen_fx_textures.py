@@ -325,11 +325,44 @@ def beam_icon(core, glow, hands):
     return img
 
 
+def thin_beam_icon(core, glow):
+    img = icon_canvas()
+    img = Image.alpha_composite(img, glow_layer(lambda d: d.line([(4, 28), (30, 2)], fill=glow + (255,), width=4), 1.6))
+    d = ImageDraw.Draw(img)
+    d.line([(4, 28), (30, 2)], fill=glow + (255,), width=2)
+    d.line([(4, 28), (30, 2)], fill=core + (255,), width=1)
+    for k in range(4):
+        x = 8 + k * 6
+        y = 24 - k * 6
+        d.arc([x - 3, y - 3, x + 3, y + 3], 0, 300, fill=glow + (255,))
+    img = Image.alpha_composite(img, glow_layer(lambda dd: dd.ellipse([1, 23, 9, 31], fill=glow + (255,)), 1.5))
+    return img
+
+
+def orb_icon(core, glow, r):
+    img = icon_canvas()
+    img = Image.alpha_composite(img, glow_layer(lambda d: d.ellipse([16 - r - 3, 16 - r - 3, 16 + r + 3, 16 + r + 3], fill=glow + (240,)), 3.0))
+    d = ImageDraw.Draw(img)
+    d.ellipse([16 - r, 16 - r, 16 + r, 16 + r], fill=glow + (255,))
+    d.ellipse([16 - r + 3, 16 - r + 3, 16 + r - 3, 16 + r - 3], fill=core + (255,))
+    for k in range(8):
+        a = k * 0.785
+        import math as m
+        d.line([(16 + m.cos(a) * (r + 2), 16 + m.sin(a) * (r + 2)), (16 + m.cos(a) * (r + 5), 16 + m.sin(a) * (r + 5))], fill=glow + (255,))
+    return img
+
+
 def skill_icons():
     icons = {
         "ki_blast": skill_ki_blast(),
         "kamehameha": beam_icon((235, 250, 255), (63, 168, 255), True),
         "raider_cannon": beam_icon((255, 236, 255), (176, 75, 255), False),
+        "galick_gun": beam_icon((255, 240, 255), (160, 64, 255), True),
+        "masenko": beam_icon((255, 251, 224), (255, 212, 59), True),
+        "special_beam_cannon": thin_beam_icon((255, 255, 230), (208, 112, 255)),
+        "final_flash": beam_icon((255, 255, 240), (255, 230, 64), True),
+        "big_bang_attack": orb_icon((255, 255, 255), (127, 200, 255), 11),
+        "death_beam": thin_beam_icon((255, 224, 255), (255, 90, 216)),
     }
     for name, img in icons.items():
         img.save(path("textures", "gui", "sprites", "skill", name + ".png"))

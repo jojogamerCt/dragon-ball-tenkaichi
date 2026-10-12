@@ -124,6 +124,18 @@ public final class SmokeTest {
             beam.setDirection(raider.getBoundingBox().getCenter().subtract(beam.position()));
             level.addFreshEntity(beam);
             check(beam.isAlive(), "kamehameha beam entity spawned");
+            for (com.dbtenkaichi.ki.Techniques.Unlock unlock : com.dbtenkaichi.ki.Techniques.UNLOCKS) {
+                com.dbtenkaichi.ki.Technique technique = unlock.technique();
+                net.minecraft.world.entity.Entity spawned = technique.type() == com.dbtenkaichi.ki.Technique.Type.BEAM
+                        ? KiBeamEntity.create(level, master, technique, 0.5)
+                        : com.dbtenkaichi.entity.KiBlastEntity.create(level, master, technique, technique.glowColor(), -1, 1.0);
+                level.addFreshEntity(spawned);
+                check(spawned.isAlive(), technique.id() + " entity spawned");
+                spawned.discard();
+            }
+            for (String form : List.of("dbtenkaichi:super_saiyan_2", "dbtenkaichi:super_saiyan_3", "dbtenkaichi:kaioken", "dbtenkaichi:kaioken_x10")) {
+                check(com.dbtenkaichi.form.FormRegistry.get(form, false) != null, form + " form loaded from datapack");
+            }
         }
         if (tick == 200) {
             Vec3 sky = new Vec3(0, level.getMaxY() - 10, 0);

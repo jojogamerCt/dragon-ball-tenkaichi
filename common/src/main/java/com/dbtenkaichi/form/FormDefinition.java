@@ -24,6 +24,7 @@ public final class FormDefinition {
     public double speedMultiplier = 1.0;
     public double kiDrainPerSecond;
     public double staminaDrainPerSecond;
+    public double healthDrainPerSecond;
     public double masteryPerSecond = 0.001;
     public double masteryDrainReduction = 0.6;
     public double lowMasteryControlPenalty = 0.15;
@@ -81,6 +82,7 @@ public final class FormDefinition {
         speedMultiplier = Math.max(0.1, Math.min(10.0, speedMultiplier));
         kiDrainPerSecond = Math.max(0.0, kiDrainPerSecond);
         staminaDrainPerSecond = Math.max(0.0, staminaDrainPerSecond);
+        healthDrainPerSecond = Math.max(0.0, Math.min(20.0, healthDrainPerSecond));
         masteryPerSecond = Math.max(0.0, Math.min(1.0, masteryPerSecond));
         masteryDrainReduction = Math.max(0.0, Math.min(1.0, masteryDrainReduction));
         lowMasteryControlPenalty = Math.max(0.0, Math.min(0.9, lowMasteryControlPenalty));

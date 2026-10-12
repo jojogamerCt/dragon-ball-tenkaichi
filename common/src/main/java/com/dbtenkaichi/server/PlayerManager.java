@@ -140,6 +140,25 @@ public final class PlayerManager {
         }
     }
 
+    public static void checkTechniqueUnlocks(ServerPlayer player, PlayerData data) {
+        if (!data.isCreated()) {
+            return;
+        }
+        long bp = com.dbtenkaichi.combat.Fighter.of(player).battlePower();
+        for (com.dbtenkaichi.ki.Techniques.Unlock unlock : com.dbtenkaichi.ki.Techniques.UNLOCKS) {
+            String id = unlock.technique().id();
+            if (data.hasSkill(id) || !unlock.allows(data.race()) || bp < unlock.battlePower()) {
+                continue;
+            }
+            if (data.learnSkill(id)) {
+                data.runtime().dataDirty = true;
+                player.sendSystemMessage(net.minecraft.network.chat.Component.translatable("message.dbtenkaichi.learned",
+                        net.minecraft.network.chat.Component.translatable(unlock.technique().translationKey())));
+                com.dbtenkaichi.combat.CombatSystem.playSound(player.level(), player, com.dbtenkaichi.registry.ModSounds.UI_CONFIRM.get(), 1.0f, 1.0f);
+            }
+        }
+    }
+
     private static void tickPlayer(ServerPlayer player) {
         PlayerData data = data(player);
         RuntimeState rt = data.runtime();
@@ -168,6 +187,9 @@ public final class PlayerManager {
         if (rt.charging && !exhausted && !rt.busy(now)) {
             ki += DerivedStats.kiChargePerSecond(data.stats(), data.race(), cfg) / 20.0;
             stamina -= 0.5 / 20.0;
+            if (now % 40 == 0) {
+                checkTechniqueUnlocks(player, data);
+            }
             if (now % 20 == 0) {
                 TrainingSystem.passiveGain(player, data, "ki_charge", StatType.KI_CONTROL, 0.6);
             }
@@ -192,6 +214,10 @@ public final class PlayerManager {
                 double drain = form.drainAt(data.mastery(form.id)) * DerivedStats.kiCostMultiplier(data.stats(), data.race(), cfg) / 20.0;
                 ki -= drain;
                 stamina -= form.staminaDrainPerSecond / 20.0;
+                if (form.healthDrainPerSecond > 0.0 && player.getHealth() > 2.0f) {
+                    float drained = (float) (form.healthDrainPerSecond * (1.0 - 0.5 * data.mastery(form.id)) / 20.0);
+                    player.setHealth(Math.max(2.0f, player.getHealth() - drained));
+                }
                 float gain = (float) (form.masteryPerSecond / 20.0 * (now - rt.lastCombat < 100 ? 2.0 : 1.0) * cfg.trainingSpeedMultiplier);
                 float mastery = data.mastery(form.id);
                 if (mastery < 1.0f && gain > 0) {

@@ -291,6 +291,22 @@ public final class ClientSmokeTest {
                 action(ActionType.COMBAT_STANCE, 0);
                 command(mc, "kill @e[type=dbtenkaichi:saiyan_raider]");
             }
+            case 640 -> {
+                command(mc, "tenkaichi setstat " + name + " all 160");
+                command(mc, "tenkaichi restore " + name);
+            }
+            case 646 -> action(ActionType.TRANSFORM_UP, TransformationSystem.CINEMATIC_SKIP);
+            case 662 -> {
+                LOG.add("form after second transformation: " + data.form());
+                shot(mc, "12b_super_saiyan_2");
+                command(mc, "tenkaichi restore " + name);
+            }
+            case 666 -> action(ActionType.TRANSFORM_UP, TransformationSystem.CINEMATIC_SKIP);
+            case 684 -> {
+                LOG.add("form after third transformation: " + data.form());
+                LOG.add("skills after unlocks: " + new java.util.TreeSet<>(data.skills()));
+                shot(mc, "12c_super_saiyan_3");
+            }
             case 860 -> {
                 mc.gui.setScreen(null);
                 finished = true;

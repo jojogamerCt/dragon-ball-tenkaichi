@@ -157,6 +157,16 @@ def build():
     add("technique.dbtenkaichi.ki_blast", "Ki Blast", "Sfera Ki")
     add("technique.dbtenkaichi.kamehameha", "Kamehameha", "Kamehameha")
     add("technique.dbtenkaichi.raider_cannon", "Raider Cannon", "Cannone del Predone")
+    add("technique.dbtenkaichi.galick_gun", "Galick Gun", "Galick Gun")
+    add("technique.dbtenkaichi.masenko", "Masenko", "Masenko")
+    add("technique.dbtenkaichi.special_beam_cannon", "Special Beam Cannon", "Makankosappo")
+    add("technique.dbtenkaichi.final_flash", "Final Flash", "Final Flash")
+    add("technique.dbtenkaichi.big_bang_attack", "Big Bang Attack", "Big Bang Attack")
+    add("technique.dbtenkaichi.death_beam", "Death Beam", "Raggio della Morte")
+    add("form.dbtenkaichi.super_saiyan_2", "Super Saiyan 2", "Super Saiyan 2")
+    add("form.dbtenkaichi.super_saiyan_3", "Super Saiyan 3", "Super Saiyan 3")
+    add("form.dbtenkaichi.kaioken", "Kaioken", "Kaioken")
+    add("form.dbtenkaichi.kaioken_x10", "Kaioken x10", "Kaioken x10")
     for dmg, (e, i) in {
         "martial_arts": ("%1$s was beaten down", "%1$s è stato messo al tappeto"),
         "ki_blast": ("%1$s was struck by a Ki blast", "%1$s è stato colpito da una sfera Ki"),

@@ -172,4 +172,18 @@ class BalanceTest {
             assertTrue(race.implemented(), race + " must be playable");
         }
     }
+
+    @org.junit.jupiter.api.Test
+    void techniqueUnlocksAreConsistent() {
+        java.util.Set<String> races = new java.util.HashSet<>();
+        for (com.dbtenkaichi.race.Race race : com.dbtenkaichi.race.Race.values()) {
+            races.add(race.id());
+        }
+        for (com.dbtenkaichi.ki.Techniques.Unlock unlock : com.dbtenkaichi.ki.Techniques.UNLOCKS) {
+            org.junit.jupiter.api.Assertions.assertSame(unlock.technique(), com.dbtenkaichi.ki.Techniques.get(unlock.technique().id()));
+            org.junit.jupiter.api.Assertions.assertTrue(unlock.battlePower() > 0);
+            org.junit.jupiter.api.Assertions.assertTrue(unlock.technique().kiCost() > 0 && unlock.technique().baseDamage() > 0);
+            org.junit.jupiter.api.Assertions.assertTrue(races.containsAll(unlock.races()), unlock.technique().id());
+        }
+    }
 }

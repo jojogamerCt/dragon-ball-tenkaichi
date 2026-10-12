@@ -1,0 +1,39 @@
+{
+  "name": "form.dbtenkaichi.super_saiyan_2",
+  "races": [
+    "saiyan",
+    "half_saiyan"
+  ],
+  "parent": "dbtenkaichi:super_saiyan",
+  "order": 20,
+  "requirements": {
+    "battlePower": 60000,
+    "stats": {},
+    "unlock": "none",
+    "requiredForm": "dbtenkaichi:super_saiyan"
+  },
+  "bpMultiplier": 100.0,
+  "speedMultiplier": 1.25,
+  "kiDrainPerSecond": 5.0,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 40.0,
+  "cinematicTicks": 90,
+  "cinematic": "power_up",
+  "quickTicks": 10,
+  "visual": {
+    "hairStyle": "ascended_spikes",
+    "hairColor": "#FFE04A",
+    "hairGlow": true,
+    "eyeColor": "#2FD8B4",
+    "auraColor": "#FFD43B",
+    "auraSecondary": "#FFFBD8",
+    "auraStyle": "flame",
+    "lightning": true,
+    "auraScale": 1.25,
+    "auraIntensity": 1.15
+  }
+}
