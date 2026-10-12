@@ -5,6 +5,7 @@ import com.dbtenkaichi.client.ClientState;
 import com.dbtenkaichi.client.EntityVisual;
 import com.dbtenkaichi.config.ClientConfig;
 import com.dbtenkaichi.config.ConfigManager;
+import com.dbtenkaichi.player.Appearance;
 import com.dbtenkaichi.player.HairStyle;
 import com.dbtenkaichi.race.Race;
 import com.dbtenkaichi.race.RacePassive;
@@ -34,6 +35,7 @@ public final class TenkaichiLayers {
     public static final Identifier HAIR_TEXTURE = Tenkaichi.id("textures/entity/hair.png");
     public static final Identifier TAIL_TEXTURE = Tenkaichi.id("textures/entity/tail.png");
     public static final Identifier AURA_TEXTURE = Tenkaichi.id("textures/entity/aura_swirl.png");
+    public static final Identifier GEM_TEXTURE = Tenkaichi.id("textures/entity/gem.png");
     public static final Identifier FEATURE_TEXTURE = Tenkaichi.id("textures/entity/feature.png");
     public static final Identifier THICK_TAIL_TEXTURE = Tenkaichi.id("textures/entity/thick_tail.png");
     public static final Identifier ARMOR_PAD_TEXTURE = Tenkaichi.id("textures/entity/armor_pad.png");
@@ -189,19 +191,30 @@ public final class TenkaichiLayers {
                 if (byTint == null) {
                     return;
                 }
+                boolean natural = visual.appearance.outfit == Appearance.OUTFIT_NATURAL;
                 for (Map.Entry<TenkaichiModels.FeatureTint, HairModel> entry : byTint.entrySet()) {
-                    int color = switch (entry.getKey()) {
+                    TenkaichiModels.FeatureTint tint = entry.getKey();
+                    if (tint.bodyOnly() && !natural) {
+                        continue;
+                    }
+                    int color = switch (tint) {
                         case SKIN -> visual.appearance.skinColor;
-                        case ACCENT -> visual.appearance.featureColor;
-                        case HORN -> visual.race == Race.FRIEZA_RACE ? 0xE8E2D4 : visual.appearance.featureColor;
+                        case ACCENT, GEM, BODY_GEM -> visual.appearance.featureColor;
+                        case HORN -> visual.race == Race.FRIEZA_RACE ? 0x2A2430 : visual.appearance.featureColor;
+                        case PLATE, BODY_PLATE -> plateColor(visual.appearance.skinColor);
                     };
-                    collector.submitModel(entry.getValue(), state, poseStack, RenderTypes.entityCutout(FEATURE_TEXTURE), light, OverlayTexture.NO_OVERLAY,
+                    Identifier texture = tint.gem() ? GEM_TEXTURE : FEATURE_TEXTURE;
+                    collector.submitModel(entry.getValue(), state, poseStack, RenderTypes.entityCutout(texture), light, OverlayTexture.NO_OVERLAY,
                             0xFF000000 | color, null, state.outlineColor);
                 }
             } catch (RuntimeException e) {
                 RenderGuard.report("feature", e);
             }
         }
+    }
+
+    public static int plateColor(int skin) {
+        return EntityVisual.mix(0xF6F4F8, skin, 0.12f);
     }
 
     static final class GearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {

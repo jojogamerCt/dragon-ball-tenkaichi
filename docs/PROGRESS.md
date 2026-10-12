@@ -95,3 +95,11 @@ Nessuna verifica automatica fallisce allo stato attuale.
 - Aura base che formava un "cappuccio" conico sopra la testa → raggio non più rastremato e dissolvenza anticipata.
 - Bagliori del raggio troppo grandi → ridotti.
 - Testo troncato nei pulsanti stretti → ridimensionamento automatico del testo.
+
+### Aggiornamento — Razza di Freezer
+- Aspetto ridisegnato sulla prima forma (stile Freezer/Frost/Cooler base): pelle rosa-lilla, corazza
+  biologica bianca (cupola, guance, spalle, petto, stinchi), gemme nel colore dettagli (viola di default,
+  blu disponibile), corna scure, occhi rossi con segni scuri, labbra viola, coda spessa.
+- Nuovo outfit "Naturale" (default per questa razza); placche e gemme del corpo visibili solo con esso.
+- Verificato con la galleria del test client su Fabric e NeoForge (`docs/screenshots/frieza_race_first_form.png`).
+- Primo tentativo: corna ruotate verso l'interno della testa → corretta la rotazione.

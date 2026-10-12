@@ -12,9 +12,10 @@ la colonna "Verifica" indica come è stata provata (vedi `TESTING.md`).
 | Personaggio | 10 razze giocabili: Saiyan, Mezzo-Saiyan, Umano, Namecciano, Razza di Freezer, Majin, Androide, Bio-Androide, Kaioshin, Razza del Regno Demoniaco | Implementata | JUnit + client (galleria) |
 | Personaggio | Passive razziali con effetto reale lato server (vedi tabella sotto) | Implementata | JUnit (distinzione), codice; effetti non provati in gioco |
 | Personaggio | Aspetto predefinito, palette della pelle e "colore dettagli" diversi per razza | Implementata | client scriptato |
-| Personaggio | Modelli 3D razziali: antenne e orecchie (Namecciano), cupola, corna e coda spessa (Freezer), antenna (Majin), cresta e coda a pungiglione (Bio-Androide), auricolari (Androide), orecchie a punta e orecchini (Kaioshin), corna e orecchie (Demoniaca) | Implementata | client scriptato (screenshot) |
+| Personaggio | Modelli 3D razziali: antenne e orecchie (Namecciano), aspetto della prima forma (pelle rosa-lilla, cupola, guance, spalline e placca pettorale bianche, gemme colorate, corna scure curve verso l'alto, coda spessa) per la Razza di Freezer, antenna (Majin), cresta e coda a pungiglione (Bio-Androide), auricolari (Androide), orecchie a punta e orecchini (Kaioshin), corna e orecchie (Demoniaca) | Implementata | client scriptato (screenshot) |
 | Personaggio | Skin procedurale HD 128×128: ombreggiatura, muscoli, viso dettagliato (palpebre, iridi, riflessi, naso, orecchie), abiti 3D sui layer esterni con pieghe, cintura, emblema, stivali; dettagli razziali (bande sulle braccia, macchie, placche) | Implementata | client scriptato |
 | Personaggio | Armatura con spalline e pettorale 3D; barba e baffi del Maestro | Implementata | client scriptato |
+| Personaggio | Outfit "Naturale": corpo con corazza biologica per la Razza di Freezer, pantaloncini per le altre razze | Implementata | client scriptato (galleria) |
 | Personaggio | 7 acconciature selezionabili + 3 di trasformazione con ciocche curve a 4 segmenti, texture capelli HD; coda Saiyan a 8 segmenti animata | Implementata | client scriptato |
 | Personaggio | Altezza (attributo `scale`) e corporatura (larghezza modello) | Implementata | client scriptato |
 | Statistiche | 12 statistiche, TP, costo superlineare, cap da Potenziale, pratica | Implementata | JUnit |

@@ -108,6 +108,22 @@ def armor_pad():
     img.save(path("textures", "entity", "armor_pad.png"))
 
 
+def gem():
+    size = 128
+    img = Image.new("RGBA", (size, size))
+    px = img.load()
+    for x in range(size):
+        for y in range(size):
+            u = (x % 16) / 15.0
+            v = (y % 16) / 15.0
+            base = 0.62 + 0.38 * (1.0 - v) ** 1.4
+            spec = math.exp(-((u - 0.3) ** 2 + (v - 0.22) ** 2) / 0.012)
+            rim = 0.85 if (x % 16 in (0, 15) or y % 16 in (0, 15)) else 1.0
+            g = clamp8((base * rim + spec * 0.55) * 230)
+            px[x, y] = (g, g, g, 255)
+    img.save(path("textures", "entity", "gem.png"))
+
+
 def aura_swirl():
     size = 64
     img = Image.new("RGBA", (size, size))
@@ -195,5 +211,6 @@ if __name__ == "__main__":
     feature()
     thick_tail()
     armor_pad()
+    gem()
     aura_swirl()
     print("textures and item models generated")

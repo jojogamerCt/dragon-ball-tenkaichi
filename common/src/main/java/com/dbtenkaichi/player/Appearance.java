@@ -10,7 +10,8 @@ public final class Appearance {
     public static final int HAIR_STYLES = HairStyle.PLAYER_SELECTABLE;
     public static final int EXPRESSIONS = 4;
     public static final int VOICES = 4;
-    public static final int OUTFITS = 3;
+    public static final int OUTFITS = 4;
+    public static final int OUTFIT_NATURAL = 3;
     public static final int BODY_BUILDS = 3;
 
     public int presentation;
@@ -136,11 +137,12 @@ public final class Appearance {
                 a.outfitSecondary = 0x2A6FB0;
             }
             case FRIEZA_RACE -> {
-                a.skinColor = 0xF2F0F4;
-                a.featureColor = 0x8E3FB8;
+                a.skinColor = 0xE6CCDA;
+                a.featureColor = 0x9A3CC8;
                 a.eyeColor = 0xB0141E;
                 a.auraColor = 0xC890FF;
-                a.outfit = 1;
+                a.eyebrowStyle = 1;
+                a.outfit = OUTFIT_NATURAL;
                 a.outfitPrimary = 0x24204A;
                 a.outfitSecondary = 0x7A3010;
             }

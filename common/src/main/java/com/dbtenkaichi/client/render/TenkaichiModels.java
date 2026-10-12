@@ -50,7 +50,19 @@ public final class TenkaichiModels {
     public enum FeatureTint {
         SKIN,
         ACCENT,
-        HORN
+        HORN,
+        PLATE,
+        GEM,
+        BODY_PLATE,
+        BODY_GEM;
+
+        public boolean bodyOnly() {
+            return this == BODY_PLATE || this == BODY_GEM;
+        }
+
+        public boolean gem() {
+            return this == GEM || this == BODY_GEM;
+        }
     }
 
     private TenkaichiModels() {
@@ -273,18 +285,62 @@ public final class TenkaichiModels {
                 }
             }
             case FRIEZA_RACE -> {
-                if (tint == FeatureTint.ACCENT) {
-                    head.addOrReplaceChild("dome", CubeListBuilder.create().texOffs(0, 0)
-                            .addBox(-4.45f, -9.1f, -4.3f, 8.9f, 4.0f, 8.9f)
-                            .texOffs(0, 16).addBox(-3.6f, -9.6f, -3.2f, 7.2f, 0.6f, 7.0f)
-                            .texOffs(0, 24).addBox(-4.5f, -5.0f, 1.5f, 9.0f, 3.2f, 3.1f), PartPose.ZERO);
-                    head.addOrReplaceChild("cheek_l", CubeListBuilder.create().texOffs(32, 24).addBox(-4.55f, -4.2f, -3.0f, 0.5f, 2.4f, 3.0f), PartPose.ZERO);
-                    head.addOrReplaceChild("cheek_r", CubeListBuilder.create().texOffs(32, 24).addBox(4.05f, -4.2f, -3.0f, 0.5f, 2.4f, 3.0f), PartPose.ZERO);
-                } else if (tint == FeatureTint.HORN) {
-                    b.curved(-4.0f, -7.2f, -0.6f, 0.0f, 0.0f, 1.45f, 7.0f, 1.9f, -0.32f, 0.0f);
-                    b.curved(4.0f, -7.2f, -0.6f, 0.0f, 0.0f, -1.45f, 7.0f, 1.9f, 0.32f, 0.0f);
-                } else {
-                    any = false;
+                PartDefinition root = mesh.getRoot();
+                switch (tint) {
+                    case PLATE -> {
+                        head.addOrReplaceChild("dome", CubeListBuilder.create().texOffs(0, 0)
+                                .addBox(-4.4f, -8.7f, -4.45f, 8.8f, 3.3f, 8.9f)
+                                .texOffs(0, 14).addBox(-3.7f, -9.3f, -3.7f, 7.4f, 0.7f, 7.4f)
+                                .texOffs(0, 24).addBox(-4.45f, -5.5f, 1.0f, 8.9f, 3.4f, 3.5f), PartPose.ZERO);
+                        head.addOrReplaceChild("brow", CubeListBuilder.create().texOffs(0, 34)
+                                .addBox(-4.45f, -5.6f, -4.5f, 8.9f, 0.7f, 0.6f), PartPose.ZERO);
+                        head.addOrReplaceChild("cheek_l", CubeListBuilder.create().texOffs(32, 24)
+                                .addBox(-4.55f, -5.5f, -3.6f, 0.6f, 2.6f, 4.8f), PartPose.ZERO);
+                        head.addOrReplaceChild("cheek_r", CubeListBuilder.create().texOffs(32, 24)
+                                .addBox(3.95f, -5.5f, -3.6f, 0.6f, 2.6f, 4.8f), PartPose.ZERO);
+                    }
+                    case GEM -> {
+                        head.addOrReplaceChild("crown_gem", CubeListBuilder.create().texOffs(0, 0)
+                                .addBox(-1.7f, -9.75f, -2.6f, 3.4f, 0.6f, 4.4f)
+                                .texOffs(0, 8).addBox(-1.1f, -10.05f, -1.9f, 2.2f, 0.4f, 3.0f), PartPose.ZERO);
+                        head.addOrReplaceChild("side_gem_l", CubeListBuilder.create().texOffs(16, 0)
+                                .addBox(-4.75f, -7.6f, -1.2f, 0.4f, 1.6f, 2.4f), PartPose.ZERO);
+                        head.addOrReplaceChild("side_gem_r", CubeListBuilder.create().texOffs(16, 0)
+                                .addBox(4.35f, -7.6f, -1.2f, 0.4f, 1.6f, 2.4f), PartPose.ZERO);
+                    }
+                    case HORN -> {
+                        b.curved(-4.2f, -6.8f, 0.4f, 0.0f, 0.0f, -1.35f, 8.0f, 2.3f, 0.42f, 0.0f);
+                        b.curved(4.2f, -6.8f, 0.4f, 0.0f, 0.0f, 1.35f, 8.0f, 2.3f, -0.42f, 0.0f);
+                    }
+                    case BODY_PLATE -> {
+                        root.getChild("body").addOrReplaceChild("chest", CubeListBuilder.create().texOffs(0, 0)
+                                .addBox(-4.3f, -0.3f, -2.5f, 8.6f, 6.2f, 0.7f)
+                                .texOffs(0, 8).addBox(-4.3f, -0.3f, 1.8f, 8.6f, 6.2f, 0.7f)
+                                .texOffs(0, 16).addBox(-4.3f, -0.4f, -2.5f, 8.6f, 0.8f, 5.0f), PartPose.ZERO);
+                        root.getChild("right_arm").addOrReplaceChild("shoulder", CubeListBuilder.create().texOffs(0, 24)
+                                .addBox(-3.6f, -2.6f, -2.5f, 4.2f, 2.4f, 5.0f)
+                                .texOffs(0, 32).addBox(-3.75f, -0.4f, -2.4f, 0.6f, 2.2f, 4.8f), PartPose.rotation(0.0f, 0.0f, 0.12f));
+                        root.getChild("left_arm").addOrReplaceChild("shoulder", CubeListBuilder.create().texOffs(0, 24).mirror()
+                                .addBox(-0.6f, -2.6f, -2.5f, 4.2f, 2.4f, 5.0f)
+                                .texOffs(0, 32).addBox(3.15f, -0.4f, -2.4f, 0.6f, 2.2f, 4.8f), PartPose.rotation(0.0f, 0.0f, -0.12f));
+                        root.getChild("right_leg").addOrReplaceChild("shin", CubeListBuilder.create().texOffs(0, 40)
+                                .addBox(-2.2f, 5.5f, -2.45f, 4.4f, 5.0f, 0.6f), PartPose.ZERO);
+                        root.getChild("left_leg").addOrReplaceChild("shin", CubeListBuilder.create().texOffs(0, 40)
+                                .addBox(-2.2f, 5.5f, -2.45f, 4.4f, 5.0f, 0.6f), PartPose.ZERO);
+                    }
+                    case BODY_GEM -> {
+                        root.getChild("body").addOrReplaceChild("chest_gem", CubeListBuilder.create().texOffs(0, 0)
+                                .addBox(-1.2f, 1.2f, -2.75f, 2.4f, 1.8f, 0.4f), PartPose.ZERO);
+                        root.getChild("right_arm").addOrReplaceChild("shoulder_gem", CubeListBuilder.create().texOffs(0, 8)
+                                .addBox(-2.7f, -2.95f, -1.4f, 2.4f, 0.5f, 2.8f), PartPose.rotation(0.0f, 0.0f, 0.12f));
+                        root.getChild("left_arm").addOrReplaceChild("shoulder_gem", CubeListBuilder.create().texOffs(0, 8)
+                                .addBox(0.3f, -2.95f, -1.4f, 2.4f, 0.5f, 2.8f), PartPose.rotation(0.0f, 0.0f, -0.12f));
+                        root.getChild("right_leg").addOrReplaceChild("knee_gem", CubeListBuilder.create().texOffs(0, 16)
+                                .addBox(-0.9f, 4.0f, -2.6f, 1.8f, 1.4f, 0.4f), PartPose.ZERO);
+                        root.getChild("left_leg").addOrReplaceChild("knee_gem", CubeListBuilder.create().texOffs(0, 16)
+                                .addBox(-0.9f, 4.0f, -2.6f, 1.8f, 1.4f, 0.4f), PartPose.ZERO);
+                    }
+                    default -> any = false;
                 }
             }
             case MAJIN -> {

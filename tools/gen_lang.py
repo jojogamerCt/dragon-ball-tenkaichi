@@ -224,7 +224,7 @@ def build():
         add("screen.dbtenkaichi.creator.build.%d" % n, e, i)
     for n, (e, i) in enumerate([("Calm", "Calma"), ("Focused", "Concentrata"), ("Fierce", "Feroce"), ("Cheerful", "Allegra")]):
         add("screen.dbtenkaichi.creator.expression.%d" % n, e, i)
-    for n, (e, i) in enumerate([("Martial arts gi", "Gi da arti marziali"), ("Battle armor", "Armatura da battaglia"), ("Casual", "Casual")]):
+    for n, (e, i) in enumerate([("Martial arts gi", "Gi da arti marziali"), ("Battle armor", "Armatura da battaglia"), ("Casual", "Casual"), ("Natural", "Naturale")]):
         add("screen.dbtenkaichi.creator.outfit.%d" % n, e, i)
     add("screen.dbtenkaichi.creator.style", "Style %s", "Stile %s")
     add("screen.dbtenkaichi.creator.voice_value", "Voice %s", "Voce %s")

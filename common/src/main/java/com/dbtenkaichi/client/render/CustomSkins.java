@@ -102,10 +102,11 @@ public final class CustomSkins {
             face();
             ears();
             raceDetails();
-            switch (Math.max(0, Math.min(2, a.outfit))) {
+            switch (Math.max(0, Math.min(Appearance.OUTFITS - 1, a.outfit))) {
                 case 0 -> gi();
                 case 1 -> armor();
-                default -> casual();
+                case 2 -> casual();
+                default -> natural();
             }
             return img;
         }
@@ -245,7 +246,7 @@ public final class CustomSkins {
         private void face() {
             int fx = 8 * S;
             int fy = 8 * S;
-            int brow = bald ? shade(skin, 0.6f) : shade(hairColor, 0.9f);
+            int brow = race == Race.FRIEZA_RACE ? 0x3A2440 : bald ? shade(skin, 0.6f) : shade(hairColor, 0.9f);
             int browY = fy + 6;
             switch (a.eyebrowStyle) {
                 case 1 -> {
@@ -387,14 +388,44 @@ public final class CustomSkins {
                     }
                 }
                 case FRIEZA_RACE -> {
-                    rect(8 * S, 0, 16, 16, feature, 1.1f, 0.95f, 0.04f);
-                    rect(24 * S, 8 * S, 16, 8, feature, 1.0f, 0.9f, 0.04f);
-                    rect(20 * S + 2, 20 * S + 2, 12, 10, feature, 1.12f, 0.95f, 0.04f);
-                    for (int[] limb : new int[][]{{44, 16}, {36, 48}}) {
-                        rect(limb[0] * S, (limb[1] + 4) * S, 8, 4, feature, 1.1f, 1.0f, 0.04f);
-                    }
-                    for (int[] leg : new int[][]{{4, 16}, {20, 48}}) {
-                        rect(leg[0] * S, (leg[1] + 4) * S + 12, 8, 6, feature, 1.1f, 0.95f, 0.04f);
+                    int plate = TenkaichiLayers.plateColor(skin);
+                    int dark = 0x3A2440;
+                    rect(8 * S, 0, 16, 16, plate, 1.08f, 0.96f, 0.03f);
+                    rect(0, 8 * S, 16, 7, plate, 0.95f, 0.88f, 0.03f);
+                    rect(16 * S, 8 * S, 16, 7, plate, 0.95f, 0.88f, 0.03f);
+                    rect(24 * S, 8 * S, 16, 9, plate, 0.9f, 0.82f, 0.03f);
+                    rect(8 * S, 8 * S, 16, 5, plate, 1.06f, 0.98f, 0.03f);
+                    rect(8 * S + 6, 2, 4, 6, feature, 1.15f, 0.85f, 0.02f);
+                    int fx = 8 * S;
+                    int fy = 8 * S;
+                    line(fx, fy + 5, fx + 15, fy + 5, shade(plate, 0.7f));
+                    line(fx + 2, fy + 10, fx + 1, fy + 12, dark);
+                    line(fx + 13, fy + 10, fx + 14, fy + 12, dark);
+                    line(fx + 3, fy + 11, fx + 5, fy + 11, shade(skin, 0.75f));
+                    line(fx + 10, fy + 11, fx + 12, fy + 11, shade(skin, 0.75f));
+                    line(fx + 6, fy + 13, fx + 9, fy + 13, 0x5A2A68);
+                    line(fx + 7, fy + 14, fx + 8, fy + 14, shade(skin, 0.8f));
+                    px(0 * S + 7, 8 * S + 10, dark);
+                    px(16 * S + 8, 8 * S + 10, dark);
+                    if (a.outfit == Appearance.OUTFIT_NATURAL) {
+                        rect(20 * S, 20 * S, 16, 12, plate, 1.08f, 0.95f, 0.03f);
+                        rect(32 * S, 20 * S, 16, 12, plate, 0.85f, 0.78f, 0.03f);
+                        line(20 * S + 7, 20 * S + 2, 20 * S + 7, 20 * S + 11, shade(plate, 0.8f));
+                        line(20 * S, 20 * S + 12, 20 * S + 15, 20 * S + 12, shade(plate, 0.6f));
+                        rect(20 * S + 6, 20 * S + 3, 4, 3, feature, 1.15f, 0.85f, 0.02f);
+                        for (int row = 15; row < 23; row += 3) {
+                            line(20 * S + 4, 20 * S + row, 20 * S + 11, 20 * S + row, shade(skin, 0.86f));
+                        }
+                        for (int[] limb : new int[][]{{40, 16}, {32, 48}}) {
+                            rect((limb[0] + 4) * S, limb[1] * S, 8, 8, plate, 1.1f, 1.0f, 0.03f);
+                            rect(limb[0] * S, (limb[1] + 4) * S, 32, 5, plate, 1.0f, 0.9f, 0.03f);
+                            line(limb[0] * S, (limb[1] + 4) * S + 5, limb[0] * S + 31, (limb[1] + 4) * S + 5, shade(plate, 0.65f));
+                        }
+                        for (int[] leg : new int[][]{{0, 16}, {16, 48}}) {
+                            rect((leg[0] + 4) * S, (leg[1] + 4) * S + 11, 8, 10, plate, 1.06f, 0.94f, 0.03f);
+                            rect((leg[0] + 4) * S + 2, (leg[1] + 4) * S + 8, 4, 3, feature, 1.15f, 0.85f, 0.02f);
+                            line(leg[0] * S, (leg[1] + 4) * S + 21, leg[0] * S + 31, (leg[1] + 4) * S + 21, shade(skin, 0.7f));
+                        }
                     }
                 }
                 case MAJIN -> {
@@ -606,6 +637,22 @@ public final class CustomSkins {
             coverTops(suit, suit);
             hd(44, 32, 4, 4, plate, 1.1f, 1.0f, 0.03f);
             hd(52, 48, 4, 4, plate, 1.1f, 1.0f, 0.03f);
+        }
+
+        private void natural() {
+            overlayClear();
+            if (race == Race.FRIEZA_RACE) {
+                return;
+            }
+            int shorts = a.outfitPrimary;
+            int belt = a.outfitSecondary;
+            faceRows(16, 16, 8, 12, 4, 9, 12, shorts, 0.06f);
+            faceRows(16, 16, 8, 12, 4, 9, 10, belt, 0.04f);
+            faceRows(0, 16, 4, 12, 4, 0, 5, shorts, 0.06f);
+            faceRows(16, 48, 4, 12, 4, 0, 5, shorts, 0.06f);
+            hd(4, 16, 4, 4, shorts, 0.8f, 0.75f, 0.05f);
+            hd(20, 48, 4, 4, shorts, 0.8f, 0.75f, 0.05f);
+            hd(28, 16, 8, 4, shorts, 0.7f, 0.65f, 0.05f);
         }
 
         private void casual() {
