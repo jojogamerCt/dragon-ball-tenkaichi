@@ -24,7 +24,9 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.entity.Entity;
+import org.joml.Matrix4f;
 import org.joml.Matrix4fc;
+import org.joml.Vector3f;
 import org.jspecify.annotations.Nullable;
 
 import java.util.EnumMap;
@@ -304,9 +306,10 @@ public final class TenkaichiLayers {
             int segments = 12;
             int count = Math.max(8, flames + 6);
             int shells = Math.max(2, layers + 1);
+            Vector3f cam = new Matrix4f(pose).invert().transformPosition(new Vector3f());
             for (int layer = 0; layer < shells; layer++) {
                 float layerScale = 1.0f + layer * 0.16f;
-                float layerAlpha = (0.16f - layer * 0.025f) * intensity;
+                float layerAlpha = (0.34f - layer * 0.06f) * intensity;
                 if (layerAlpha <= 0.01f) {
                     continue;
                 }
@@ -319,8 +322,11 @@ public final class TenkaichiLayers {
                     float bottom = 1.75f * scale;
                     double cos = Math.cos(angle);
                     double sin = Math.sin(angle);
-                    double tx = -sin;
-                    double tz = cos;
+                    double bx = cam.z() - sin * 0.5;
+                    double bz = -(cam.x() - cos * 0.5);
+                    double blen = Math.sqrt(bx * bx + bz * bz);
+                    double tx = blen > 1.0e-3 ? bx / blen : -sin;
+                    double tz = blen > 1.0e-3 ? bz / blen : cos;
                     for (int s = 0; s < segments; s++) {
                         float t0 = (float) s / segments;
                         float t1 = (float) (s + 1) / segments;
@@ -357,9 +363,8 @@ public final class TenkaichiLayers {
         }
 
         private static float fade(float t) {
-            float in = Math.min(1.0f, t * 6.0f);
-            float out = Math.max(0.0f, 1.0f - t * 1.15f);
-            return in * out * out * out;
+            float bell = (float) Math.pow(Math.sin(Math.PI * Math.min(1.0f, t * 1.05f)), 0.6);
+            return bell * (1.0f - 0.3f * t);
         }
 
         static void softQuad(Matrix4fc pose, VertexConsumer buffer, float cx0, float y0, float cz0, float cx1, float y1, float cz1,
