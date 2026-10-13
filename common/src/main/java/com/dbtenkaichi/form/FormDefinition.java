@@ -32,6 +32,7 @@ public final class FormDefinition {
     public int cinematicTicks = 70;
     public String cinematic = "power_up";
     public int quickTicks = 8;
+    public boolean kaiokenCompatible;
     public Visual visual = new Visual();
 
     public boolean allows(Race race) {

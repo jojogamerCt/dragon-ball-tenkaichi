@@ -78,6 +78,7 @@ KEYS = {
     "skill_2": ("Technique slot 2", "Tecnica slot 2"),
     "skill_3": ("Technique slot 3", "Tecnica slot 3"),
     "skill_4": ("Technique slot 4", "Tecnica slot 4"),
+    "kaioken": ("Kaioken (cycle level)", "Kaioken (cambia livello)"),
     "character_menu": ("Character menu", "Menu personaggio"),
 }
 
@@ -165,8 +166,14 @@ def build():
     add("technique.dbtenkaichi.death_beam", "Death Beam", "Raggio della Morte")
     add("form.dbtenkaichi.super_saiyan_2", "Super Saiyan 2", "Super Saiyan 2")
     add("form.dbtenkaichi.super_saiyan_3", "Super Saiyan 3", "Super Saiyan 3")
-    add("form.dbtenkaichi.kaioken", "Kaioken", "Kaioken")
-    add("form.dbtenkaichi.kaioken_x10", "Kaioken x10", "Kaioken x10")
+    add("technique.dbtenkaichi.kaioken", "Kaioken", "Kaioken")
+    add("message.dbtenkaichi.kaioken_unknown", "You have not learned the Kaioken.", "Non hai imparato il Kaioken.")
+    add("message.dbtenkaichi.kaioken_incompatible", "The Kaioken cannot be used in this form.", "Il Kaioken non si può usare in questa forma.")
+    add("message.dbtenkaichi.kaioken_on", "Kaioken x%s!", "Kaioken x%s!")
+    add("message.dbtenkaichi.kaioken_off", "Kaioken released", "Kaioken disattivato")
+    add("message.dbtenkaichi.kaioken_exhausted", "Your Ki ran out and the Kaioken faded.", "Il Ki si è esaurito e il Kaioken è svanito.")
+    add("message.dbtenkaichi.kaioken_strain", "Your body cannot take the strain: the Kaioken breaks off!", "Il tuo corpo non regge lo sforzo: il Kaioken si interrompe!")
+    add("hud.dbtenkaichi.kaioken", "Kaioken x%s", "Kaioken x%s")
     for dmg, (e, i) in {
         "martial_arts": ("%1$s was beaten down", "%1$s è stato messo al tappeto"),
         "ki_blast": ("%1$s was struck by a Ki blast", "%1$s è stato colpito da una sfera Ki"),
@@ -201,6 +208,42 @@ def build():
         "Non sei pronto: allena Controllo Ki (6) e Potenza Ki (5) e completa due sessioni.")
     add("message.dbtenkaichi.tp_gained", "+%s TP", "+%s TP")
     add("command.dbtenkaichi.done", "Done.", "Fatto.")
+    add('entity.dbtenkaichi.master.roshi', 'Master Roshi', 'Maestro Muten')
+    add('entity.dbtenkaichi.master.karin', 'Korin', 'Karin')
+    add('entity.dbtenkaichi.master.kami', 'Kami', 'Il Supremo')
+    add('landmark.dbtenkaichi.kame_house', 'Kame House', 'Kame House')
+    add('landmark.dbtenkaichi.korin_tower', 'Korin Tower', 'Torre di Karin')
+    add('landmark.dbtenkaichi.kami_lookout', "Kami's Lookout", 'Palazzo del Supremo')
+    add('command.dbtenkaichi.landmark', '%s: %s, %s, %s', '%s: %s, %s, %s')
+    add('command.dbtenkaichi.no_landmarks', 'No landmarks have been generated yet.', 'Nessun luogo iconico generato.')
+    add('command.dbtenkaichi.unknown_lesson', 'Unknown trial.', 'Prova sconosciuta.')
+    add('lesson.dbtenkaichi.kamehameha', 'Kamehameha', 'Kamehameha')
+    add('lesson.dbtenkaichi.senzu', 'Senzu Bean', 'Fagiolo Senzu')
+    add('lesson.dbtenkaichi.sacred_water', 'Sacred Water', 'Acqua Sacra')
+    add('lesson.dbtenkaichi.time_chamber', 'Hyperbolic Time Chamber', 'Stanza dello Spirito e del Tempo')
+    add('arena.dbtenkaichi.mountain', 'Rocky Wasteland', 'Lande rocciose')
+    add('arena.dbtenkaichi.island', 'Kame Island', 'Isola della Kame House')
+    add('arena.dbtenkaichi.tower', 'Top of Korin Tower', 'Cima della Torre di Karin')
+    add('arena.dbtenkaichi.time_chamber', 'Hyperbolic Time Chamber', 'Stanza dello Spirito e del Tempo')
+    add('message.dbtenkaichi.trial_vs', 'Trial against %s', 'Prova contro %s')
+    add('message.dbtenkaichi.trial_fight', 'FIGHT!', 'COMBATTI!')
+    add('message.dbtenkaichi.trial_cleared', 'Trial cleared!', 'Prova superata!')
+    add('message.dbtenkaichi.trial_failed', 'Trial failed', 'Prova fallita')
+    add('message.dbtenkaichi.trial_time', 'Time left: %s:%s', 'Tempo rimasto: %s:%s')
+    add('message.dbtenkaichi.trial_busy', 'You cannot start a trial right now.', 'Non puoi iniziare una prova adesso.')
+    add('message.dbtenkaichi.trial_unavailable', 'The training realm is not available on this server.', 'La dimensione di allenamento non è disponibile su questo server.')
+    add('message.dbtenkaichi.lesson_locked', 'You need a base Battle Power of %s.', 'Ti serve un Battle Power base di %s.')
+    add('message.dbtenkaichi.not_enough_tp', 'You need %s Training Points.', 'Ti servono %s Punti Allenamento.')
+    add('message.dbtenkaichi.sacred_water', 'You drank the Sacred Water: Speed, Agility and Martial Arts +2.', "Hai bevuto l'Acqua Sacra: Velocità, Agilità e Arti marziali +2.")
+    add('message.dbtenkaichi.time_chamber', 'A year of training in a single day: +250 TP.', 'Un anno di allenamento in un solo giorno: +250 TP.')
+    add('training.dbtenkaichi.buy', 'Buy · %s TP', 'Compra · %s TP')
+    add('training.dbtenkaichi.trial', 'Trial', 'Prova')
+    add('training.dbtenkaichi.learned_short', 'Learned', 'Appreso')
+    add('screen.dbtenkaichi.training.lessons', 'Lessons', 'Lezioni')
+    add('screen.dbtenkaichi.training.requires_bp', 'Requires base BP %s', 'Richiede BP base %s')
+    add('screen.dbtenkaichi.training.cooldown', 'Come back tomorrow', 'Torna domani')
+    add('screen.dbtenkaichi.training.available', 'Available', 'Disponibile')
+    add('screen.dbtenkaichi.character.buy_technique', '%s · %s TP · BP %s', '%s · %s TP · BP %s')
     add("command.dbtenkaichi.reloaded", "Dragon Block: Tenkaichi data reloaded.", "Dati di Dragon Block: Tenkaichi ricaricati.")
     add("command.dbtenkaichi.no_character", "That player has no character yet.", "Quel giocatore non ha ancora un personaggio.")
     add("command.dbtenkaichi.unknown_form", "Unknown transformation: %s", "Trasformazione sconosciuta: %s")

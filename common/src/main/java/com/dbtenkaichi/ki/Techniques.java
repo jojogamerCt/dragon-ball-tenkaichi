@@ -44,19 +44,19 @@ public final class Techniques {
             9.0, 12.0, 0.0, 0, 0, 3.6, 0.12, 0.0, 64, 40, 0.6, 0.0, 0.0, true, false, false, 25,
             0xFFE0FF, 0xFF5AD8, StatType.KI_CONTROL));
 
-    public record Unlock(Technique technique, long battlePower, java.util.Set<String> races) {
+    public record Unlock(Technique technique, long battlePower, int price, java.util.Set<String> races) {
         public boolean allows(com.dbtenkaichi.race.Race race) {
             return races.isEmpty() || races.contains(race.id());
         }
     }
 
     public static final java.util.List<Unlock> UNLOCKS = java.util.List.of(
-            new Unlock(MASENKO, 3_000L, java.util.Set.of("half_saiyan", "namekian")),
-            new Unlock(DEATH_BEAM, 5_000L, java.util.Set.of("frieza_race", "bio_android")),
-            new Unlock(GALICK_GUN, 8_000L, java.util.Set.of("saiyan")),
-            new Unlock(SPECIAL_BEAM_CANNON, 10_000L, java.util.Set.of("namekian")),
-            new Unlock(BIG_BANG_ATTACK, 40_000L, java.util.Set.of("saiyan", "half_saiyan", "android")),
-            new Unlock(FINAL_FLASH, 120_000L, java.util.Set.of("saiyan", "bio_android")));
+            new Unlock(MASENKO, 3_000L, 250, java.util.Set.of("half_saiyan", "namekian")),
+            new Unlock(DEATH_BEAM, 5_000L, 300, java.util.Set.of("frieza_race", "bio_android")),
+            new Unlock(GALICK_GUN, 8_000L, 400, java.util.Set.of("saiyan")),
+            new Unlock(SPECIAL_BEAM_CANNON, 10_000L, 450, java.util.Set.of("namekian")),
+            new Unlock(BIG_BANG_ATTACK, 40_000L, 700, java.util.Set.of("saiyan", "half_saiyan", "android")),
+            new Unlock(FINAL_FLASH, 120_000L, 1000, java.util.Set.of("saiyan", "bio_android")));
 
     private Techniques() {
     }

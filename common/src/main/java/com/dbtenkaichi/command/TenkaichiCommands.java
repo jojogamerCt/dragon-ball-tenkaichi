@@ -94,11 +94,11 @@ public final class TenkaichiCommands {
         root.then(Commands.literal("learn").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(Commands.argument("player", EntityArgument.player())
                         .then(Commands.argument("technique", StringArgumentType.greedyString())
-                                .suggests((ctx, b) -> SharedSuggestionProvider.suggest(Techniques.all().keySet(), b))
+                                .suggests((ctx, b) -> SharedSuggestionProvider.suggest(java.util.stream.Stream.concat(Techniques.all().keySet().stream(), java.util.stream.Stream.of(com.dbtenkaichi.form.KaiokenSystem.ABILITY)), b))
                                 .executes(ctx -> {
                                     ServerPlayer player = EntityArgument.getPlayer(ctx, "player");
                                     String id = StringArgumentType.getString(ctx, "technique");
-                                    if (Techniques.get(id) == null) {
+                                    if (Techniques.get(id) == null && !com.dbtenkaichi.form.KaiokenSystem.ABILITY.equals(id)) {
                                         ctx.getSource().sendFailure(Component.translatable("command.dbtenkaichi.unknown_technique", id));
                                         return 0;
                                     }
@@ -121,6 +121,39 @@ public final class TenkaichiCommands {
                             ctx.getSource().sendSuccess(() -> Component.translatable("command.dbtenkaichi.done"), true);
                             return 1;
                         })));
+        root.then(Commands.literal("landmarks")
+                .executes(ctx -> {
+                    var sites = com.dbtenkaichi.world.Landmarks.sites();
+                    if (sites.isEmpty()) {
+                        ctx.getSource().sendFailure(Component.translatable("command.dbtenkaichi.no_landmarks"));
+                        return 0;
+                    }
+                    sites.forEach((id, pos) -> ctx.getSource().sendSuccess(() -> Component.translatable("command.dbtenkaichi.landmark",
+                            Component.translatable("landmark.dbtenkaichi." + id), pos.getX(), pos.getY(), pos.getZ()), false));
+                    return sites.size();
+                }));
+        root.then(Commands.literal("trial").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                .then(Commands.literal("start")
+                        .then(Commands.argument("player", EntityArgument.player())
+                                .then(Commands.argument("lesson", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(com.dbtenkaichi.training.Lessons.ALL.stream().filter(com.dbtenkaichi.training.Lessons.Lesson::trial).map(com.dbtenkaichi.training.Lessons.Lesson::id), b))
+                                        .executes(ctx -> {
+                                            ServerPlayer player = EntityArgument.getPlayer(ctx, "player");
+                                            com.dbtenkaichi.training.Lessons.Lesson lesson = com.dbtenkaichi.training.Lessons.get(StringArgumentType.getString(ctx, "lesson"));
+                                            if (lesson == null || !lesson.trial()) {
+                                                ctx.getSource().sendFailure(Component.translatable("command.dbtenkaichi.unknown_lesson"));
+                                                return 0;
+                                            }
+                                            boolean ok = com.dbtenkaichi.training.TrialManager.start(player, PlayerManager.data(player), lesson, lesson.mentors().iterator().next());
+                                            if (ok) {
+                                                ctx.getSource().sendSuccess(() -> Component.translatable("command.dbtenkaichi.done"), true);
+                                            }
+                                            return ok ? 1 : 0;
+                                        }))))
+                .then(Commands.literal("end")
+                        .then(Commands.argument("player", EntityArgument.player())
+                                .then(Commands.literal("win").executes(ctx -> com.dbtenkaichi.training.TrialManager.forceEnd(EntityArgument.getPlayer(ctx, "player"), true) ? 1 : 0))
+                                .then(Commands.literal("lose").executes(ctx -> com.dbtenkaichi.training.TrialManager.forceEnd(EntityArgument.getPlayer(ctx, "player"), false) ? 1 : 0)))));
         root.then(Commands.literal("reload").requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
                 .executes(ctx -> {
                     ServerEvents.onDataReloaded(ctx.getSource().getServer());

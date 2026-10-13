@@ -13,8 +13,15 @@ import com.dbtenkaichi.registry.ModSounds;
 import com.dbtenkaichi.server.PlayerManager;
 import com.dbtenkaichi.stats.StatBlock;
 import com.dbtenkaichi.stats.StatType;
-import com.dbtenkaichi.training.TrainingSystem;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.dbtenkaichi.training.Lessons;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,6 +41,9 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 public class MasterEntity extends FighterNpc {
+    private static final EntityDataAccessor<Integer> KIND = SynchedEntityData.defineId(MasterEntity.class, EntityDataSerializers.INT);
+    private @Nullable BlockPos home;
+    private boolean trial;
     private int sparringPartner = -1;
     private int drillPartner = -1;
     private long nextDrillShot;
@@ -47,6 +57,91 @@ public class MasterEntity extends FighterNpc {
         }
         applyStats(block, Race.HUMAN);
         setPersistenceRequired();
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(KIND, 0);
+    }
+
+    public MasterKind kind() {
+        return MasterKind.byOrdinal(entityData.get(KIND));
+    }
+
+    public void setKind(MasterKind kind) {
+        entityData.set(KIND, kind.ordinal());
+        setCustomName(kind == MasterKind.MASTER ? null : Component.translatable(kind.translationKey()));
+    }
+
+    public void setHome(@Nullable BlockPos pos) {
+        home = pos;
+    }
+
+    public boolean inTrial() {
+        return trial;
+    }
+
+    public void prepareTrial(ServerPlayer player, PlayerData data) {
+        trial = true;
+        StatBlock block = new StatBlock();
+        for (StatType type : StatType.all()) {
+            block.set(type, Math.max(5, (int) Math.round(data.stat(type) * 0.9)));
+        }
+        applyStats(block, Race.HUMAN);
+        lookAtPoint(player.getBoundingBox().getCenter());
+    }
+
+    public void startTrialFight(ServerPlayer player) {
+        trial = true;
+        sparringPartner = player.getId();
+        comboHits = 0;
+        nextDrillShot = level().getGameTime() + 40;
+        setTarget(player);
+    }
+
+    public void openMenu(ServerPlayer player) {
+        PlayerData data = PlayerManager.data(player);
+        CompoundTag tag = new CompoundTag();
+        tag.putString("mode", "menu");
+        tag.putInt("master", getId());
+        tag.putInt("kind", kind().ordinal());
+        tag.putInt("sessions", data.trainingSessions());
+        tag.putFloat("fatigue", (float) data.fatigue());
+        tag.putLong("tp", data.trainingPoints());
+        ListTag lessons = new ListTag();
+        for (Lessons.Lesson lesson : Lessons.forMaster(kind())) {
+            CompoundTag entry = new CompoundTag();
+            entry.putString("id", lesson.id());
+            entry.putInt("state", Lessons.state(player, data, lesson));
+            entry.putInt("price", lesson.price());
+            entry.putBoolean("trial", lesson.trial());
+            entry.putLong("bp", lesson.battlePower());
+            lessons.add(entry);
+        }
+        tag.put("lessons", lessons);
+        Services.NETWORK.sendToPlayer(player, new Packets.OpenScreen(PlayerManager.SCREEN_TRAINING, tag));
+    }
+
+    @Override
+    protected void addAdditionalSaveData(ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        output.putInt("master_kind", kind().ordinal());
+        if (home != null) {
+            output.putIntArray("master_home", new int[]{home.getX(), home.getY(), home.getZ()});
+        }
+    }
+
+    @Override
+    protected void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
+        entityData.set(KIND, input.getIntOr("master_kind", 0));
+        home = input.getIntArray("master_home").filter(a -> a.length == 3).map(a -> new BlockPos(a[0], a[1], a[2])).orElse(null);
+    }
+
+    @Override
+    public boolean shouldBeSaved() {
+        return !trial && super.shouldBeSaved();
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -76,14 +171,10 @@ public class MasterEntity extends FighterNpc {
                 PlayerManager.openCreator(serverPlayer);
                 return InteractionResult.SUCCESS;
             }
-            CompoundTag tag = new CompoundTag();
-            tag.putString("mode", "menu");
-            tag.putInt("master", getId());
-            tag.putBoolean("kamehameha_known", data.hasSkill(Techniques.KAMEHAMEHA.id()));
-            tag.putBoolean("kamehameha_ready", TrainingSystem.canLearnKamehameha(data));
-            tag.putInt("sessions", data.trainingSessions());
-            tag.putFloat("fatigue", (float) data.fatigue());
-            Services.NETWORK.sendToPlayer(serverPlayer, new Packets.OpenScreen(PlayerManager.SCREEN_TRAINING, tag));
+            if (trial) {
+                return InteractionResult.PASS;
+            }
+            openMenu(serverPlayer);
         }
         return InteractionResult.SUCCESS;
     }
@@ -119,7 +210,7 @@ public class MasterEntity extends FighterNpc {
 
     @Override
     public double outgoingDamageScale() {
-        return 0.2;
+        return trial ? 0.5 : 0.2;
     }
 
     @Override
@@ -145,6 +236,9 @@ public class MasterEntity extends FighterNpc {
             if (isFighterFlying()) {
                 setFighterFlying(false);
             }
+            if (home != null && !trial && home.distToCenterSqr(position()) > 36.0 && now % 20 == 0) {
+                getNavigation().moveTo(home.getX() + 0.5, home.getY(), home.getZ() + 0.5, 0.8);
+            }
         }
     }
 
@@ -159,6 +253,13 @@ public class MasterEntity extends FighterNpc {
             setFighterFlying(fly);
         }
         RuntimeState partnerRt = PlayerManager.data(partner).runtime();
+        if (trial && distance > 6.0 && now >= nextDrillShot) {
+            nextDrillShot = now + 30 + getRandom().nextInt(25);
+            KiBlastEntity blast = KiBlastEntity.create(level, this, Techniques.KI_BLAST, 0xBFE6FF, -1, 0.0);
+            level.addFreshEntity(blast);
+            CombatSystem.anim(this, getRandom().nextBoolean() ? AnimClip.KI_BLAST_LEFT : AnimClip.KI_BLAST_RIGHT, 6, 0);
+            CombatSystem.playSound(level, this, ModSounds.KI_BLAST.get(), 0.8f, 1.1f);
+        }
         if (distance > 3.0) {
             if (fly) {
                 FighterMovement.flyToward(this, partner.getBoundingBox().getCenter(), 0.6, 0.3);
@@ -174,7 +275,7 @@ public class MasterEntity extends FighterNpc {
             return;
         }
         runtime.guarding = false;
-        if (now >= runtime.nextAttackAllowed && partner.getHealth() > partner.getMaxHealth() * 0.35f) {
+        if (now >= runtime.nextAttackAllowed && (trial || partner.getHealth() > partner.getMaxHealth() * 0.35f)) {
             if (comboHits >= 3) {
                 comboHits = 0;
                 runtime.nextAttackAllowed = now + 30;

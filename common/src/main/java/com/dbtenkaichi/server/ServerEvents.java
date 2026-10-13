@@ -33,6 +33,8 @@ public final class ServerEvents {
         PlayerManager.tickServer(server);
         BeamClashManager.tick(server);
         DestructionManager.tick(server);
+        com.dbtenkaichi.world.Landmarks.tick(server);
+        com.dbtenkaichi.training.TrialManager.tick(server);
         SmokeTest.tick(server);
     }
 

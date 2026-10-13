@@ -101,6 +101,7 @@ public final class PlayerManager {
     public static void onLeave(ServerPlayer player) {
         PlayerData data = data(player);
         com.dbtenkaichi.ki.BeamClashManager.onLeave(player);
+        com.dbtenkaichi.training.TrialManager.onLeave(player);
         if (data.runtime().flying) {
             player.setNoGravity(false);
         }
@@ -140,23 +141,51 @@ public final class PlayerManager {
         }
     }
 
-    public static void checkTechniqueUnlocks(ServerPlayer player, PlayerData data) {
-        if (!data.isCreated()) {
+    public static void buyTechnique(ServerPlayer player, PlayerData data, int index) {
+        if (index == com.dbtenkaichi.form.KaiokenSystem.SHOP_INDEX) {
+            buyKaioken(player, data);
             return;
         }
-        long bp = com.dbtenkaichi.combat.Fighter.of(player).battlePower();
-        for (com.dbtenkaichi.ki.Techniques.Unlock unlock : com.dbtenkaichi.ki.Techniques.UNLOCKS) {
-            String id = unlock.technique().id();
-            if (data.hasSkill(id) || !unlock.allows(data.race()) || bp < unlock.battlePower()) {
-                continue;
-            }
-            if (data.learnSkill(id)) {
-                data.runtime().dataDirty = true;
-                player.sendSystemMessage(net.minecraft.network.chat.Component.translatable("message.dbtenkaichi.learned",
-                        net.minecraft.network.chat.Component.translatable(unlock.technique().translationKey())));
-                com.dbtenkaichi.combat.CombatSystem.playSound(player.level(), player, com.dbtenkaichi.registry.ModSounds.UI_CONFIRM.get(), 1.0f, 1.0f);
-            }
+        if (!data.isCreated() || index < 0 || index >= com.dbtenkaichi.ki.Techniques.UNLOCKS.size()) {
+            return;
         }
+        com.dbtenkaichi.ki.Techniques.Unlock unlock = com.dbtenkaichi.ki.Techniques.UNLOCKS.get(index);
+        String id = unlock.technique().id();
+        if (data.hasSkill(id) || !unlock.allows(data.race())) {
+            return;
+        }
+        if (com.dbtenkaichi.stats.BattlePower.base(data.stats(), ConfigManager.balance()) < unlock.battlePower()) {
+            player.sendSystemMessage(Component.translatable("message.dbtenkaichi.lesson_locked", unlock.battlePower()));
+            return;
+        }
+        if (data.trainingPoints() < unlock.price()) {
+            player.sendSystemMessage(Component.translatable("message.dbtenkaichi.not_enough_tp", unlock.price()));
+            return;
+        }
+        data.setTrainingPoints(data.trainingPoints() - unlock.price());
+        data.learnSkill(id);
+        data.runtime().dataDirty = true;
+        player.sendSystemMessage(Component.translatable("message.dbtenkaichi.learned", Component.translatable(unlock.technique().translationKey())));
+        com.dbtenkaichi.combat.CombatSystem.playSound(player.level(), player, com.dbtenkaichi.registry.ModSounds.UI_CONFIRM.get(), 1.0f, 1.0f);
+    }
+
+    private static void buyKaioken(ServerPlayer player, PlayerData data) {
+        if (!data.isCreated() || data.hasSkill(com.dbtenkaichi.form.KaiokenSystem.ABILITY)) {
+            return;
+        }
+        if (com.dbtenkaichi.stats.BattlePower.base(data.stats(), ConfigManager.balance()) < com.dbtenkaichi.form.KaiokenSystem.BATTLE_POWER) {
+            player.sendSystemMessage(Component.translatable("message.dbtenkaichi.lesson_locked", com.dbtenkaichi.form.KaiokenSystem.BATTLE_POWER));
+            return;
+        }
+        if (data.trainingPoints() < com.dbtenkaichi.form.KaiokenSystem.PRICE) {
+            player.sendSystemMessage(Component.translatable("message.dbtenkaichi.not_enough_tp", com.dbtenkaichi.form.KaiokenSystem.PRICE));
+            return;
+        }
+        data.setTrainingPoints(data.trainingPoints() - com.dbtenkaichi.form.KaiokenSystem.PRICE);
+        data.learnSkill(com.dbtenkaichi.form.KaiokenSystem.ABILITY);
+        data.runtime().dataDirty = true;
+        player.sendSystemMessage(Component.translatable("message.dbtenkaichi.learned", Component.translatable("technique.dbtenkaichi.kaioken")));
+        com.dbtenkaichi.combat.CombatSystem.playSound(player.level(), player, com.dbtenkaichi.registry.ModSounds.UI_CONFIRM.get(), 1.0f, 1.0f);
     }
 
     private static void tickPlayer(ServerPlayer player) {
@@ -187,9 +216,6 @@ public final class PlayerManager {
         if (rt.charging && !exhausted && !rt.busy(now)) {
             ki += DerivedStats.kiChargePerSecond(data.stats(), data.race(), cfg) / 20.0;
             stamina -= 0.5 / 20.0;
-            if (now % 40 == 0) {
-                checkTechniqueUnlocks(player, data);
-            }
             if (now % 20 == 0) {
                 TrainingSystem.passiveGain(player, data, "ki_charge", StatType.KI_CONTROL, 0.6);
             }
@@ -232,6 +258,14 @@ public final class PlayerManager {
                     rt.exhaustedUntil = now + 100;
                     data.setFatigue(data.fatigue() + 0.1);
                 }
+            }
+        }
+
+        if (rt.kaioken > 0) {
+            ki -= com.dbtenkaichi.form.KaiokenSystem.tick(player, data, cfg, now) * DerivedStats.kiCostMultiplier(data.stats(), data.race(), cfg);
+            if (ki <= 0) {
+                ki = 0;
+                com.dbtenkaichi.form.KaiokenSystem.off(player, data, now, "message.dbtenkaichi.kaioken_exhausted");
             }
         }
 
@@ -283,7 +317,7 @@ public final class PlayerManager {
         setModifier(player, Attributes.SCALE, SCALE_ID, data.isCreated() ? data.appearance().height - 1.0 : 0.0, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         setModifier(player, Attributes.SAFE_FALL_DISTANCE, FALL_ID, data.isCreated() ? Math.min(40.0, 3.0 + data.stat(StatType.CONSTITUTION) * 0.25 + data.stat(StatType.AGILITY) * 0.15) : 0.0, AttributeModifier.Operation.ADD_VALUE);
         FormDefinition form = data.isTransformed() ? FormRegistry.get(data.form(), false) : null;
-        setModifier(player, Attributes.MOVEMENT_SPEED, FORM_SPEED_ID, form == null ? 0.0 : (form.speedMultiplier * form.controlFactor(data.mastery(form.id))) - 1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+        setModifier(player, Attributes.MOVEMENT_SPEED, FORM_SPEED_ID, (form == null ? 1.0 : form.speedMultiplier * form.controlFactor(data.mastery(form.id))) * com.dbtenkaichi.form.KaiokenSystem.speed(data.runtime().kaioken) - 1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
         setModifier(player, Attributes.MOVEMENT_SPEED, CHARGE_SLOW_ID, data.runtime().charging ? -0.6 : 0.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
         com.dbtenkaichi.race.RaceMechanics.applyAttributes(player, data);
         float newMax = player.getMaxHealth();

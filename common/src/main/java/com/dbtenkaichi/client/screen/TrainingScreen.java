@@ -2,7 +2,6 @@ package com.dbtenkaichi.client.screen;
 
 import com.dbtenkaichi.client.ClientState;
 import com.dbtenkaichi.client.input.Keybinds;
-import com.dbtenkaichi.ki.Techniques;
 import com.dbtenkaichi.network.ActionType;
 import com.dbtenkaichi.network.Packets;
 import com.dbtenkaichi.platform.Services;
@@ -15,6 +14,9 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import com.dbtenkaichi.entity.MasterKind;
+import com.dbtenkaichi.training.Lessons;
 import net.minecraft.network.chat.Component;
 
 public class TrainingScreen extends Screen {
@@ -53,7 +55,7 @@ public class TrainingScreen extends Screen {
                 return;
             }
         }
-        if (this.minecraft != null) {
+        if (this.minecraft != null && this.width > 0) {
             rebuildWidgets();
         }
     }
@@ -68,21 +70,35 @@ public class TrainingScreen extends Screen {
         int y = this.height / 2 - 70;
         switch (mode) {
             case "menu" -> {
+                int top = this.height / 2 - 74;
                 String[] activities = {TrainingSystem.MEDITATION, TrainingSystem.KI_CONTROL, TrainingSystem.SPARRING, TrainingSystem.DODGE_DRILL};
-                for (String id : activities) {
+                for (int i = 0; i < activities.length; i++) {
+                    String id = activities[i];
                     addRenderableWidget(TenkaichiButton.create(Component.translatable("training.dbtenkaichi." + id), b -> send(id, TrainingSystem.PHASE_START, master))
-                            .bounds(cx - 100, y, 200, 20).build());
-                    y += 24;
+                            .bounds(cx - 150 + (i % 2) * 152, top + (i / 2) * 22, 148, 20).build());
                 }
-                boolean known = data.getBooleanOr("kamehameha_known", false);
-                Button learn = addRenderableWidget(TenkaichiButton.create(Component.translatable(known ? "training.dbtenkaichi.learned" : "training.dbtenkaichi.learn",
-                                Component.translatable(Techniques.KAMEHAMEHA.translationKey())),
-                        b -> {
-                            send(Techniques.KAMEHAMEHA.id(), TrainingSystem.PHASE_LEARN, master);
+                ListTag lessons = data.getListOrEmpty("lessons");
+                long tp = data.getLongOr("tp", 0L);
+                for (int i = 0; i < Math.min(4, lessons.size()); i++) {
+                    CompoundTag lesson = lessons.getCompoundOrEmpty(i);
+                    String id = lesson.getStringOr("id", "");
+                    int state = lesson.getIntOr("state", Lessons.LOCKED);
+                    int price = lesson.getIntOr("price", 0);
+                    int rowY = top + 62 + i * 24;
+                    if (price > 0) {
+                        Component label = state == Lessons.DONE ? Component.translatable("training.dbtenkaichi.learned_short") : Component.translatable("training.dbtenkaichi.buy", price);
+                        Button buy = addRenderableWidget(TenkaichiButton.create(label, b -> send(id, TrainingSystem.PHASE_LEARN, master)).bounds(cx + 4, rowY, 88, 20).build());
+                        buy.active = state == Lessons.AVAILABLE && tp >= price;
+                    }
+                    if (lesson.getBooleanOr("trial", false)) {
+                        Button trial = addRenderableWidget(TenkaichiButton.create(Component.translatable("training.dbtenkaichi.trial"), b -> {
+                            send(id, TrainingSystem.PHASE_TRIAL, master);
                             onClose();
-                        }).bounds(cx - 100, y + 6, 200, 20).build());
-                learn.active = !known && data.getBooleanOr("kamehameha_ready", false);
-                addRenderableWidget(TenkaichiButton.create(Component.translatable("gui.done"), b -> onClose()).bounds(cx - 100, y + 34, 200, 20).build());
+                        }).bounds(cx + 96, rowY, 56, 20).build());
+                        trial.active = state == Lessons.AVAILABLE;
+                    }
+                }
+                addRenderableWidget(TenkaichiButton.create(Component.translatable("gui.done"), b -> onClose()).bounds(cx - 60, this.height / 2 + 72, 120, 20).build());
             }
             case "summary" -> addRenderableWidget(TenkaichiButton.create(Component.translatable("gui.done"), b -> onClose()).bounds(cx - 60, this.height / 2 + 40, 120, 20).build());
             default -> addRenderableWidget(TenkaichiButton.create(Component.translatable("training.dbtenkaichi.stop"), b -> {
@@ -146,8 +162,26 @@ public class TrainingScreen extends Screen {
         super.extractRenderState(g, mouseX, mouseY, partial);
         switch (mode) {
             case "menu" -> {
-                g.centeredText(this.font, Component.translatable("screen.dbtenkaichi.training.master"), cx, cy - 100, 0xFFFFD45A);
+                g.centeredText(this.font, Component.translatable(MasterKind.byOrdinal(data.getIntOr("kind", 0)).translationKey()), cx, cy - 100, 0xFFFFD45A);
                 g.centeredText(this.font, Component.translatable("screen.dbtenkaichi.training.status", data.getIntOr("sessions", 0), Math.round(data.getFloatOr("fatigue", 0) * 100)), cx, cy - 88, 0xFFBBBBBB);
+                ListTag lessons = data.getListOrEmpty("lessons");
+                if (!lessons.isEmpty()) {
+                    TenkaichiUi.divider(g, cx - 150, cy - 29, 300);
+                    g.text(this.font, Component.translatable("screen.dbtenkaichi.training.lessons"), cx - 150, cy - 25, 0xFFFFD45A, true);
+                }
+                for (int i = 0; i < Math.min(4, lessons.size()); i++) {
+                    CompoundTag lesson = lessons.getCompoundOrEmpty(i);
+                    int rowY = cy - 74 + 62 + i * 24;
+                    int state = lesson.getIntOr("state", Lessons.LOCKED);
+                    g.text(this.font, Component.translatable("lesson.dbtenkaichi." + lesson.getStringOr("id", "")), cx - 148, rowY + 2, state == Lessons.DONE ? 0xFF7CFFB0 : 0xFFFFFFFF, true);
+                    Component info = switch (state) {
+                        case Lessons.LOCKED -> Component.translatable("screen.dbtenkaichi.training.requires_bp", lesson.getLongOr("bp", 0L));
+                        case Lessons.COOLDOWN -> Component.translatable("screen.dbtenkaichi.training.cooldown");
+                        case Lessons.DONE -> Component.translatable("training.dbtenkaichi.learned_short");
+                        default -> Component.translatable("screen.dbtenkaichi.training.available");
+                    };
+                    g.text(this.font, info, cx - 148, rowY + 12, state == Lessons.LOCKED ? 0xFFFF8A6A : 0xFF9AA4B4, false);
+                }
             }
             case "summary" -> {
                 g.centeredText(this.font, Component.translatable("training.dbtenkaichi." + activity), cx, cy - 60, 0xFFFFD45A);

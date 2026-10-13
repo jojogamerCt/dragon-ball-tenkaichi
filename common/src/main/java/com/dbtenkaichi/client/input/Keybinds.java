@@ -22,9 +22,10 @@ public final class Keybinds {
     public static final KeyMapping SKILL_2 = key("skill_2", InputConstants.KEY_C);
     public static final KeyMapping SKILL_3 = key("skill_3", InputConstants.KEY_N);
     public static final KeyMapping SKILL_4 = key("skill_4", InputConstants.KEY_M);
+    public static final KeyMapping KAIOKEN = key("kaioken", InputConstants.KEY_Y);
     public static final KeyMapping MENU = key("character_menu", InputConstants.KEY_U);
 
-    public static final List<KeyMapping> ALL = List.of(CHARGE, FLIGHT, STANCE, LOCK_ON, NEXT_TARGET, DODGE, DASH, TRANSFORM, REVERT, SKILL_1, SKILL_2, SKILL_3, SKILL_4, MENU);
+    public static final List<KeyMapping> ALL = List.of(CHARGE, FLIGHT, STANCE, LOCK_ON, NEXT_TARGET, DODGE, DASH, TRANSFORM, REVERT, SKILL_1, SKILL_2, SKILL_3, SKILL_4, KAIOKEN, MENU);
     public static final KeyMapping[] SKILLS = {SKILL_1, SKILL_2, SKILL_3, SKILL_4};
 
     private Keybinds() {

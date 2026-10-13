@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import org.jspecify.annotations.Nullable;
 
 public record Fighter(LivingEntity entity, StatBlock stats, Race race, @Nullable FormDefinition form, float mastery, double kiRatio, double fatigue,
-                      @Nullable RuntimeState runtime, @Nullable PlayerData data, float suppression) {
+                      @Nullable RuntimeState runtime, @Nullable PlayerData data, float suppression, int kaioken) {
 
     public static Fighter of(LivingEntity entity) {
         boolean client = entity.level().isClientSide();
@@ -26,13 +26,13 @@ public record Fighter(LivingEntity entity, StatBlock stats, Race race, @Nullable
             FormDefinition form = data.isTransformed() ? FormRegistry.get(data.form(), client) : null;
             double maxKi = Math.max(1.0, data.runtime().cachedMaxKi);
             double ki = data.ki() < 0 ? maxKi : data.ki();
-            return new Fighter(entity, data.stats(), data.race(), form, data.mastery(data.form()), ki / maxKi, data.fatigue(), data.runtime(), data, data.suppression());
+            return new Fighter(entity, data.stats(), data.race(), form, data.mastery(data.form()), ki / maxKi, data.fatigue(), data.runtime(), data, data.suppression(), data.runtime().kaioken);
         }
         if (entity instanceof TenkaichiFighter npc) {
             FormDefinition form = npc.fighterForm() == null ? null : FormRegistry.get(npc.fighterForm(), client);
-            return new Fighter(entity, npc.fighterStats(), npc.fighterRace(), form, npc.fighterMastery(), npc.fighterKiRatio(), 0.0, npc.fighterRuntime(), null, 1.0f);
+            return new Fighter(entity, npc.fighterStats(), npc.fighterRace(), form, npc.fighterMastery(), npc.fighterKiRatio(), 0.0, npc.fighterRuntime(), null, 1.0f, 0);
         }
-        return new Fighter(entity, vanillaStats(entity), Race.HUMAN, null, 0.0f, 1.0, 0.0, null, null, 1.0f);
+        return new Fighter(entity, vanillaStats(entity), Race.HUMAN, null, 0.0f, 1.0, 0.0, null, null, 1.0f, 0);
     }
 
     public static StatBlock vanillaStats(LivingEntity entity) {
@@ -54,25 +54,29 @@ public record Fighter(LivingEntity entity, StatBlock stats, Race race, @Nullable
     }
 
     public double formBp() {
-        return form == null ? 1.0 : form.bpMultiplier;
+        return (form == null ? 1.0 : form.bpMultiplier) * com.dbtenkaichi.form.KaiokenSystem.multiplier(kaioken);
+    }
+
+    private double kaiokenFactor(BalanceConfig cfg, double scale) {
+        return kaioken <= 0 ? 1.0 : BattlePower.combatMultiplierFromForm(com.dbtenkaichi.form.KaiokenSystem.multiplier(kaioken), cfg) * scale;
     }
 
     public double attackMultiplier(BalanceConfig cfg) {
         double race = com.dbtenkaichi.race.RaceMechanics.attackFactor(entity, this.race);
-        return (form == null ? 1.0 : form.attack(cfg) * form.controlFactor(mastery)) * race;
+        return (form == null ? 1.0 : form.attack(cfg) * form.controlFactor(mastery)) * race * kaiokenFactor(cfg, 1.0);
     }
 
     public double defenseMultiplier(BalanceConfig cfg) {
-        return form == null ? 1.0 : form.defense(cfg);
+        return (form == null ? 1.0 : form.defense(cfg)) * kaiokenFactor(cfg, 0.9);
     }
 
     public double kiMultiplier(BalanceConfig cfg) {
         double race = com.dbtenkaichi.race.RaceMechanics.kiFactor(entity, this.race);
-        return (form == null ? 1.0 : form.ki(cfg) * form.controlFactor(mastery)) * race;
+        return (form == null ? 1.0 : form.ki(cfg) * form.controlFactor(mastery)) * race * kaiokenFactor(cfg, 1.0);
     }
 
     public double speedMultiplier() {
-        return form == null ? 1.0 : form.speedMultiplier * form.controlFactor(mastery);
+        return (form == null ? 1.0 : form.speedMultiplier * form.controlFactor(mastery)) * com.dbtenkaichi.form.KaiokenSystem.speed(kaioken);
     }
 
     public long battlePower() {

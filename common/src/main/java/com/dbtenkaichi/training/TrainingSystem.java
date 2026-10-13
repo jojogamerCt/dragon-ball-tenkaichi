@@ -28,6 +28,7 @@ public final class TrainingSystem {
     public static final int PHASE_PRESS = 1;
     public static final int PHASE_STOP = 2;
     public static final int PHASE_LEARN = 3;
+    public static final int PHASE_TRIAL = 4;
 
     public static final int MEDITATION_PERIOD = 30;
     public static final int SESSION_TICKS = 600;
@@ -84,7 +85,8 @@ public final class TrainingSystem {
                     finish(player, data, now, false);
                 }
             }
-            case PHASE_LEARN -> learn(player, data, activity, value);
+            case PHASE_LEARN -> lesson(player, data, activity, value, false);
+            case PHASE_TRIAL -> lesson(player, data, activity, value, true);
             default -> {
             }
         }
@@ -274,26 +276,16 @@ public final class TrainingSystem {
         Services.NETWORK.sendToPlayer(player, new Packets.OpenScreen(PlayerManager.SCREEN_TRAINING, tag));
     }
 
-    public static boolean canLearnKamehameha(PlayerData data) {
-        return data.stat(StatType.KI_CONTROL) >= 6 && data.stat(StatType.KI_OUTPUT) >= 5 && data.trainingSessions() >= 2;
-    }
-
-    private static void learn(ServerPlayer player, PlayerData data, String technique, int masterId) {
-        if (nearbyMaster(player, masterId) == null) {
+    private static void lesson(ServerPlayer player, PlayerData data, String id, int masterId, boolean trial) {
+        MasterEntity master = nearbyMaster(player, masterId);
+        Lessons.Lesson lesson = Lessons.get(id);
+        if (master == null || lesson == null || !lesson.mentors().contains(master.kind())) {
             return;
         }
-        if (Techniques.KAMEHAMEHA.id().equals(technique)) {
-            if (data.hasSkill(technique)) {
-                return;
-            }
-            if (!canLearnKamehameha(data)) {
-                player.sendSystemMessage(Component.translatable("message.dbtenkaichi.not_ready_kamehameha"));
-                return;
-            }
-            data.learnSkill(technique);
-            data.runtime().dataDirty = true;
-            player.sendSystemMessage(Component.translatable("message.dbtenkaichi.learned", Component.translatable(Techniques.KAMEHAMEHA.translationKey())));
-            CombatSystem.playSound(player.level(), player, ModSounds.UI_CONFIRM.get(), 1.0f, 1.0f);
+        if (trial) {
+            TrialManager.start(player, data, lesson, master.kind());
+        } else {
+            Lessons.buy(player, data, master, lesson);
         }
     }
 }

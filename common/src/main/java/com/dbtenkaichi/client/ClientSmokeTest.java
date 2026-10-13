@@ -52,6 +52,17 @@ public final class ClientSmokeTest {
         Services.NETWORK.sendToServer(new Packets.Action(type.ordinal(), arg));
     }
 
+    private static net.minecraft.world.phys.Vec3 trialOrigin;
+
+    private static void tour(Minecraft mc, String name, String site, int dx, int dy, int dz, int lx, int ly, int lz) {
+        net.minecraft.core.BlockPos pos = com.dbtenkaichi.world.Landmarks.sites().get(site);
+        if (pos == null) {
+            LOG.add("missing landmark " + site);
+            return;
+        }
+        command(mc, String.format(java.util.Locale.ROOT, "tp %s %d %d %d facing %d %d %d", name, pos.getX() + dx, pos.getY() + dy, pos.getZ() + dz, pos.getX() + lx, pos.getY() + ly, pos.getZ() + lz));
+    }
+
     private static void command(Minecraft mc, String cmd) {
         IntegratedServer server = mc.getSingleplayerServer();
         if (server != null) {
@@ -307,14 +318,97 @@ public final class ClientSmokeTest {
                 LOG.add("skills after unlocks: " + new java.util.TreeSet<>(data.skills()));
                 shot(mc, "12c_super_saiyan_3");
             }
-            case 860 -> {
+            case 690, 694, 698 -> action(ActionType.TRANSFORM_DOWN, 0);
+            case 700 -> {
+                command(mc, "tenkaichi learn " + name + " dbtenkaichi:kaioken");
+                command(mc, "tenkaichi restore " + name);
+            }
+            case 704 -> action(ActionType.KAIOKEN, 0);
+            case 716 -> {
+                LOG.add("kaioken level after first press: " + com.dbtenkaichi.form.KaiokenSystem.fromFlags(ClientState.forEntity(mc.player).flags) + " bp " + ClientState.battlePower);
+                shot(mc, "14a_kaioken");
+            }
+            case 720 -> action(ActionType.KAIOKEN, 0);
+            case 726 -> {
+                LOG.add("kaioken level after second press: " + com.dbtenkaichi.form.KaiokenSystem.fromFlags(ClientState.forEntity(mc.player).flags) + " bp " + ClientState.battlePower);
+                command(mc, "tenkaichi restore " + name);
+            }
+            case 730 -> action(ActionType.TRANSFORM_UP, TransformationSystem.CINEMATIC_SKIP);
+            case 746 -> action(ActionType.KAIOKEN, 0);
+            case 758 -> {
+                LOG.add("form with kaioken: " + data.form() + " level " + com.dbtenkaichi.form.KaiokenSystem.fromFlags(ClientState.forEntity(mc.player).flags) + " bp " + ClientState.battlePower);
+                shot(mc, "14b_super_saiyan_kaioken");
+            }
+            case 762, 766 -> action(ActionType.TRANSFORM_DOWN, 0);
+            case 772 -> {
+                command(mc, "tenkaichi restore " + name);
+                trialOrigin = mc.player.position();
+                LOG.add(String.format(java.util.Locale.ROOT, "trial origin %.2f %.2f %.2f in %s", trialOrigin.x, trialOrigin.y, trialOrigin.z, mc.player.level().dimension().identifier()));
+                command(mc, "tenkaichi trial start " + name + " sacred_water");
+            }
+            case 790 -> {
+                LOG.add("trial dimension: " + mc.player.level().dimension().identifier());
+                shot(mc, "15a_trial_countdown");
+            }
+            case 885 -> {
+                java.util.List<com.dbtenkaichi.entity.MasterEntity> rivals = mc.level.getEntitiesOfClass(com.dbtenkaichi.entity.MasterEntity.class, mc.player.getBoundingBox().inflate(24));
+                LOG.add("trial opponents near: " + rivals.size() + (rivals.isEmpty() ? "" : " kind " + rivals.get(0).kind() + " distance " + String.format(java.util.Locale.ROOT, "%.1f", rivals.get(0).distanceTo(mc.player))));
+                mc.options.setCameraType(CameraType.THIRD_PERSON_FRONT);
+            }
+            case 887 -> {
+                shot(mc, "15b_trial_fight");
+                mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+            }
+            case 890 -> command(mc, "tenkaichi trial end " + name + " win");
+            case 905 -> {
+                net.minecraft.world.phys.Vec3 now = mc.player.position();
+                LOG.add(String.format(java.util.Locale.ROOT, "after trial %.2f %.2f %.2f in %s, origin distance %.3f, sacred water %s", now.x, now.y, now.z, mc.player.level().dimension().identifier(),
+                        trialOrigin == null ? -1.0 : now.distanceTo(trialOrigin), data.hasSkill("dbtenkaichi:sacred_water")));
+                shot(mc, "15c_trial_return");
+                command(mc, "title " + name + " clear");
+                mc.options.setCameraType(CameraType.FIRST_PERSON);
+                command(mc, "tenkaichi restore " + name);
+                action(ActionType.FLIGHT_TOGGLE, 0);
+            }
+            case 910 -> tour(mc, name, com.dbtenkaichi.world.Landmarks.KAME_HOUSE, 5, 4, 12, 1, 5, -4);
+            case 940 -> shot(mc, "16a_kame_house");
+            case 945 -> tour(mc, name, com.dbtenkaichi.world.Landmarks.KORIN_TOWER, 14, 2, 8, 0, 4, -6);
+            case 975 -> shot(mc, "16b_korin_tower_top");
+            case 980 -> tour(mc, name, com.dbtenkaichi.world.Landmarks.KAMI_LOOKOUT, 0, -6, 42, 0, -4, -8);
+            case 1010 -> shot(mc, "16c_kami_lookout");
+            case 1015 -> tour(mc, name, com.dbtenkaichi.world.Landmarks.KAMI_LOOKOUT, 26, 6, 20, 0, 4, -8);
+            case 1040 -> shot(mc, "16d_kami_palace");
+            case 1044 -> {
+                action(ActionType.FLIGHT_TOGGLE, 0);
+                mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+                LOG.add("landmarks: " + com.dbtenkaichi.world.Landmarks.sites());
+                net.minecraft.nbt.CompoundTag menu = new net.minecraft.nbt.CompoundTag();
+                menu.putString("mode", "menu");
+                menu.putInt("master", -1);
+                menu.putInt("kind", com.dbtenkaichi.entity.MasterKind.KARIN.ordinal());
+                menu.putLong("tp", data.trainingPoints());
+                net.minecraft.nbt.ListTag lessons = new net.minecraft.nbt.ListTag();
+                for (com.dbtenkaichi.training.Lessons.Lesson lesson : com.dbtenkaichi.training.Lessons.forMaster(com.dbtenkaichi.entity.MasterKind.KARIN)) {
+                    net.minecraft.nbt.CompoundTag entry = new net.minecraft.nbt.CompoundTag();
+                    entry.putString("id", lesson.id());
+                    entry.putInt("state", data.hasSkill(lesson.skill()) ? com.dbtenkaichi.training.Lessons.DONE : com.dbtenkaichi.training.Lessons.AVAILABLE);
+                    entry.putInt("price", lesson.price());
+                    entry.putBoolean("trial", lesson.trial());
+                    entry.putLong("bp", lesson.battlePower());
+                    lessons.add(entry);
+                }
+                menu.put("lessons", lessons);
+                mc.gui.setScreen(new com.dbtenkaichi.client.screen.TrainingScreen(menu));
+            }
+            case 1048 -> shot(mc, "17_master_lessons");
+            case 1210 -> {
                 mc.gui.setScreen(null);
                 finished = true;
                 Tenkaichi.LOG.info("[DBT-CLIENT] RESULT {}", LOG);
                 mc.stop();
             }
             default -> {
-                int gallery = tick - 700;
+                int gallery = tick - 1050;
                 if (gallery >= 0 && gallery < Race.values().length * 14) {
                     Race race = Race.values()[gallery / 14];
                     if (gallery % 14 == 0) {

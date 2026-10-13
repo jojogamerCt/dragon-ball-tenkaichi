@@ -67,6 +67,9 @@ public class CharacterScreen extends Screen {
             case 1 -> {
                 int y = 50;
                 for (String skill : data.skills()) {
+                    if (Techniques.get(skill) == null) {
+                        continue;
+                    }
                     final String id = skill;
                     addRenderableWidget(TenkaichiButton.create(Component.translatable(technique(skill)), b -> {
                         selectedSkill = id;
@@ -82,6 +85,24 @@ public class CharacterScreen extends Screen {
                     addRenderableWidget(TenkaichiButton.create(label, b -> {
                         Services.NETWORK.sendToServer(new Packets.AssignSlot(s, selectedSkill));
                     }).bounds(left + 180, 50 + slot * 22, 160, 18).build());
+                }
+                int buyY = 50 + PlayerData.SKILL_SLOTS * 22 + 18;
+                if (!data.hasSkill(com.dbtenkaichi.form.KaiokenSystem.ABILITY)) {
+                    Component kaioken = Component.translatable("screen.dbtenkaichi.character.buy_technique", Component.translatable("technique.dbtenkaichi.kaioken"), com.dbtenkaichi.form.KaiokenSystem.PRICE, com.dbtenkaichi.form.KaiokenSystem.BATTLE_POWER);
+                    addRenderableWidget(TenkaichiButton.create(kaioken, b -> Services.NETWORK.sendToServer(new Packets.Action(ActionType.BUY_TECHNIQUE.ordinal(), com.dbtenkaichi.form.KaiokenSystem.SHOP_INDEX)))
+                            .bounds(left + 180, buyY, 160, 18).build()).active = ClientState.trainingPoints >= com.dbtenkaichi.form.KaiokenSystem.PRICE;
+                    buyY += 22;
+                }
+                for (int i = 0; i < Techniques.UNLOCKS.size(); i++) {
+                    Techniques.Unlock unlock = Techniques.UNLOCKS.get(i);
+                    if (!unlock.allows(data.race()) || data.hasSkill(unlock.technique().id())) {
+                        continue;
+                    }
+                    final int index = i;
+                    Component label = Component.translatable("screen.dbtenkaichi.character.buy_technique", Component.translatable(unlock.technique().translationKey()), unlock.price(), unlock.battlePower());
+                    addRenderableWidget(TenkaichiButton.create(label, b -> Services.NETWORK.sendToServer(new Packets.Action(ActionType.BUY_TECHNIQUE.ordinal(), index)))
+                            .bounds(left + 180, buyY, 160, 18).build()).active = ClientState.trainingPoints >= unlock.price();
+                    buyY += 22;
                 }
             }
             case 3 -> {

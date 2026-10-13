@@ -69,20 +69,26 @@ public final class EntityVisual {
         return def == null ? appearance.eyeColor : FormDefinition.parseColor(def.visual.eyeColor, appearance.eyeColor);
     }
 
+    public int kaioken() {
+        return com.dbtenkaichi.form.KaiokenSystem.fromFlags(flags);
+    }
+
     public int auraColor() {
         FormDefinition def = visualForm();
-        return def == null ? appearance.auraColor : FormDefinition.parseColor(def.visual.auraColor, appearance.auraColor);
+        int base = def == null ? appearance.auraColor : FormDefinition.parseColor(def.visual.auraColor, appearance.auraColor);
+        return kaioken() > 0 ? mix(base, 0xFF2A18, 0.72f) : base;
     }
 
     public int auraSecondary() {
         FormDefinition def = visualForm();
         int fallback = mix(auraColor(), 0xFFFFFF, 0.55f);
-        return def == null ? fallback : FormDefinition.parseColor(def.visual.auraSecondary, fallback);
+        int base = def == null ? fallback : FormDefinition.parseColor(def.visual.auraSecondary, fallback);
+        return kaioken() > 0 ? mix(base, 0xFF9080, 0.7f) : base;
     }
 
     public float auraScale() {
         FormDefinition def = visualForm();
-        return def == null ? 1.0f : def.visual.auraScale;
+        return (def == null ? 1.0f : def.visual.auraScale) * (1.0f + 0.06f * kaioken());
     }
 
     public boolean auraLightning() {
@@ -102,6 +108,8 @@ public final class EntityVisual {
             target = 1.25f;
         } else if (has(RuntimeState.FLAG_AURA)) {
             target = 0.75f;
+        } else if (kaioken() > 0) {
+            target = 0.5f + 0.05f * kaioken();
         } else if (!PlayerData.BASE_FORM.equals(form)) {
             target = 0.32f;
         }

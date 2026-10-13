@@ -5,6 +5,7 @@ import com.dbtenkaichi.combat.TenkaichiDamage;
 import com.dbtenkaichi.entity.KiBeamEntity;
 import com.dbtenkaichi.entity.MasterEntity;
 import com.dbtenkaichi.entity.RaiderEntity;
+import com.dbtenkaichi.form.FormDefinition;
 import com.dbtenkaichi.form.FormRegistry;
 import com.dbtenkaichi.ki.Techniques;
 import com.dbtenkaichi.registry.ModEntities;
@@ -86,6 +87,26 @@ public final class SmokeTest {
         check(ModSounds.NAMES.size() > 20 && ModSounds.PUNCH_LIGHT.get() != null, "sound events registered");
         check(ModItems.SENZU_BEAN.get() != null && ModItems.TAB.get() != null, "items and creative tab registered");
         check(ModEntities.RAIDER.get() != null && ModEntities.KI_BEAM.get() != null, "entity types registered");
+        ServerLevel realm = level.getServer().getLevel(com.dbtenkaichi.training.TrialManager.REALM);
+        check(realm != null, "training realm dimension loaded");
+        if (realm != null) {
+            for (com.dbtenkaichi.training.Arena arena : com.dbtenkaichi.training.Arena.values()) {
+                BlockPos center = new BlockPos(arena.ordinal() * 200, 100, -4000);
+                arena.build(realm, center);
+                check(!realm.getBlockState(center.below()).isAir(), "arena " + arena + " built in the training realm");
+            }
+        }
+        var sites = com.dbtenkaichi.world.Landmarks.sites();
+        check(sites.size() == 3, "three landmarks registered " + sites);
+        sites.forEach((id, pos) -> {
+            level.getChunk(pos.getX() >> 4, pos.getZ() >> 4);
+            check(!level.getBlockState(pos.below()).isAir(), "landmark " + id + " has ground under its master at " + pos);
+        });
+        check(com.dbtenkaichi.training.Lessons.forMaster(com.dbtenkaichi.entity.MasterKind.ROSHI).stream().anyMatch(l -> l.skill().equals(Techniques.KAMEHAMEHA.id())), "Master Roshi teaches the Kamehameha");
+        check(com.dbtenkaichi.form.KaiokenSystem.SHOP_INDEX >= com.dbtenkaichi.ki.Techniques.UNLOCKS.size() && com.dbtenkaichi.form.KaiokenSystem.PRICE > 0, "Kaioken can be bought from the technique list");
+        FormDefinition ssj = FormRegistry.get("dbtenkaichi:super_saiyan", false);
+        check(ssj != null && ssj.kaiokenCompatible, "Super Saiyan accepts the Kaioken");
+        check(com.dbtenkaichi.form.KaiokenSystem.multiplier(5) == 20.0 && com.dbtenkaichi.form.KaiokenSystem.fromFlags(3 << com.dbtenkaichi.form.KaiokenSystem.FLAG_SHIFT) == 3, "Kaioken levels and flag encoding");
     }
 
     private static void spawn(ServerLevel level) {
@@ -101,6 +122,11 @@ public final class SmokeTest {
             dummy.setNoAi(true);
         }
         check(master != null && raider != null && dummy != null, "spawned master, raider and target dummy");
+        if (master != null) {
+            master.setKind(com.dbtenkaichi.entity.MasterKind.ROSHI);
+            check(master.kind() == com.dbtenkaichi.entity.MasterKind.ROSHI, "master kind is stored");
+            master.setKind(com.dbtenkaichi.entity.MasterKind.MASTER);
+        }
         if (raider != null && dummy != null) {
             raider.setTarget(dummy);
             dummyHealth = dummy.getHealth();
@@ -133,7 +159,7 @@ public final class SmokeTest {
                 check(spawned.isAlive(), technique.id() + " entity spawned");
                 spawned.discard();
             }
-            for (String form : List.of("dbtenkaichi:super_saiyan_2", "dbtenkaichi:super_saiyan_3", "dbtenkaichi:kaioken", "dbtenkaichi:kaioken_x10")) {
+            for (String form : List.of("dbtenkaichi:super_saiyan_2", "dbtenkaichi:super_saiyan_3")) {
                 check(com.dbtenkaichi.form.FormRegistry.get(form, false) != null, form + " form loaded from datapack");
             }
         }

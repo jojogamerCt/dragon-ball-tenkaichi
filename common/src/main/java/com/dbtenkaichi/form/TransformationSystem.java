@@ -127,6 +127,9 @@ public final class TransformationSystem {
         data.setForm(form.id);
         data.unlockForm(form.id);
         data.markCinematicSeen(form.id);
+        if (rt.kaioken > 0 && !form.kaiokenCompatible) {
+            rt.kaioken = 0;
+        }
         rt.stateDirty = true;
         rt.dataDirty = true;
         PlayerManager.refreshCaches(player, data);
@@ -145,6 +148,10 @@ public final class TransformationSystem {
 
     public static void transformDown(ServerPlayer player, PlayerData data, long now) {
         RuntimeState rt = data.runtime();
+        if (rt.kaioken > 0 && rt.transformingUntil <= now) {
+            KaiokenSystem.off(player, data, now, null);
+            return;
+        }
         if (!data.isTransformed() || rt.transformingUntil > now) {
             return;
         }
@@ -160,6 +167,7 @@ public final class TransformationSystem {
     }
 
     public static void forceRevert(ServerPlayer player, PlayerData data, @Nullable Component reason) {
+        data.runtime().kaioken = 0;
         if (!data.isTransformed()) {
             return;
         }

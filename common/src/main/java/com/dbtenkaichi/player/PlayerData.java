@@ -38,6 +38,7 @@ public final class PlayerData {
     private final Set<String> skills = new LinkedHashSet<>();
     private final Map<String, Float> skillMastery = new HashMap<>();
     private final List<String> skillSlots = new ArrayList<>(List.of("", "", "", ""));
+    private net.minecraft.nbt.CompoundTag returnPoint;
     private final Map<String, Integer> dailyTraining = new HashMap<>();
     private long trainingDay = -1L;
     private long zenkaiReadyAt;
@@ -172,9 +173,17 @@ public final class PlayerData {
         return skills.contains(skill);
     }
 
+    public net.minecraft.nbt.CompoundTag returnPoint() {
+        return returnPoint;
+    }
+
+    public void setReturnPoint(net.minecraft.nbt.CompoundTag tag) {
+        returnPoint = tag == null ? null : tag.copy();
+    }
+
     public boolean learnSkill(String skill) {
         boolean added = skills.add(skill);
-        if (added) {
+        if (added && com.dbtenkaichi.ki.Techniques.get(skill) != null) {
             for (int i = 0; i < SKILL_SLOTS; i++) {
                 if (skillSlots.get(i).isEmpty()) {
                     skillSlots.set(i, skill);
@@ -315,6 +324,9 @@ public final class PlayerData {
         }
         tag.put("practice", practiceTag);
         tag.putInt("sessions", trainingSessions);
+        if (returnPoint != null) {
+            tag.put("return_point", returnPoint.copy());
+        }
         return tag;
     }
 
@@ -340,6 +352,7 @@ public final class PlayerData {
         skills.addAll(readStringList(tag.getListOrEmpty("skills")));
         skillMastery.clear();
         readFloatMap(tag.getCompoundOrEmpty("skill_mastery"), skillMastery);
+        returnPoint = tag.getCompound("return_point").map(net.minecraft.nbt.CompoundTag::copy).orElse(null);
         List<String> slots = readStringList(tag.getListOrEmpty("slots"));
         for (int i = 0; i < SKILL_SLOTS; i++) {
             skillSlots.set(i, i < slots.size() ? slots.get(i) : "");

@@ -67,10 +67,11 @@ public final class ClientState {
             if (npc instanceof RaiderEntity) {
                 visual.race = Race.SAIYAN;
                 visual.appearance = raiderAppearance();
-            } else if (npc instanceof MasterEntity) {
-                visual.race = Race.HUMAN;
-                visual.appearance = masterAppearance();
-                visual.beard = true;
+            } else if (npc instanceof MasterEntity master) {
+                com.dbtenkaichi.entity.MasterKind kind = master.kind();
+                visual.race = kind == com.dbtenkaichi.entity.MasterKind.KAMI ? Race.NAMEKIAN : Race.HUMAN;
+                visual.appearance = masterAppearance(kind);
+                visual.beard = kind == com.dbtenkaichi.entity.MasterKind.MASTER || kind == com.dbtenkaichi.entity.MasterKind.ROSHI;
             }
         }
         if (entity instanceof Player player && player.isLocalPlayer()) {
@@ -133,8 +134,41 @@ public final class ClientState {
         return a;
     }
 
-    private static Appearance masterAppearance() {
+    private static Appearance masterAppearance(com.dbtenkaichi.entity.MasterKind kind) {
+        switch (kind) {
+            case KAMI -> {
+                Appearance a = Appearance.defaultsFor(Race.NAMEKIAN);
+                a.skinColor = 0x63B84E;
+                a.height = 1.06f;
+                a.eyebrowStyle = 2;
+                a.outfit = 2;
+                a.outfitPrimary = 0xF2F2F2;
+                a.outfitSecondary = 0x2F4FA0;
+                a.auraColor = 0xF4FFF0;
+                return a;
+            }
+            case KARIN -> {
+                Appearance a = Appearance.defaultsFor(Race.HUMAN);
+                a.hairStyle = HairStyle.BALD.ordinal();
+                a.skinColor = 0xF4F0E6;
+                a.height = 0.62f;
+                a.eyeStyle = 1;
+                a.outfit = 2;
+                a.outfitPrimary = 0xF4F0E6;
+                a.outfitSecondary = 0x7A5A3A;
+                a.auraColor = 0xFFFFFF;
+                a.tail = false;
+                return a;
+            }
+            default -> {
+            }
+        }
         Appearance a = Appearance.defaultsFor(Race.HUMAN);
+        if (kind == com.dbtenkaichi.entity.MasterKind.ROSHI) {
+            a.height = 0.86f;
+            a.outfitPrimary = 0xF29A3A;
+            a.outfitSecondary = 0xC8A46A;
+        }
         a.hairStyle = HairStyle.BALD.ordinal();
         a.hairColor = 0xEDEDED;
         a.auraColor = 0xBFE6FF;
@@ -142,8 +176,10 @@ public final class ClientState {
         a.eyebrowStyle = 2;
         a.expression = 3;
         a.outfit = 2;
-        a.outfitPrimary = 0xE8902A;
-        a.outfitSecondary = 0x2F6B3A;
+        if (kind != com.dbtenkaichi.entity.MasterKind.ROSHI) {
+            a.outfitPrimary = 0xE8902A;
+            a.outfitSecondary = 0x2F6B3A;
+        }
         a.tail = false;
         return a;
     }

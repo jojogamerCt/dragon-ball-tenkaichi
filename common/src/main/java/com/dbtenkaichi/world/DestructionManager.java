@@ -83,7 +83,7 @@ public final class DestructionManager {
         sendNear(level, center, 128, new Packets.CombatFx(CombatFxKind.EXPLOSION.ordinal(), source == null ? -1 : source.getId(), -1, center.x, center.y, center.z, (float) r));
         level.playSound(null, center.x, center.y, center.z, ModSounds.EXPLOSION.get(), SoundSource.PLAYERS, (float) Math.min(4.0, 1.0 + r * 0.5), 0.8f + level.getRandom().nextFloat() * 0.2f);
         TenkaichiConfig.DestructionMode mode = cfg.destruction();
-        if (mode == TenkaichiConfig.DestructionMode.OFF || mode == TenkaichiConfig.DestructionMode.VISUAL) {
+        if (mode == TenkaichiConfig.DestructionMode.OFF || mode == TenkaichiConfig.DestructionMode.VISUAL || com.dbtenkaichi.training.TrialManager.isRealm(level)) {
             return;
         }
         if (gp.destructionDimensionBlacklist.contains(level.dimension().identifier().toString())) {

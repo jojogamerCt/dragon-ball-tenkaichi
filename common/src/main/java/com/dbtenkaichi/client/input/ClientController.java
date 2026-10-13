@@ -133,6 +133,9 @@ public final class ClientController {
         while (Keybinds.REVERT.consumeClick()) {
             send(ActionType.TRANSFORM_DOWN, 0);
         }
+        while (Keybinds.KAIOKEN.consumeClick()) {
+            send(ActionType.KAIOKEN, 0);
+        }
         boolean chargeDown = Keybinds.CHARGE.isDown();
         if (ClientState.clashId >= 0) {
             while (Keybinds.CHARGE.consumeClick()) {

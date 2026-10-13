@@ -20,7 +20,9 @@ public enum ActionType {
     UPGRADE_STAT,
     OPEN_MENU,
     COMBAT_STANCE,
-    LANDED;
+    LANDED,
+    KAIOKEN,
+    BUY_TECHNIQUE;
 
     private static final ActionType[] VALUES = values();
 

@@ -43,6 +43,7 @@ public final class RuntimeState {
     public long transformingUntil;
     public String pendingForm;
     public int lockedTarget = -1;
+    public int kaioken;
     public int skillSlot = -1;
     public long skillStart;
     public int activeBeam = -1;
@@ -134,6 +135,7 @@ public final class RuntimeState {
         if (trainingActivity != null) {
             f |= FLAG_TRAINING;
         }
+        f |= Math.max(0, Math.min(7, kaioken)) << com.dbtenkaichi.form.KaiokenSystem.FLAG_SHIFT;
         return f;
     }
 
@@ -151,6 +153,7 @@ public final class RuntimeState {
         invulnerableUntil = 0L;
         transformingUntil = 0L;
         pendingForm = null;
+        kaioken = 0;
         lockedTarget = -1;
         skillSlot = -1;
         activeBeam = -1;

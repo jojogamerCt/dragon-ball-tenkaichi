@@ -108,6 +108,10 @@ public final class TenkaichiHud {
         Component title = form == null ? Component.translatable(data.race().translationKey())
                 : Component.translatable(data.race().translationKey()).append(" · ").append(Component.translatable(form.name));
         g.text(font, title, tx, y + 7, form == null ? TenkaichiUi.TEXT : accent, true);
+        if (visual.kaioken() > 0) {
+            Component kaioken = Component.translatable("hud.dbtenkaichi.kaioken", (int) com.dbtenkaichi.form.KaiokenSystem.multiplier(visual.kaioken()));
+            g.text(font, kaioken, x + PANEL_W - 4 - font.width(kaioken), y + 19, 0xFFFF5A3C, true);
+        }
         if (ConfigManager.client().showBattlePower) {
             String bp = NumberFormat.getIntegerInstance(Locale.ROOT).format(ClientState.battlePower);
             g.text(font, "BP", tx, y + 19, 0xFFB08A3A, true);

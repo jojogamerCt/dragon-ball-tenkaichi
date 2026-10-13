@@ -21,6 +21,7 @@
   "cinematicTicks": 150,
   "cinematic": "super_saiyan_awakening",
   "quickTicks": 8,
+  "kaiokenCompatible": true,
   "visual": {
     "hairStyle": "super_spikes",
     "hairColor": "#FFE25A",
