@@ -64,14 +64,24 @@ public final class FirstPersonCombat {
         return t >= 0.0f && t < 1.0f ? t : -1.0f;
     }
 
+    public static HumanoidArm renderedArm(HumanoidArm arm) {
+        return ClientState.localHas(RuntimeState.FLAG_SKILL_CHARGING) ? HumanoidArm.RIGHT : arm;
+    }
+
     public static void transform(PoseStack pose, HumanoidArm arm, float partial) {
         float invert = arm == HumanoidArm.RIGHT ? 1.0f : -1.0f;
         float bob = Mth.sin((ClientState.clientTicks + partial) * 0.12f + (invert > 0 ? 0.0f : 1.7f)) * 0.012f;
         if (ClientState.localHas(RuntimeState.FLAG_SKILL_CHARGING)) {
             float shake = Mth.sin((ClientState.clientTicks + partial) * 2.3f + invert) * 0.01f;
-            pose.translate(invert > 0 ? -0.3f : 0.88f, 0.34f + shake, -0.15f);
-            pose.rotateDegrees(Axis.YP, invert > 0 ? -12.0f : 28.0f);
-            pose.rotateDegrees(Axis.ZP, invert > 0 ? -8.0f : 10.0f);
+            if (invert > 0) {
+                pose.translate(-0.3f, 0.34f + shake, -0.15f);
+                pose.rotateDegrees(Axis.YP, -12.0f);
+                pose.rotateDegrees(Axis.ZP, -8.0f);
+            } else {
+                pose.translate(-0.16f, 0.22f - shake, -0.08f);
+                pose.rotateDegrees(Axis.YP, -4.0f);
+                pose.rotateDegrees(Axis.ZP, -20.0f);
+            }
             return;
         }
         if (ClientState.localHas(RuntimeState.FLAG_GUARDING)) {

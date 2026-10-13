@@ -40,7 +40,7 @@ public abstract class FirstPersonHandsMixin {
             HumanoidArm arm = hand == InteractionHand.MAIN_HAND ? avatar.mainArm : avatar.mainArm.getOpposite();
             poseStack.pushPose();
             FirstPersonCombat.transform(poseStack, arm, partialTicks);
-            renderPlayerArm(poseStack, collector, lightCoords, inverseArmHeight, 0.0f, arm, playerState);
+            renderPlayerArm(poseStack, collector, lightCoords, inverseArmHeight, 0.0f, FirstPersonCombat.renderedArm(arm), playerState);
             poseStack.popPose();
             ci.cancel();
         } catch (RuntimeException e) {
