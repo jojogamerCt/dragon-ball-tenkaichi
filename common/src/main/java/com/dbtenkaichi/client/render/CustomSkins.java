@@ -549,8 +549,6 @@ public final class CustomSkins {
                 px(cx + 10, cy + dy, shade(accent, 0.8f));
                 px(cx + 11, cy + dy + 1, shade(accent, 0.7f));
             }
-            emblem(cx + 3, cy + 4, accent);
-            emblem((32 + 4) * S + 5, (32 + 4) * S + 4, accent);
             faceRows(0, 32, 4, 12, 4, 0, 8, main, 0.08f);
             faceRows(0, 48, 4, 12, 4, 0, 8, main, 0.08f);
             topBottom(0, 32, 4, 4, main);
@@ -589,23 +587,6 @@ public final class CustomSkins {
             hd(4, 48, 4, 4, pants, 0.85f, 0.8f, 0.05f);
             hd(28, 16, 8, 4, pants, 0.7f, 0.65f, 0.05f);
             hd(28, 32, 8, 4, pants, 0.72f, 0.66f, 0.05f);
-        }
-
-        private void emblem(int x, int y, int color) {
-            int bg = 0xF2F2F2;
-            for (int dy = -3; dy <= 3; dy++) {
-                for (int dx = -3; dx <= 3; dx++) {
-                    if (dx * dx + dy * dy <= 10) {
-                        px(x + dx, y + dy, bg);
-                    }
-                }
-            }
-            line(x, y - 2, x, y + 2, color);
-            line(x - 2, y, x + 2, y, color);
-            px(x - 1, y - 1, color);
-            px(x + 1, y - 1, color);
-            px(x - 1, y + 1, color);
-            px(x + 1, y + 1, color);
         }
 
         private void armor() {

@@ -50,6 +50,10 @@ public class KiBeamEntity extends Entity {
     private static final EntityDataAccessor<Float> DIR_X = SynchedEntityData.defineId(KiBeamEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DIR_Y = SynchedEntityData.defineId(KiBeamEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DIR_Z = SynchedEntityData.defineId(KiBeamEntity.class, EntityDataSerializers.FLOAT);
+    public String techniqueId() {
+        return entityData.get(TECHNIQUE);
+    }
+
     private static final EntityDataAccessor<Integer> CORE = SynchedEntityData.defineId(KiBeamEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> GLOW = SynchedEntityData.defineId(KiBeamEntity.class, EntityDataSerializers.INT);
 

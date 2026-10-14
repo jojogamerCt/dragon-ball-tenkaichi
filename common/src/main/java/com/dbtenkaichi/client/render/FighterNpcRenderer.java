@@ -46,6 +46,16 @@ public class FighterNpcRenderer extends LivingEntityRenderer<FighterNpc, AvatarR
     }
 
     @Override
+    protected void scale(AvatarRenderState state, PoseStack poseStack) {
+        super.scale(state, poseStack);
+        EntityVisual visual = TenkaichiLayers.visual(state);
+        if (visual != null && Math.abs(visual.appearance.height - 1.0f) > 0.01f) {
+            float h = visual.appearance.height;
+            poseStack.scale(h, h, h);
+        }
+    }
+
+    @Override
     public Identifier getTextureLocation(AvatarRenderState state) {
         EntityVisual visual = TenkaichiLayers.visual(state);
         if (visual == null) {

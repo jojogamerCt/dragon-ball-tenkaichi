@@ -32,6 +32,7 @@ public class KiBeamRenderer extends EntityRenderer<KiBeamEntity, KiBeamRenderer.
         state.glow = entity.glowColor();
         state.beamState = entity.state();
         state.time = entity.tickCount + partialTicks;
+        state.spiral = com.dbtenkaichi.ki.SkillStyle.of(entity.techniqueId()) == com.dbtenkaichi.ki.SkillStyle.SPECIAL_BEAM_CANNON;
     }
 
     @Override
@@ -48,7 +49,12 @@ public class KiBeamRenderer extends EntityRenderer<KiBeamEntity, KiBeamRenderer.
             boolean clashing = state.beamState == KiBeamEntity.STATE_CLASHING;
             int quality = ConfigManager.client().quality().auraLayers;
             collector.submitCustomGeometry(poseStack, RenderTypes.lightning(),
-                    (pose, buffer) -> EnergyMesh.beam(pose.pose(), buffer, state.direction, state.length, state.radius, state.core, state.glow, state.time, fade, clashing, quality));
+                    (pose, buffer) -> {
+                        EnergyMesh.beam(pose.pose(), buffer, state.direction, state.length, state.spiral ? state.radius * 0.4f : state.radius, state.core, state.glow, state.time, fade, clashing, quality);
+                        if (state.spiral) {
+                            EnergyMesh.spiral(pose.pose(), buffer, state.direction, state.length, state.radius, state.glow, state.time, fade);
+                        }
+                    });
         } catch (RuntimeException e) {
             RenderGuard.report("ki_beam", e);
         }
@@ -58,6 +64,7 @@ public class KiBeamRenderer extends EntityRenderer<KiBeamEntity, KiBeamRenderer.
     public static class State extends EntityRenderState {
         public float length;
         public float radius;
+        public boolean spiral;
         public Vec3 direction = new Vec3(0, 0, 1);
         public int core;
         public int glow;

@@ -70,6 +70,44 @@ public final class EnergyMesh {
         }
     }
 
+    public static void spiral(Matrix4fc pose, VertexConsumer buffer, Vec3 dir, float length, float radius, int color, float age, float fade) {
+        if (length < 0.05f) {
+            return;
+        }
+        Vec3 d = dir.normalize();
+        Vec3 helper = Math.abs(d.y) > 0.9 ? new Vec3(1, 0, 0) : new Vec3(0, 1, 0);
+        Vec3 u = d.cross(helper).normalize();
+        Vec3 v = d.cross(u).normalize();
+        float coil = Math.max(0.3f, radius * 0.75f) * fade;
+        float thickness = Math.max(0.07f, radius * 0.16f) * fade;
+        float pitch = 1.2f;
+        float step = 0.2f;
+        int count = Math.min(480, (int) (length / step));
+        for (int i = 0; i < count; i++) {
+            float t0 = i * step;
+            float t1 = t0 + step;
+            Vec3 p0 = helix(d, u, v, t0, coil, pitch, age);
+            Vec3 p1 = helix(d, u, v, t1, coil, pitch, age);
+            Vec3 seg = p1.subtract(p0);
+            double len = seg.length();
+            if (len < 1.0e-4) {
+                continue;
+            }
+            Vec3 sd = seg.scale(1.0 / len);
+            Vec3 h2 = Math.abs(sd.y) > 0.9 ? new Vec3(1, 0, 0) : new Vec3(0, 1, 0);
+            Vec3 su = sd.cross(h2).normalize();
+            Vec3 sv = sd.cross(su).normalize();
+            float taper = Math.min(1.0f, 0.35f + t0 * 0.4f);
+            tubeAt(pose, buffer, p0, sd, su, sv, 0.0f, (float) len, thickness * taper, thickness * taper, color, 0.9f * fade, 0.9f * fade);
+            tubeAt(pose, buffer, p0, sd, su, sv, 0.0f, (float) len, thickness * taper * 2.4f, thickness * taper * 2.4f, color, 0.22f * fade, 0.22f * fade);
+        }
+    }
+
+    private static Vec3 helix(Vec3 d, Vec3 u, Vec3 v, float t, float coil, float pitch, float age) {
+        double a = t / pitch * Math.PI * 2 - age * 0.7;
+        return d.scale(t).add(u.scale(Math.cos(a) * coil)).add(v.scale(Math.sin(a) * coil));
+    }
+
     private static void tube(Matrix4fc pose, VertexConsumer buffer, Vec3 d, Vec3 u, Vec3 v, float from, float to, float r0, float r1, int color, float a0, float a1) {
         tubeAt(pose, buffer, Vec3.ZERO, d, u, v, from, to, r0, r1, color, a0, a1);
     }

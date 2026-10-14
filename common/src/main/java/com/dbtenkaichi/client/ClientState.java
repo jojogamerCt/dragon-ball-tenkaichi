@@ -153,7 +153,7 @@ public final class ClientState {
                 a.hairStyle = HairStyle.BALD.ordinal();
                 a.skinColor = 0xF6F3EC;
                 a.hairColor = 0xF6F3EC;
-                a.height = 0.62f;
+                a.height = 0.45f;
                 a.build = 2;
                 a.eyeStyle = 1;
                 a.eyeColor = 0x111111;

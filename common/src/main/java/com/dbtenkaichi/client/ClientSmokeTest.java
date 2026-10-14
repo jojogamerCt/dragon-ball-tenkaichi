@@ -100,6 +100,7 @@ public final class ClientSmokeTest {
                 case 25 -> shot(mc, label + "_charge_fp");
                 case 26 -> mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
                 case 40 -> action(ActionType.SKILL_RELEASE, 0);
+                case 50 -> shot(mc, label + "_beam");
                 case 46 -> mc.gui.setScreen(new PosePreview(25.0f));
                 case 48 -> shot(mc, label + "_fire");
                 case 49 -> {

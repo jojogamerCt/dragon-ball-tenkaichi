@@ -136,3 +136,15 @@ Nessuna verifica automatica fallisce allo stato attuale.
   nello spettro, picco del tuono oltre 0 dBFS → tutti corretti e ricontrollati.
 - Verificato su Fabric e NeoForge: smoke server PASS, test client completo (36 screenshot), forma Super Saiyan applicata
   al termine della cutscene.
+
+### Aggiornamento — 0.2.0
+- Kaioken combinabile, acquisto delle tecniche, Maestri canonici con lezioni e prove nella dimensione `training_realm`,
+  luoghi iconici con i Maestri, pose canoniche per ogni tecnica, Makankosappo a spirale, Karin come gatto bianco,
+  emblema del gi rimosso, aura riprogettata, SS2/SS3 e sei nuove tecniche.
+- Test: smoke test del server PASS su Fabric e NeoForge (mondi nuovi); test client completo PASS su entrambi i loader,
+  con la sequenza delle tecniche (stili ricevuti dal client) e il ritorno dalla prova (0,078 blocchi su NeoForge).
+- Problemi trovati e risolti: altezza del terreno letta prima di caricare il chunk, pulsanti duplicati nel menu del
+  Maestro, sabbia dell’isola senza supporto, cima di Karin in ombra (luci invisibili), aura trasparente, braccia
+  incrociate in prima persona, nomi dei Maestri non ripristinati al caricamento, statura degli NPC non applicata.
+- Un avvio del client NeoForge si è chiuso con un crash nativo del driver (0xC0000005) prima del caricamento della mod;
+  il secondo avvio è passato.
