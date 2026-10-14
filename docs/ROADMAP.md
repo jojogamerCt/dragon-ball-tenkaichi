@@ -34,17 +34,21 @@ entrambi i loader e verificato nei limiti indicati in `TESTING.md`.
 - [x] Ki Blast, Kamehameha (carica, sterzata, penetrazione, trincee), Raider Cannon (NPC)
 - [x] Beam Clash autoritativo con battiti a tempo, stagger, intervento esterno
 - [x] Distruzione ambientale configurabile
-- [ ] Altre tecniche (Galick Gun, Masenko, Destructo Disc, Special Beam Cannon, Spirit Bomb…)
+- [x] Galick Gun, Masenko, Makankosappo, Final Flash, Big Bang Attack, Raggio della Morte, con pose canoniche
+- [ ] Destructo Disc, Spirit Bomb e altre
 
 ## Fase 5 — Trasformazioni
 - [x] Architettura data-driven via datapack, sincronizzata ai client
 - [x] Super Saiyan con sblocco per rabbia, cinematica alla prima attivazione, padronanza
-- [ ] Gradi SS, SS2/3/4, God, Blue, UI/UE e percorsi razziali
+- [x] SS2, SS3 e Kaioken combinabile
+- [ ] Gradi SS, SS4, God, Blue, UI/UE e percorsi razziali; cutscene dedicate SS2/SS3
 
 ## Fase 6 — NPC e Boss
 - [x] Maestro di arti marziali (allenatore) e Predone Saiyan con FSM gerarchica (10 stati, seconda fase)
+- [x] Maestri canonici (Muten, Karin, il Supremo) con lezioni e prove
 - [ ] Boss multi-fase canonici, spawn naturale, scaling avanzato
 
 ## Fasi 7–10
-Non iniziate: dimensioni e strutture, Sfere del Drago, story mode, fusioni, tornei, ottimizzazione
+Avviate: dimensione delle prove e luoghi iconici (Kame House, Torre di Karin, Palazzo del Supremo).
+Non iniziate: altre dimensioni (Aldilà, Namek), Sfere del Drago, story mode, fusioni, tornei, ottimizzazione
 avanzata e benchmark. Vedi `FEATURES.md` per l'elenco completo dei requisiti.

@@ -15,6 +15,7 @@ public final class EntityVisual {
     public Appearance appearance = Appearance.defaultsFor(Race.HUMAN);
     public boolean created;
     public boolean beard;
+    public boolean cat;
     public String form = PlayerData.BASE_FORM;
     public int flags;
     public float kiRatio = 1.0f;
@@ -29,6 +30,7 @@ public final class EntityVisual {
     public String cinematicForm = PlayerData.BASE_FORM;
     public long lastSeen;
     public final AnimPlayer anim = new AnimPlayer();
+    public com.dbtenkaichi.ki.SkillStyle style = com.dbtenkaichi.ki.SkillStyle.KAMEHAMEHA;
 
     public boolean has(int flag) {
         return (flags & flag) != 0;

@@ -72,6 +72,7 @@ public final class ClientState {
                 visual.race = kind == com.dbtenkaichi.entity.MasterKind.KAMI ? Race.NAMEKIAN : Race.HUMAN;
                 visual.appearance = masterAppearance(kind);
                 visual.beard = kind == com.dbtenkaichi.entity.MasterKind.MASTER || kind == com.dbtenkaichi.entity.MasterKind.ROSHI;
+                visual.cat = kind == com.dbtenkaichi.entity.MasterKind.KARIN;
             }
         }
         if (entity instanceof Player player && player.isLocalPlayer()) {
@@ -150,12 +151,15 @@ public final class ClientState {
             case KARIN -> {
                 Appearance a = Appearance.defaultsFor(Race.HUMAN);
                 a.hairStyle = HairStyle.BALD.ordinal();
-                a.skinColor = 0xF4F0E6;
+                a.skinColor = 0xF6F3EC;
+                a.hairColor = 0xF6F3EC;
                 a.height = 0.62f;
+                a.build = 2;
                 a.eyeStyle = 1;
-                a.outfit = 2;
-                a.outfitPrimary = 0xF4F0E6;
-                a.outfitSecondary = 0x7A5A3A;
+                a.eyeColor = 0x111111;
+                a.outfit = Appearance.OUTFIT_NATURAL;
+                a.outfitPrimary = 0xF6F3EC;
+                a.outfitSecondary = 0xF6F3EC;
                 a.auraColor = 0xFFFFFF;
                 a.tail = false;
                 return a;

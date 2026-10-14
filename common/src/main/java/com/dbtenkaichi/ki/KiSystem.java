@@ -74,6 +74,7 @@ public final class KiSystem {
             return;
         }
         if (rt.skillSlot < 0) {
+            rt.skillStyle = SkillStyle.of(id).ordinal();
             rt.skillSlot = slot;
             rt.skillStart = now;
             rt.stateDirty = true;
@@ -139,7 +140,14 @@ public final class KiSystem {
         KiBlastEntity blast = KiBlastEntity.create(level, player, technique, color, rt.lockedTarget, 1.0);
         level.addFreshEntity(blast);
         rt.blastHand = !rt.blastHand;
-        CombatSystem.anim(player, rt.blastHand ? AnimClip.KI_BLAST_LEFT : AnimClip.KI_BLAST_RIGHT, 6, 0);
+        SkillStyle style = SkillStyle.of(technique.id());
+        if (style == SkillStyle.BIG_BANG) {
+            CombatSystem.anim(player, AnimClip.BIG_BANG, AnimClip.BIG_BANG.defaultDuration, 0);
+        } else if (style == SkillStyle.DEATH_BEAM) {
+            CombatSystem.anim(player, AnimClip.DEATH_BEAM, AnimClip.DEATH_BEAM.defaultDuration, 0);
+        } else {
+            CombatSystem.anim(player, rt.blastHand ? AnimClip.KI_BLAST_LEFT : AnimClip.KI_BLAST_RIGHT, 6, 0);
+        }
         CombatSystem.playSound(level, player, ModSounds.KI_BLAST.get(), 0.8f, 0.9f + player.getRandom().nextFloat() * 0.3f);
         TrainingSystem.passiveGain(player, data, "ki_blast", technique.trainedStat(), 0.15);
     }

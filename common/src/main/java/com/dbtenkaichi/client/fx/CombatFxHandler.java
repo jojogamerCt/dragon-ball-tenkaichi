@@ -311,7 +311,22 @@ public final class CombatFxHandler {
         }
         look = look.normalize();
         Vec3 side = new Vec3(-look.z, 0, look.x);
-        Vec3 hands = entity.position().add(0, entity.getBbHeight() * 0.42, 0).add(look.scale(-0.45)).add(side.scale(0.1));
+        float h = entity.getBbHeight();
+        com.dbtenkaichi.ki.SkillStyle style = ClientState.forEntity(entity).style;
+        Vec3 base = entity.position();
+        switch (style) {
+            case GALICK_GUN -> chargeOrb(base.add(0, h * 0.7, 0).add(look.scale(-0.9)), random, quality, 0xA040FF);
+            case MASENKO -> chargeOrb(base.add(0, h * 1.12, 0).add(look.scale(0.25)), random, quality, 0xFFD43B);
+            case SPECIAL_BEAM_CANNON -> chargeOrb(base.add(0, h * 0.92, 0).add(look.scale(0.35)), random, quality, 0xD070FF);
+            case FINAL_FLASH -> {
+                chargeOrb(base.add(0, h * 0.75, 0).add(side.scale(1.05)), random, quality, 0xFFE640);
+                chargeOrb(base.add(0, h * 0.75, 0).add(side.scale(-1.05)), random, quality, 0xFFE640);
+            }
+            default -> chargeOrb(base.add(0, h * 0.42, 0).add(look.scale(-0.45)).add(side.scale(0.1)), random, quality, color);
+        }
+    }
+
+    private static void chargeOrb(Vec3 hands, RandomSource random, ClientConfig.Quality quality, int color) {
         int n = Math.max(1, Math.round(3 * quality.particleBudget));
         for (int i = 0; i < n; i++) {
             Vec3 from = hands.add((random.nextDouble() - 0.5) * 2.4, (random.nextDouble() - 0.5) * 2.4, (random.nextDouble() - 0.5) * 2.4);

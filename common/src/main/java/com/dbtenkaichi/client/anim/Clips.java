@@ -1,6 +1,7 @@
 package com.dbtenkaichi.client.anim;
 
 import com.dbtenkaichi.anim.AnimClip;
+import com.dbtenkaichi.ki.SkillStyle;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -8,6 +9,8 @@ import java.util.Map;
 public final class Clips {
     private static final Map<AnimClip, Frame[]> CLIPS = new EnumMap<>(AnimClip.class);
     private static final Map<AnimPlayer.BaseState, LimbPose> BASE = new EnumMap<>(AnimPlayer.BaseState.class);
+    private static final Map<SkillStyle, LimbPose> CHARGE = new EnumMap<>(SkillStyle.class);
+    private static final Map<SkillStyle, LimbPose> FIRE = new EnumMap<>(SkillStyle.class);
 
     static {
         put(AnimClip.PUNCH_LEFT,
@@ -137,6 +140,25 @@ public final class Clips {
         BASE.put(AnimPlayer.BaseState.STUNNED, p().head(-0.25f, 0, 0.12f).rightArm(0.25f, 0, 0.35f).leftArm(0.2f, 0, -0.35f));
         BASE.put(AnimPlayer.BaseState.TRANSFORM, p().rightArm(0.32f, 0, 0.62f).leftArm(0.32f, 0, -0.62f).head(-0.55f, 0, 0).rightLeg(0, 0, 0.3f).leftLeg(0, 0, -0.3f));
         BASE.put(AnimPlayer.BaseState.MEDITATE, meditate());
+        put(AnimClip.BIG_BANG,
+                f(0.0f, p().rightArm(-0.6f, 0.4f, 0.3f).body(0, 0.3f, 0)),
+                f(0.3f, p().rightArm(-1.62f, 0.0f, 0.0f).leftArm(0.15f, 0, -0.45f).body(0, -0.35f, 0).rightLeg(0.3f, 0, 0.1f).leftLeg(-0.4f, 0, -0.1f)),
+                f(0.8f, p().rightArm(-1.6f, 0.0f, 0.0f).leftArm(0.15f, 0, -0.45f).body(0, -0.3f, 0).rightLeg(0.3f, 0, 0.1f).leftLeg(-0.4f, 0, -0.1f)),
+                f(1.0f, p().rightArm(-1.3f, 0, 0.1f).leftArm(0.1f, 0, -0.3f).body(0, -0.1f, 0)));
+        put(AnimClip.DEATH_BEAM,
+                f(0.0f, p().rightArm(-1.2f, 0.2f, 0.1f).leftArm(0.1f, 0, -0.6f)),
+                f(0.25f, p().rightArm(-1.6f, -0.05f, 0).leftArm(0.15f, 0, -0.7f).body(0, 0.15f, 0)),
+                f(1.0f, p().rightArm(-1.58f, -0.05f, 0).leftArm(0.15f, 0, -0.7f).body(0, 0.12f, 0)));
+        CHARGE.put(SkillStyle.KAMEHAMEHA, BASE.get(AnimPlayer.BaseState.SKILL_CHARGE));
+        CHARGE.put(SkillStyle.GALICK_GUN, p().body(0.1f, 0, 0).rightArm(-1.5f, 1.45f, 0.0f).leftArm(-1.5f, 1.15f, 0.0f).rightLeg(0.12f, 0, 0.38f).leftLeg(-0.12f, 0, -0.38f));
+        CHARGE.put(SkillStyle.MASENKO, p().body(-0.05f, 0, 0).head(0.05f, 0, 0).rightArm(-2.95f, 0.0f, 0.22f).leftArm(-2.95f, 0.0f, -0.22f).rightLeg(0, 0, 0.22f).leftLeg(0, 0, -0.22f));
+        CHARGE.put(SkillStyle.SPECIAL_BEAM_CANNON, p().body(0.06f, 0, 0).rightArm(-2.5f, 0.0f, 0.55f).leftArm(0.15f, 0, -0.2f).rightLeg(0, 0, 0.3f).leftLeg(0, 0, -0.3f));
+        CHARGE.put(SkillStyle.FINAL_FLASH, p().body(-0.12f, 0, 0).head(-0.1f, 0, 0).rightArm(-0.05f, 0, 1.5f).leftArm(-0.05f, 0, -1.5f).rightLeg(0, 0, 0.32f).leftLeg(0, 0, -0.32f));
+        FIRE.put(SkillStyle.KAMEHAMEHA, BASE.get(AnimPlayer.BaseState.BEAM_FIRE));
+        FIRE.put(SkillStyle.GALICK_GUN, BASE.get(AnimPlayer.BaseState.BEAM_FIRE));
+        FIRE.put(SkillStyle.MASENKO, p().body(0.1f, 0, 0).rightArm(-2.2f, -0.12f, 0).leftArm(-2.2f, 0.12f, 0).rightLeg(0.35f, 0, 0.15f).leftLeg(-0.45f, 0, -0.1f));
+        FIRE.put(SkillStyle.SPECIAL_BEAM_CANNON, p().rightArm(-1.6f, -0.08f, 0).leftArm(0.3f, 0, -0.25f).rightLeg(0.3f, 0, 0.12f).leftLeg(-0.4f, 0, -0.1f));
+        FIRE.put(SkillStyle.FINAL_FLASH, p().rightArm(-1.62f, -0.32f, 0).leftArm(-1.62f, 0.32f, 0).rightLeg(0.35f, 0, 0.15f).leftLeg(-0.45f, 0, -0.1f));
     }
 
     private Clips() {
@@ -159,6 +181,16 @@ public final class Clips {
     }
 
     public static LimbPose base(AnimPlayer.BaseState state) {
+        return BASE.get(state);
+    }
+
+    public static LimbPose base(AnimPlayer.BaseState state, SkillStyle style) {
+        if (state == AnimPlayer.BaseState.SKILL_CHARGE) {
+            return CHARGE.getOrDefault(style, BASE.get(state));
+        }
+        if (state == AnimPlayer.BaseState.BEAM_FIRE) {
+            return FIRE.getOrDefault(style, BASE.get(state));
+        }
         return BASE.get(state);
     }
 

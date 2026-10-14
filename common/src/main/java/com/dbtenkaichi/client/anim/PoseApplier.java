@@ -2,6 +2,7 @@ package com.dbtenkaichi.client.anim;
 
 import com.dbtenkaichi.client.ClientState;
 import com.dbtenkaichi.client.EntityVisual;
+import com.dbtenkaichi.ki.SkillStyle;
 import com.dbtenkaichi.player.RuntimeState;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -25,6 +26,9 @@ public final class PoseApplier {
 
     public static void tickVisual(Entity entity, EntityVisual visual) {
         int f = visual.flags;
+        if ((f & (RuntimeState.FLAG_SKILL_CHARGING | RuntimeState.FLAG_BEAM_FIRING | RuntimeState.FLAG_CLASHING)) != 0) {
+            visual.style = SkillStyle.fromFlags(f);
+        }
         boolean[] active = new boolean[AnimPlayer.BASE_STATES];
         Vec3 motion = new Vec3(entity.getX() - entity.xo, entity.getY() - entity.yo, entity.getZ() - entity.zo);
         boolean moving = motion.lengthSqr() > 0.004;
@@ -74,7 +78,7 @@ public final class PoseApplier {
         for (AnimPlayer.BaseState state : AnimPlayer.BaseState.values()) {
             float w = anim.weight(state, partial);
             if (w > 0.001f) {
-                blend(model, Clips.base(state), w);
+                blend(model, Clips.base(state, visual.style), w);
             }
         }
         float tremble = anim.weight(AnimPlayer.BaseState.CHARGE, partial) * 0.035f + anim.weight(AnimPlayer.BaseState.TRANSFORM, partial) * 0.07f
@@ -87,7 +91,7 @@ public final class PoseApplier {
         }
         float skill = anim.weight(AnimPlayer.BaseState.SKILL_CHARGE, partial);
         if (skill > 0.0f) {
-            model.head.yRot += (float) Math.toRadians(KAMEHAMEHA_TURN) * skill;
+            model.head.yRot += (float) Math.toRadians(visual.style.turn()) * skill;
         }
         float hover = anim.weight(AnimPlayer.BaseState.HOVER, partial);
         if (hover > 0.0f) {
@@ -145,7 +149,6 @@ public final class PoseApplier {
         }
     }
 
-    public static final float KAMEHAMEHA_TURN = 78.0f;
 
     public static void applyBodyTransform(PoseStack poseStack, Entity entity, EntityVisual visual, float bodyRotDegrees, float height) {
         float partial = partial();
@@ -156,7 +159,7 @@ public final class PoseApplier {
         float meditate = anim.weight(AnimPlayer.BaseState.MEDITATE, partial);
         float skill = anim.weight(AnimPlayer.BaseState.SKILL_CHARGE, partial);
         if (skill > 0.001f) {
-            poseStack.rotateDegrees(Axis.YP, KAMEHAMEHA_TURN * skill);
+            poseStack.rotateDegrees(Axis.YP, visual.style.turn() * skill);
         }
         if (fast + fly + hover + meditate < 0.001f) {
             return;

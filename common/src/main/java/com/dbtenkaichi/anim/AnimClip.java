@@ -29,7 +29,9 @@ public enum AnimClip {
     POWER_UP(20),
     LAND(8),
     MEDITATE(40),
-    CLASH_PUSH(10);
+    CLASH_PUSH(10),
+    BIG_BANG(14),
+    DEATH_BEAM(12);
 
     private static final AnimClip[] VALUES = values();
 

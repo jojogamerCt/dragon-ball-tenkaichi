@@ -74,6 +74,11 @@ form: super_saiyan, beam clash active: true). Nessuna eccezione di rendering reg
 - Galleria delle 10 razze (`docs/screenshots/race_gallery.png`, da NeoForge; identica su Fabric):
   ogni razza ha colori, skin HD e modelli razziali distinti e riconoscibili.
 
+- 0.2.0: Kaioken x2 (BP esattamente raddoppiato, 755.982 contro 378.173) anche sopra il Super Saiyan; prova di Karin
+  con arena, conto alla rovescia, avversario presente e ritorno nel punto di partenza (0,078 blocchi su NeoForge);
+  Kame House, Torre di Karin e Palazzo del Supremo; menu delle lezioni; pose di carica e di sparo di Galick Gun,
+  Masenko, Makankosappo, Final Flash, Big Bang Attack e Raggio della Morte (`dbt_18*`); Maestri canonici (`dbt_07_npcs`).
+
 ## 6. Non ancora verificato
 
 - Gioco con due client reali sullo stesso server dedicato (sincronizzazione tra giocatori distinti).

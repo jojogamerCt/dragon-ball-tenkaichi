@@ -135,7 +135,11 @@ public class MasterEntity extends FighterNpc {
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
-        entityData.set(KIND, input.getIntOr("master_kind", 0));
+        MasterKind kind = MasterKind.byOrdinal(input.getIntOr("master_kind", 0));
+        entityData.set(KIND, kind.ordinal());
+        if (kind != MasterKind.MASTER && getCustomName() == null) {
+            setCustomName(Component.translatable(kind.translationKey()));
+        }
         home = input.getIntArray("master_home").filter(a -> a.length == 3).map(a -> new BlockPos(a[0], a[1], a[2])).orElse(null);
     }
 

@@ -27,6 +27,8 @@ public final class TenkaichiModels {
     public static final ModelLayerLocation STINGER_TAIL = new ModelLayerLocation(Tenkaichi.id("stinger_tail"), "main");
     public static final ModelLayerLocation SHOULDER_PADS = new ModelLayerLocation(Tenkaichi.id("shoulder_pads"), "main");
     public static final ModelLayerLocation BEARD = new ModelLayerLocation(Tenkaichi.id("beard"), "main");
+    public static final ModelLayerLocation CAT_FEATURES = new ModelLayerLocation(Tenkaichi.id("cat_features"), "main");
+    public static final ModelLayerLocation CAT_NOSE = new ModelLayerLocation(Tenkaichi.id("cat_nose"), "main");
     public static final Map<Race, Map<FeatureTint, ModelLayerLocation>> FEATURES = new EnumMap<>(Race.class);
     public static final int TAIL_SEGMENTS = 8;
     public static final int THICK_TAIL_SEGMENTS = 9;
@@ -81,6 +83,8 @@ public final class TenkaichiModels {
         registrar.accept(STINGER_TAIL, () -> thickTail(true));
         registrar.accept(SHOULDER_PADS, TenkaichiModels::shoulderPads);
         registrar.accept(BEARD, TenkaichiModels::beard);
+        registrar.accept(CAT_FEATURES, TenkaichiModels::catFeatures);
+        registrar.accept(CAT_NOSE, TenkaichiModels::catNose);
         FEATURES.forEach((race, byTint) -> byTint.forEach((tint, location) ->
                 registrar.accept(location, () -> LayerDefinition.create(feature(race, tint), 64, 64))));
     }
@@ -273,6 +277,28 @@ public final class TenkaichiModels {
                 .texOffs(0, 24).addBox(-1.2f, 4.0f, -4.4f, 2.4f, 2.4f, 1.0f), PartPose.ZERO);
         head.addOrReplaceChild("brow_l", CubeListBuilder.create().texOffs(16, 0).addBox(-3.6f, -5.0f, -4.4f, 2.6f, 0.9f, 0.6f), PartPose.rotation(0.0f, 0.0f, 0.15f));
         head.addOrReplaceChild("brow_r", CubeListBuilder.create().texOffs(16, 0).addBox(1.0f, -5.0f, -4.4f, 2.6f, 0.9f, 0.6f), PartPose.rotation(0.0f, 0.0f, -0.15f));
+        return LayerDefinition.create(mesh, 64, 64);
+    }
+
+    public static LayerDefinition catFeatures() {
+        MeshDefinition mesh = emptyPlayerMesh();
+        PartDefinition head = mesh.getRoot().getChild("head");
+        head.addOrReplaceChild("ear_r", CubeListBuilder.create().texOffs(0, 0).addBox(-4.3f, -10.4f, -1.2f, 2.8f, 3.2f, 1.4f)
+                .texOffs(0, 0).addBox(-3.6f, -11.4f, -1.0f, 1.4f, 1.2f, 1.0f), PartPose.rotation(0.0f, 0.0f, -0.2f));
+        head.addOrReplaceChild("ear_l", CubeListBuilder.create().texOffs(0, 0).addBox(1.5f, -10.4f, -1.2f, 2.8f, 3.2f, 1.4f)
+                .texOffs(0, 0).addBox(2.2f, -11.4f, -1.0f, 1.4f, 1.2f, 1.0f), PartPose.rotation(0.0f, 0.0f, 0.2f));
+        head.addOrReplaceChild("muzzle", CubeListBuilder.create().texOffs(0, 8).addBox(-2.2f, -3.4f, -4.9f, 4.4f, 2.4f, 1.0f), PartPose.ZERO);
+        head.addOrReplaceChild("cheek_r", CubeListBuilder.create().texOffs(0, 8).addBox(-4.6f, -3.6f, -3.6f, 0.8f, 2.4f, 2.4f), PartPose.ZERO);
+        head.addOrReplaceChild("cheek_l", CubeListBuilder.create().texOffs(0, 8).addBox(3.8f, -3.6f, -3.6f, 0.8f, 2.4f, 2.4f), PartPose.ZERO);
+        return LayerDefinition.create(mesh, 64, 64);
+    }
+
+    public static LayerDefinition catNose() {
+        MeshDefinition mesh = emptyPlayerMesh();
+        PartDefinition head = mesh.getRoot().getChild("head");
+        head.addOrReplaceChild("nose", CubeListBuilder.create().texOffs(0, 0).addBox(-0.7f, -3.8f, -5.2f, 1.4f, 0.9f, 0.5f), PartPose.ZERO);
+        head.addOrReplaceChild("inner_ear_r", CubeListBuilder.create().texOffs(0, 0).addBox(-3.7f, -9.8f, -1.35f, 1.6f, 2.0f, 0.2f), PartPose.rotation(0.0f, 0.0f, -0.2f));
+        head.addOrReplaceChild("inner_ear_l", CubeListBuilder.create().texOffs(0, 0).addBox(2.1f, -9.8f, -1.35f, 1.6f, 2.0f, 0.2f), PartPose.rotation(0.0f, 0.0f, 0.2f));
         return LayerDefinition.create(mesh, 64, 64);
     }
 

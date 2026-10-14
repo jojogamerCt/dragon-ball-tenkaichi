@@ -44,6 +44,7 @@ public final class RuntimeState {
     public String pendingForm;
     public int lockedTarget = -1;
     public int kaioken;
+    public int skillStyle;
     public int skillSlot = -1;
     public long skillStart;
     public int activeBeam = -1;
@@ -136,6 +137,9 @@ public final class RuntimeState {
             f |= FLAG_TRAINING;
         }
         f |= Math.max(0, Math.min(7, kaioken)) << com.dbtenkaichi.form.KaiokenSystem.FLAG_SHIFT;
+        if (skillSlot >= 0 || activeBeam >= 0 || clashId >= 0) {
+            f |= (skillStyle & 15) << com.dbtenkaichi.ki.SkillStyle.SHIFT;
+        }
         return f;
     }
 

@@ -152,6 +152,10 @@ public final class TenkaichiLayers {
                     return;
                 }
                 Race race = visual.race;
+                if (visual.cat) {
+                    collector.submitModel(model, state, poseStack, RenderTypes.entityCutout(TAIL_TEXTURE), light, OverlayTexture.NO_OVERLAY, 0xFFF4F1EA, null, state.outlineColor);
+                    return;
+                }
                 if (race == Race.FRIEZA_RACE || race == Race.BIO_ANDROID && visual.appearance.tail) {
                     int skin = visual.appearance.skinColor;
                     int color = 0xFF000000 | (race == Race.BIO_ANDROID ? EntityVisual.mix(skin, visual.appearance.featureColor, 0.25f) : skin);
@@ -228,11 +232,15 @@ public final class TenkaichiLayers {
     static final class GearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         private final HairModel pads;
         private final HairModel beard;
+        private final HairModel cat;
+        private final HairModel catNose;
 
         GearLayer(RenderLayerParent<AvatarRenderState, PlayerModel> parent, EntityModelSet set) {
             super(parent);
             this.pads = new HairModel(set.bakeLayer(TenkaichiModels.SHOULDER_PADS));
             this.beard = new HairModel(set.bakeLayer(TenkaichiModels.BEARD));
+            this.cat = new HairModel(set.bakeLayer(TenkaichiModels.CAT_FEATURES));
+            this.catNose = new HairModel(set.bakeLayer(TenkaichiModels.CAT_NOSE));
         }
 
         @Override
@@ -250,6 +258,10 @@ public final class TenkaichiLayers {
                 }
                 if (visual.beard) {
                     collector.submitModel(beard, state, poseStack, RenderTypes.entityCutout(HAIR_TEXTURE), light, OverlayTexture.NO_OVERLAY, 0xFFEDEDED, null, state.outlineColor);
+                }
+                if (visual.cat) {
+                    collector.submitModel(cat, state, poseStack, RenderTypes.entityCutout(HAIR_TEXTURE), light, OverlayTexture.NO_OVERLAY, 0xFFF6F3EC, null, state.outlineColor);
+                    collector.submitModel(catNose, state, poseStack, RenderTypes.entityCutout(HAIR_TEXTURE), light, OverlayTexture.NO_OVERLAY, 0xFFE68FA6, null, state.outlineColor);
                 }
             } catch (RuntimeException e) {
                 RenderGuard.report("gear", e);

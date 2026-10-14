@@ -53,6 +53,88 @@ public final class ClientSmokeTest {
     }
 
     private static net.minecraft.world.phys.Vec3 trialOrigin;
+    private static final String[] BEAMS = {"galick_gun", "masenko", "special_beam_cannon", "final_flash"};
+    private static final String[] BLASTS = {"big_bang_attack", "death_beam"};
+
+    private static void showcase(Minecraft mc, String name, int t) {
+        if (t < 0 || t >= 780) {
+            return;
+        }
+        if (t == 0) {
+            mc.gui.setScreen(null);
+            if (trialOrigin != null) {
+                command(mc, String.format(java.util.Locale.ROOT, "tp %s %.2f %.2f %.2f", name, trialOrigin.x, trialOrigin.y, trialOrigin.z));
+            }
+            for (String id : BEAMS) {
+                command(mc, "tenkaichi learn " + name + " dbtenkaichi:" + id);
+            }
+            for (String id : BLASTS) {
+                command(mc, "tenkaichi learn " + name + " dbtenkaichi:" + id);
+            }
+            return;
+        }
+        if (t == 2) {
+            action(ActionType.FLIGHT_TOGGLE, 0);
+            return;
+        }
+        int beam = (t - 8) / 140;
+        int local = (t - 8) % 140;
+        if (t >= 8 && beam < BEAMS.length) {
+            String id = "dbtenkaichi:" + BEAMS[beam];
+            String label = "18" + (char) ('a' + beam) + "_" + BEAMS[beam];
+            switch (local) {
+                case 0 -> {
+                    command(mc, "tenkaichi restore " + name);
+                    Services.NETWORK.sendToServer(new Packets.AssignSlot(0, id));
+                }
+                case 4 -> action(ActionType.SKILL_PRESS, 0);
+                case 18 -> mc.gui.setScreen(new PosePreview(25.0f));
+                case 20 -> {
+                    LOG.add(label + " style " + com.dbtenkaichi.ki.SkillStyle.fromFlags(ClientState.flags));
+                    shot(mc, label + "_charge");
+                }
+                case 21 -> {
+                    mc.gui.setScreen(null);
+                    mc.options.setCameraType(CameraType.FIRST_PERSON);
+                }
+                case 25 -> shot(mc, label + "_charge_fp");
+                case 26 -> mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+                case 40 -> action(ActionType.SKILL_RELEASE, 0);
+                case 46 -> mc.gui.setScreen(new PosePreview(25.0f));
+                case 48 -> shot(mc, label + "_fire");
+                case 49 -> {
+                    mc.gui.setScreen(null);
+                    mc.options.setCameraType(CameraType.FIRST_PERSON);
+                }
+                case 52 -> shot(mc, label + "_fire_fp");
+                case 53 -> mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+                default -> {
+                }
+            }
+            return;
+        }
+        int blastStart = 8 + BEAMS.length * 140;
+        int blast = (t - blastStart) / 100;
+        int b = (t - blastStart) % 100;
+        if (t >= blastStart && blast < BLASTS.length) {
+            String label = "18" + (char) ('a' + BEAMS.length + blast) + "_" + BLASTS[blast];
+            switch (b) {
+                case 0 -> {
+                    command(mc, "tenkaichi restore " + name);
+                    Services.NETWORK.sendToServer(new Packets.AssignSlot(0, "dbtenkaichi:" + BLASTS[blast]));
+                }
+                case 5 -> mc.gui.setScreen(new PosePreview(25.0f));
+                case 6 -> action(ActionType.SKILL_PRESS, 0);
+                case 10 -> shot(mc, label + "_fire");
+                case 11 -> {
+                    action(ActionType.SKILL_RELEASE, 0);
+                    mc.gui.setScreen(null);
+                }
+                default -> {
+                }
+            }
+        }
+    }
 
     private static void tour(Minecraft mc, String name, String site, int dx, int dy, int dz, int lx, int ly, int lz) {
         net.minecraft.core.BlockPos pos = com.dbtenkaichi.world.Landmarks.sites().get(site);
@@ -183,6 +265,10 @@ public final class ClientSmokeTest {
                 command(mc, String.format(java.util.Locale.ROOT, "summon dbtenkaichi:saiyan_raider %.1f %.1f %.1f {NoAI:1b,NoGravity:1b}", at.x, mc.player.getY(), at.z));
                 Vec3 side = mc.player.position().add(look.cross(new Vec3(0, 1, 0)).scale(5));
                 command(mc, String.format(java.util.Locale.ROOT, "summon dbtenkaichi:master %.1f %.1f %.1f {NoGravity:1b}", side.x, mc.player.getY(), side.z));
+                for (int kind = 1; kind <= 3; kind++) {
+                    Vec3 spot = side.add(look.scale(2.2 * kind));
+                    command(mc, String.format(java.util.Locale.ROOT, "summon dbtenkaichi:master %.1f %.1f %.1f {NoGravity:1b,master_kind:%d}", spot.x, mc.player.getY(), spot.z, kind));
+                }
             }
             case 460 -> shot(mc, "07_npcs");
             case 470 -> {
@@ -379,7 +465,6 @@ public final class ClientSmokeTest {
             case 1015 -> tour(mc, name, com.dbtenkaichi.world.Landmarks.KAMI_LOOKOUT, 26, 6, 20, 0, 4, -8);
             case 1040 -> shot(mc, "16d_kami_palace");
             case 1044 -> {
-                action(ActionType.FLIGHT_TOGGLE, 0);
                 mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
                 LOG.add("landmarks: " + com.dbtenkaichi.world.Landmarks.sites());
                 net.minecraft.nbt.CompoundTag menu = new net.minecraft.nbt.CompoundTag();
@@ -401,14 +486,15 @@ public final class ClientSmokeTest {
                 mc.gui.setScreen(new com.dbtenkaichi.client.screen.TrainingScreen(menu));
             }
             case 1048 -> shot(mc, "17_master_lessons");
-            case 1210 -> {
+            case 1992 -> {
                 mc.gui.setScreen(null);
                 finished = true;
                 Tenkaichi.LOG.info("[DBT-CLIENT] RESULT {}", LOG);
                 mc.stop();
             }
             default -> {
-                int gallery = tick - 1050;
+                showcase(mc, name, tick - 1052);
+                int gallery = tick - 1832;
                 if (gallery >= 0 && gallery < Race.values().length * 14) {
                     Race race = Race.values()[gallery / 14];
                     if (gallery % 14 == 0) {

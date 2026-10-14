@@ -4,6 +4,7 @@ import com.dbtenkaichi.anim.AnimClip;
 import com.dbtenkaichi.client.ClientState;
 import com.dbtenkaichi.client.fx.CameraEffects;
 import com.dbtenkaichi.client.input.ClientController;
+import com.dbtenkaichi.ki.SkillStyle;
 import com.dbtenkaichi.player.RuntimeState;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -29,6 +30,8 @@ public final class FirstPersonCombat {
         switch (clip) {
             case PUNCH_LEFT, HOOK, KI_BLAST_LEFT -> strike(LEFT, duration, clip == AnimClip.HOOK ? 1.15f : 1.0f, false);
             case PUNCH_RIGHT, KI_BLAST_RIGHT -> strike(RIGHT, duration, 1.0f, false);
+            case BIG_BANG -> strike(RIGHT, duration, 1.5f, false);
+            case DEATH_BEAM -> strike(RIGHT, duration, 1.25f, false);
             case UPPERCUT -> strike(RIGHT, duration, 1.3f, true);
             case PALM_STRIKE, COUNTER, RUSH -> {
                 strike(RIGHT, duration, 1.4f, false);
@@ -56,7 +59,8 @@ public final class FirstPersonCombat {
     }
 
     public static boolean active() {
-        return ClientController.inStance() || ClientState.clientTicks - lastStrike < 30 || ClientState.localHas(RuntimeState.FLAG_SKILL_CHARGING);
+        return ClientController.inStance() || ClientState.clientTicks - lastStrike < 30 || ClientState.localHas(RuntimeState.FLAG_SKILL_CHARGING)
+                || ClientState.localHas(RuntimeState.FLAG_BEAM_FIRING) || ClientState.localHas(RuntimeState.FLAG_CLASHING);
     }
 
     private static float progress(Strike strike, float partial) {
@@ -64,8 +68,58 @@ public final class FirstPersonCombat {
         return t >= 0.0f && t < 1.0f ? t : -1.0f;
     }
 
+    private static void charge(PoseStack pose, SkillStyle style, boolean right, float shake) {
+        switch (style) {
+            case GALICK_GUN -> {
+                if (!right) {
+                    pose.translate(0.3f, 0.34f + shake, -0.15f);
+                    pose.rotateDegrees(Axis.YP, 12.0f);
+                    pose.rotateDegrees(Axis.ZP, 8.0f);
+                } else {
+                    pose.translate(0.16f, 0.22f - shake, -0.08f);
+                    pose.rotateDegrees(Axis.YP, 4.0f);
+                    pose.rotateDegrees(Axis.ZP, 20.0f);
+                }
+            }
+            case MASENKO -> {
+                pose.translate(right ? -0.36f : 0.36f, 0.8f + shake, -0.45f);
+                pose.rotateDegrees(Axis.ZP, right ? -8.0f : 8.0f);
+            }
+            case SPECIAL_BEAM_CANNON -> {
+                if (right) {
+                    pose.translate(-0.26f, 0.55f + shake, -0.05f);
+                    pose.rotateDegrees(Axis.ZP, -14.0f);
+                } else {
+                    pose.translate(0.05f, -0.2f, 0.1f);
+                }
+            }
+            case FINAL_FLASH -> {
+                pose.translate(right ? 0.3f : -0.3f, 0.32f + shake, 0.05f);
+                pose.rotateDegrees(Axis.ZP, right ? 22.0f : -22.0f);
+            }
+            default -> {
+                if (right) {
+                    pose.translate(-0.3f, 0.34f + shake, -0.15f);
+                    pose.rotateDegrees(Axis.YP, -12.0f);
+                    pose.rotateDegrees(Axis.ZP, -8.0f);
+                } else {
+                    pose.translate(-0.04f, 0.17f - shake, -0.06f);
+                    pose.rotateDegrees(Axis.YP, -2.0f);
+                    pose.rotateDegrees(Axis.ZP, -26.0f);
+                }
+            }
+        }
+    }
+
     public static HumanoidArm renderedArm(HumanoidArm arm) {
-        return ClientState.localHas(RuntimeState.FLAG_SKILL_CHARGING) ? HumanoidArm.RIGHT : arm;
+        if (!ClientState.localHas(RuntimeState.FLAG_SKILL_CHARGING)) {
+            return arm;
+        }
+        return switch (SkillStyle.fromFlags(ClientState.flags)) {
+            case KAMEHAMEHA -> HumanoidArm.RIGHT;
+            case GALICK_GUN -> HumanoidArm.LEFT;
+            default -> arm;
+        };
     }
 
     public static void transform(PoseStack pose, HumanoidArm arm, float partial) {
@@ -73,15 +127,17 @@ public final class FirstPersonCombat {
         float bob = Mth.sin((ClientState.clientTicks + partial) * 0.12f + (invert > 0 ? 0.0f : 1.7f)) * 0.012f;
         if (ClientState.localHas(RuntimeState.FLAG_SKILL_CHARGING)) {
             float shake = Mth.sin((ClientState.clientTicks + partial) * 2.3f + invert) * 0.01f;
-            if (invert > 0) {
-                pose.translate(-0.3f, 0.34f + shake, -0.15f);
-                pose.rotateDegrees(Axis.YP, -12.0f);
-                pose.rotateDegrees(Axis.ZP, -8.0f);
-            } else {
-                pose.translate(-0.16f, 0.22f - shake, -0.08f);
-                pose.rotateDegrees(Axis.YP, -4.0f);
-                pose.rotateDegrees(Axis.ZP, -20.0f);
+            charge(pose, SkillStyle.fromFlags(ClientState.flags), invert > 0, shake);
+            return;
+        }
+        if (ClientState.localHas(RuntimeState.FLAG_BEAM_FIRING) || ClientState.localHas(RuntimeState.FLAG_CLASHING)) {
+            float push = Mth.sin((ClientState.clientTicks + partial) * 1.7f + invert) * 0.012f;
+            if (SkillStyle.fromFlags(ClientState.flags) == SkillStyle.SPECIAL_BEAM_CANNON && invert < 0) {
+                pose.translate(0.05f, -0.2f, 0.1f);
+                return;
             }
+            pose.translate(-invert * 0.38f, 0.3f + push, -0.3f);
+            pose.rotateDegrees(Axis.YP, -invert * 6.0f);
             return;
         }
         if (ClientState.localHas(RuntimeState.FLAG_GUARDING)) {
