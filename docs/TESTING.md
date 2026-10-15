@@ -87,6 +87,9 @@ form: super_saiyan, beam clash active: true). Nessuna eccezione di rendering reg
 
 - Outfit equipaggiato alla creazione (`outfit equipped: gi_top, gi_pants, gi_boots`) e visibile in terza e prima persona su entrambi i loader.
 
+- Prove delle trasformazioni contro il proprio clone (SS su Namecc, SS2 sul ring del Cell Game, SS3 nel canyon) e Stanza dello
+  Spirito e del Tempo vuota; contenimento nel ring (spinto 40 blocchi fuori, riportato sul bordo) su entrambi i loader.
+
 ## 6. Non ancora verificato
 
 - Gioco con due client reali sullo stesso server dedicato (sincronizzazione tra giocatori distinti).

@@ -66,7 +66,9 @@ la colonna "Verifica" indica come è stata provata (vedi `TESTING.md`).
 | Razza demoniaca | Furia demoniaca | +30% danni sotto il 35% di HP; i colpi in mischia restituiscono Ki |
 
 ## Novità della 0.2.0
-- **Super Saiyan 2 e 3**: dal Super Saiyan / Super Saiyan 2 con BP base 60.000 / 200.000, con cutscene canoniche
+- **Sblocco delle trasformazioni**: livello di Potenziale (SS 8, SS2 20, SS3 35) e prova contro se stessi nella forma
+  (Namecc, ring del Cell Game, canyon); arene di ogni prova in posizioni separate e ring da cui non si esce.
+- **Super Saiyan 2 e 3** con cutscene canoniche
   abbreviate (Gohan contro Cell perfetto, Goku contro Majin Bu).
 - **Kaioken** per tutte le razze, separato dalle forme e combinabile con quelle compatibili (base e Super Saiyan,
   campo datapack `kaiokenCompatible`): livelli x2, x3, x4, x10, x20 sbloccati dalla padronanza, tasto Y, consuma Ki

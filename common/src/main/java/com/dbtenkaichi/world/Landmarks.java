@@ -143,9 +143,6 @@ public final class Landmarks {
     static BlockPos kameHouse(ServerLevel level, BlockPos origin) {
         int sea = level.getSeaLevel();
         BlockPos c = new BlockPos(origin.getX(), sea, origin.getZ());
-        Block pink = Blocks.CONCRETE.pink();
-        Block white = Blocks.CONCRETE.white();
-        Block red = Blocks.CONCRETE.red();
         for (int dx = -20; dx <= 20; dx++) {
             for (int dz = -20; dz <= 20; dz++) {
                 double d = Math.sqrt(dx * dx + dz * dz);
@@ -174,6 +171,17 @@ public final class Landmarks {
             }
         }
         BlockPos f = c.above();
+        kameHouseBuilding(level, f);
+        BlockPos npc = f.offset(-1, 0, 7);
+        master(level, npc, MasterKind.ROSHI);
+        return npc;
+    }
+
+    public static void kameHouseBuilding(ServerLevel level, BlockPos f) {
+        Block pink = Blocks.CONCRETE.pink();
+        Block white = Blocks.CONCRETE.white();
+        Block red = Blocks.CONCRETE.red();
+        BlockPos c = f.below();
         for (int dx = -4; dx <= 4; dx++) {
             for (int dz = -3; dz <= 4; dz++) {
                 Structures.set(level, c.offset(dx, 0, dz), Blocks.OAK_PLANKS);
@@ -226,9 +234,6 @@ public final class Landmarks {
         Structures.palm(level, f.offset(5, 0, -5), 7);
         Structures.palm(level, f.offset(7, 0, 1), 6);
         Structures.palm(level, f.offset(-6, 0, -4), 5);
-        BlockPos npc = f.offset(-1, 0, 7);
-        master(level, npc, MasterKind.ROSHI);
-        return npc;
     }
 
     private static void window(ServerLevel level, BlockPos pos, Block frame) {
@@ -249,8 +254,11 @@ public final class Landmarks {
     }
 
     static BlockPos korinTower(ServerLevel level, BlockPos origin) {
-        int ground = Structures.ground(level, origin.getX(), origin.getZ());
-        int top = Math.min(level.getMaxY() - 100, ground + 120);
+        return korinTower(level, origin, Structures.ground(level, origin.getX(), origin.getZ()), 120, true);
+    }
+
+    public static BlockPos korinTower(ServerLevel level, BlockPos origin, int ground, int height, boolean withMaster) {
+        int top = Math.min(level.getMaxY() - 100, ground + height);
         Block white = Blocks.CONCRETE.white();
         Block grey = Blocks.CONCRETE.lightGray();
         BlockPos base = new BlockPos(origin.getX(), ground - 3, origin.getZ());
@@ -308,7 +316,9 @@ public final class Landmarks {
             }
         }
         BlockPos npc = t.offset(0, 1, 6);
-        master(level, npc, MasterKind.KARIN);
+        if (withMaster) {
+            master(level, npc, MasterKind.KARIN);
+        }
         return npc;
     }
 
@@ -330,6 +340,10 @@ public final class Landmarks {
     }
 
     static BlockPos lookout(ServerLevel level, BlockPos center) {
+        return lookout(level, center, true);
+    }
+
+    public static BlockPos lookout(ServerLevel level, BlockPos center, boolean withMaster) {
         int radius = 22;
         int depth = 14;
         Block white = Blocks.CONCRETE.white();
@@ -426,7 +440,9 @@ public final class Landmarks {
             Structures.set(level, tower.above(15), Blocks.CONCRETE.yellow());
         }
         BlockPos npc = center.offset(0, 1, 8);
-        master(level, npc, MasterKind.KAMI);
+        if (withMaster) {
+            master(level, npc, MasterKind.KAMI);
+        }
         return npc;
     }
 }

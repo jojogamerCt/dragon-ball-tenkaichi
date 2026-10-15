@@ -150,6 +150,19 @@ public final class TenkaichiCommands {
                                             }
                                             return ok ? 1 : 0;
                                         }))))
+                .then(Commands.literal("form")
+                        .then(Commands.argument("player", EntityArgument.player())
+                                .then(Commands.argument("form", StringArgumentType.greedyString())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(FormRegistry.all(false).stream().map(f -> f.id), b))
+                                        .executes(ctx -> {
+                                            ServerPlayer player = EntityArgument.getPlayer(ctx, "player");
+                                            com.dbtenkaichi.form.FormDefinition form = com.dbtenkaichi.form.FormRegistry.get(StringArgumentType.getString(ctx, "form"), false);
+                                            if (form == null) {
+                                                ctx.getSource().sendFailure(Component.translatable("command.dbtenkaichi.unknown_lesson"));
+                                                return 0;
+                                            }
+                                            return com.dbtenkaichi.training.TrialManager.startForm(player, PlayerManager.data(player), form) ? 1 : 0;
+                                        }))))
                 .then(Commands.literal("end")
                         .then(Commands.argument("player", EntityArgument.player())
                                 .then(Commands.literal("win").executes(ctx -> com.dbtenkaichi.training.TrialManager.forceEnd(EntityArgument.getPlayer(ctx, "player"), true) ? 1 : 0))

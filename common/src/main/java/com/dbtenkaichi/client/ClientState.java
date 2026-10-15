@@ -67,6 +67,12 @@ public final class ClientState {
             if (npc instanceof RaiderEntity) {
                 visual.race = Race.SAIYAN;
                 visual.appearance = raiderAppearance();
+            } else if (npc instanceof MasterEntity master && master.mirrorOf() >= 0 && existing(master.mirrorOf()) != null) {
+                EntityVisual source = existing(master.mirrorOf());
+                visual.race = source.race;
+                visual.appearance = source.appearance;
+                visual.beard = false;
+                visual.cat = false;
             } else if (npc instanceof MasterEntity master) {
                 com.dbtenkaichi.entity.MasterKind kind = master.kind();
                 visual.race = kind == com.dbtenkaichi.entity.MasterKind.KAMI ? Race.NAMEKIAN : Race.HUMAN;

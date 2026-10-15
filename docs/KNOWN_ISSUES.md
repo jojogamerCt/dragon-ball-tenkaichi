@@ -12,6 +12,7 @@ Classificazione: **Alta** (blocca funzioni importanti), **Media** (degrada l'esp
 | Media | Prove dei Maestri non provate con input umano | Teletrasporto, conto alla rovescia, vittoria forzata e ritorno sono verificati dal test client su entrambi i loader; difficoltà e premi non sono stati giocati. |
 | Bassa | La Kame House può essere lontana dallo spawn | Viene costruita nell’oceano più vicino (ricerca fino a ~1,6 km); `/tenkaichi landmarks` mostra le coordinate. |
 | Bassa | Breve rallentamento alla prima generazione dei luoghi iconici | La costruzione carica i chunk necessari al primo avvio del mondo (circa 2-3 s). |
+| Bassa | Smoke test del server instabile al primo avvio | Su un mondo appena creato la generazione dei luoghi iconici rallenta i primi secondi e il controllo sul Predone può fallire; al secondo avvio passa. |
 | Bassa | Karin senza bastone | Il bastone di Karin non è ancora modellato. |
 | Bassa | Posa di carica del Galick Gun poco leggibile di fronte | Le braccia sono portate dietro il corpo ruotato. |
 | Bassa | Tecniche a sfera con ricarica condivisa | Big Bang Attack e Raggio della Morte usano lo stesso tempo di ricarica dei colpi Ki. |

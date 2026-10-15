@@ -39,16 +39,20 @@ public final class TrialManager {
 
     private static final class Trial {
         final Lessons.Lesson lesson;
-        final MasterKind kind;
+        final com.dbtenkaichi.form.FormDefinition form;
+        final Arena arena;
+        final Component label;
         final BlockPos center;
         final Vec3 stand;
         final long start;
         int opponent = -1;
         boolean fighting;
 
-        Trial(Lessons.Lesson lesson, MasterKind kind, BlockPos center, Vec3 stand, long start) {
+        Trial(Lessons.Lesson lesson, com.dbtenkaichi.form.FormDefinition form, Arena arena, Component label, BlockPos center, Vec3 stand, long start) {
             this.lesson = lesson;
-            this.kind = kind;
+            this.form = form;
+            this.arena = arena;
+            this.label = label;
             this.center = center;
             this.stand = stand;
             this.start = start;
@@ -86,6 +90,30 @@ public final class TrialManager {
         if (state != Lessons.AVAILABLE) {
             return false;
         }
+        return begin(player, data, kind.arena(), lesson, null, kind, Component.translatable(lesson.translationKey()),
+                Component.translatable("message.dbtenkaichi.trial_vs", Component.translatable(kind.translationKey())));
+    }
+
+    public static boolean startForm(ServerPlayer player, PlayerData data, com.dbtenkaichi.form.FormDefinition form) {
+        RuntimeState rt = data.runtime();
+        long now = player.level().getGameTime();
+        if (active(player) || isRealm(player.level()) || rt.trainingActivity != null || rt.busy(now) || now - rt.lastCombat < 100 || data.returnPoint() != null) {
+            player.sendSystemMessage(Component.translatable("message.dbtenkaichi.trial_busy"));
+            return false;
+        }
+        Arena arena = switch (form.id) {
+            case "dbtenkaichi:super_saiyan" -> Arena.NAMEK;
+            case "dbtenkaichi:super_saiyan_2" -> Arena.CELL_RING;
+            case "dbtenkaichi:super_saiyan_3" -> Arena.CANYON;
+            default -> Arena.MOUNTAIN;
+        };
+        return begin(player, data, arena, null, form, MasterKind.MASTER, Component.translatable(form.name),
+                Component.translatable("message.dbtenkaichi.trial_vs_self", Component.translatable(form.name)));
+    }
+
+    private static boolean begin(ServerPlayer player, PlayerData data, Arena arena, Lessons.Lesson lesson, com.dbtenkaichi.form.FormDefinition form,
+                                 MasterKind kind, Component label, Component subtitle) {
+        RuntimeState rt = data.runtime();
         ServerLevel realm = player.level().getServer().getLevel(REALM);
         if (realm == null) {
             player.sendSystemMessage(Component.translatable("message.dbtenkaichi.trial_unavailable"));
@@ -105,21 +133,25 @@ public final class TrialManager {
             FlightSystem.stop(player, data);
         }
         int slot = Math.floorMod(player.getUUID().hashCode(), 1024);
-        BlockPos center = new BlockPos((slot % 32) * 512 - 8192, 100, (slot / 32) * 512 - 8192);
-        kind.arena().build(realm, center);
+        BlockPos center = new BlockPos((slot % 32) * 512 - 8192, 100, (slot / 32) * 512 - 8192 + arena.ordinal() * 24000);
+        arena.build(realm, center);
         Vec3 stand = Vec3.atBottomCenterOf(center.offset(0, 0, -7));
         player.teleport(new TeleportTransition(realm, stand, Vec3.ZERO, 0.0f, 0.0f, TeleportTransition.DO_NOTHING));
-        Trial trial = new Trial(lesson, kind, center, stand, realm.getGameTime());
+        Trial trial = new Trial(lesson, form, arena, label, center, stand, realm.getGameTime());
         MasterEntity opponent = ModEntities.MASTER.get().spawn(realm, center.offset(0, 0, 7), EntitySpawnReason.EVENT);
         if (opponent != null) {
             opponent.setKind(kind);
-            opponent.prepareTrial(player, data);
+            if (form != null) {
+                opponent.prepareMirror(player, data, form);
+            } else {
+                opponent.prepareTrial(player, data);
+            }
             trial.opponent = opponent.getId();
         }
         ACTIVE.put(player.getUUID(), trial);
         rt.invulnerableUntil = Math.max(rt.invulnerableUntil, realm.getGameTime() + COUNTDOWN);
         rt.stateDirty = true;
-        title(player, Component.translatable(kind.arena().translationKey()), Component.translatable("message.dbtenkaichi.trial_vs", Component.translatable(kind.translationKey())), 10, 50, 10);
+        title(player, Component.translatable(arena.translationKey()), subtitle, 10, 50, 10);
         return true;
     }
 
@@ -143,12 +175,16 @@ public final class TrialManager {
             }
             long t = realm.getGameTime() - trial.start;
             MasterEntity opponent = realm.getEntity(trial.opponent) instanceof MasterEntity master ? master : null;
+            contain(player, trial);
+            if (opponent != null) {
+                contain(opponent, trial);
+            }
             if (t < COUNTDOWN) {
                 if (player.position().distanceToSqr(trial.stand) > 0.05) {
                     player.teleportTo(trial.stand.x, trial.stand.y, trial.stand.z);
                 }
                 if (t % 20 == 0) {
-                    title(player, Component.literal(String.valueOf((COUNTDOWN - t) / 20)), Component.translatable(trial.lesson.translationKey()), 0, 22, 4);
+                    title(player, Component.literal(String.valueOf((COUNTDOWN - t) / 20)), trial.label, 0, 22, 4);
                     player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.UI_CLICK.get(), SoundSource.PLAYERS, 1.0f, 0.8f);
                 }
                 continue;
@@ -201,12 +237,33 @@ public final class TrialManager {
     private static void finish(ServerPlayer player, PlayerData data, Trial trial, boolean win, ServerLevel realm) {
         discard(realm, trial);
         if (win) {
-            title(player, Component.translatable("message.dbtenkaichi.trial_cleared"), Component.translatable(trial.lesson.translationKey()), 5, 50, 15);
-            Lessons.grant(player, data, trial.lesson);
+            title(player, Component.translatable("message.dbtenkaichi.trial_cleared"), trial.label, 5, 50, 15);
+            if (trial.lesson != null) {
+                Lessons.grant(player, data, trial.lesson);
+            }
+            if (trial.form != null) {
+                data.unlockForm(trial.form.id);
+                data.runtime().dataDirty = true;
+                player.sendSystemMessage(Component.translatable("message.dbtenkaichi.form_trial_cleared", Component.translatable(trial.form.name)));
+            }
         } else {
-            title(player, Component.translatable("message.dbtenkaichi.trial_failed"), Component.translatable(trial.lesson.translationKey()), 5, 50, 15);
+            title(player, Component.translatable("message.dbtenkaichi.trial_failed"), trial.label, 5, 50, 15);
         }
         returnHome(player, data);
+    }
+
+    private static void contain(net.minecraft.world.entity.Entity entity, Trial trial) {
+        Vec3 c = Vec3.atBottomCenterOf(trial.center);
+        Vec3 rel = entity.position().subtract(c);
+        double horizontal = Math.sqrt(rel.x * rel.x + rel.z * rel.z);
+        double max = trial.arena.radius() - 0.7;
+        if (horizontal > max || rel.y > 24.0 || rel.y < -0.5) {
+            double k = horizontal > max ? max / horizontal : 1.0;
+            double y = Math.max(0.0, Math.min(24.0, rel.y));
+            entity.teleportTo(c.x + rel.x * k, c.y + y, c.z + rel.z * k);
+            entity.setDeltaMovement(Vec3.ZERO);
+            entity.resetFallDistance();
+        }
     }
 
     private static void discard(ServerLevel realm, Trial trial) {

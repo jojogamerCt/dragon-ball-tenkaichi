@@ -7,9 +7,11 @@
   "parent": "dbtenkaichi:super_saiyan",
   "order": 20,
   "requirements": {
-    "battlePower": 60000,
-    "stats": {},
-    "unlock": "none",
+    "battlePower": 0,
+    "stats": {
+      "potential": 20
+    },
+    "unlock": "trial",
     "requiredForm": "dbtenkaichi:super_saiyan"
   },
   "bpMultiplier": 100.0,

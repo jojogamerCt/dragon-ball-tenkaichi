@@ -90,6 +90,21 @@ public final class Structures {
         return state.hasProperty(LeavesBlock.PERSISTENT) ? state.setValue(LeavesBlock.PERSISTENT, true) : state;
     }
 
+    public static void tree(ServerLevel level, BlockPos base) {
+        for (int y = 0; y < 5; y++) {
+            set(level, base.above(y), Blocks.OAK_LOG);
+        }
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                for (int y = 3; y <= 6; y++) {
+                    if (Math.abs(dx) + Math.abs(dz) + Math.max(0, y - 4) <= 3 && !(dx == 0 && dz == 0 && y < 5)) {
+                        set(level, base.offset(dx, y, dz), leaves(Blocks.OAK_LEAVES));
+                    }
+                }
+            }
+        }
+    }
+
     public static void conifer(ServerLevel level, BlockPos base) {
         set(level, base, Blocks.SPRUCE_LOG);
         set(level, base.above(), Blocks.SPRUCE_LOG);

@@ -68,6 +68,16 @@ public final class TransformationSystem {
         }
         if (!data.hasUnlockedForm(next.id)) {
             String unlock = next.requirements.unlock == null ? "none" : next.requirements.unlock;
+            if ("trial".equals(unlock)) {
+                if (rt.trialPromptUntil >= now) {
+                    rt.trialPromptUntil = 0L;
+                    com.dbtenkaichi.training.TrialManager.startForm(player, data, next);
+                } else {
+                    rt.trialPromptUntil = now + 100L;
+                    player.sendSystemMessage(Component.translatable("message.dbtenkaichi.form_trial_ready", Component.translatable(next.name)));
+                }
+                return;
+            }
             if (!"none".equals(unlock)) {
                 player.sendSystemMessage(Component.translatable("message.dbtenkaichi.form_hint." + unlock, Component.translatable(next.name)));
                 return;

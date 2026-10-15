@@ -78,6 +78,58 @@ public final class ClientSmokeTest {
         });
     }
 
+    private static final String[] TRIALS = {"form dbtenkaichi:super_saiyan", "form dbtenkaichi:super_saiyan_2", "form dbtenkaichi:super_saiyan_3", "start time_chamber"};
+    private static net.minecraft.world.phys.Vec3 trialStand;
+
+    private static void trialTour(Minecraft mc, String name, int c) {
+        if (c < 0 || c >= TRIALS.length * 250) {
+            return;
+        }
+        int index = c / 250;
+        int t = c % 250;
+        String label = "23" + (char) ('a' + index);
+        switch (t) {
+            case 0 -> {
+                mc.gui.setScreen(null);
+                command(mc, "tenkaichi restore " + name);
+                String[] parts = TRIALS[index].split(" ");
+                command(mc, "tenkaichi trial " + parts[0] + " " + name + " " + parts[1]);
+            }
+            case 30 -> {
+                trialStand = mc.player.position();
+                LOG.add(label + " trial dimension " + mc.player.level().dimension().identifier());
+                mc.player.setYRot(mc.player.getYRot() + 35.0f);
+                shot(mc, label + "_trial_arena");
+            }
+            case 112 -> {
+                java.util.List<com.dbtenkaichi.entity.MasterEntity> rivals = mc.level.getEntitiesOfClass(com.dbtenkaichi.entity.MasterEntity.class, mc.player.getBoundingBox().inflate(30));
+                LOG.add(label + " opponents " + rivals.size() + (rivals.isEmpty() ? "" : " mirror " + (rivals.get(0).mirrorOf() == mc.player.getId()) + " form " + rivals.get(0).visualForm()));
+                shot(mc, label + "_trial_fight");
+                if (index == 0) {
+                    IntegratedServer server = mc.getSingleplayerServer();
+                    if (server != null) {
+                        server.execute(() -> {
+                            ServerPlayer sp = server.getPlayerList().getPlayerByName(name);
+                            if (sp != null) {
+                                LOG.add(String.format(java.util.Locale.ROOT, "pushed out from %.1f %.1f %.1f", sp.getX(), sp.getY(), sp.getZ()));
+                                sp.teleportTo(sp.getX() + 40.0, sp.getY() + 10.0, sp.getZ());
+                            }
+                        });
+                    }
+                }
+            }
+            case 120 -> {
+                if (index == 0 && trialStand != null) {
+                    LOG.add(String.format(java.util.Locale.ROOT, "containment: distance from stand after push %.1f at %.1f %.1f %.1f", mc.player.position().distanceTo(trialStand), mc.player.getX(), mc.player.getY(), mc.player.getZ()));
+                }
+            }
+            case 125 -> command(mc, "tenkaichi trial end " + name + (index == 0 || index == 3 ? " win" : " lose"));
+            case 140 -> LOG.add(label + " back in " + mc.player.level().dimension().identifier());
+            default -> {
+            }
+        }
+    }
+
     private static void quickForm(Minecraft mc, String name, String formId) {
         IntegratedServer server = mc.getSingleplayerServer();
         if (server == null) {
@@ -622,7 +674,7 @@ public final class ClientSmokeTest {
                 mc.gui.setScreen(new com.dbtenkaichi.client.screen.TrainingScreen(menu));
             }
             case 1048 -> shot(mc, "17_master_lessons");
-            case 2492 -> {
+            case 3492 -> {
                 mc.gui.setScreen(null);
                 finished = true;
                 Tenkaichi.LOG.info("[DBT-CLIENT] RESULT {}", LOG);
@@ -632,7 +684,8 @@ public final class ClientSmokeTest {
                 showcase(mc, name, tick - 1052);
                 cutscenes(mc, name, tick - 1832);
                 hairGallery(mc, name, tick - 2252);
-                int gallery = tick - 2332;
+                trialTour(mc, name, tick - 2332);
+                int gallery = tick - 3332;
                 if (gallery >= 0 && gallery < Race.values().length * 14) {
                     Race race = Race.values()[gallery / 14];
                     if (gallery % 14 == 0) {

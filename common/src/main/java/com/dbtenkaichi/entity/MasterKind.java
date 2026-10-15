@@ -4,8 +4,8 @@ import com.dbtenkaichi.training.Arena;
 
 public enum MasterKind {
     MASTER("master", Arena.MOUNTAIN),
-    ROSHI("roshi", Arena.ISLAND),
-    KARIN("karin", Arena.TOWER),
+    ROSHI("roshi", Arena.KAME_ISLAND),
+    KARIN("karin", Arena.KORIN_FOREST),
     KAMI("kami", Arena.TIME_CHAMBER);
 
     private static final MasterKind[] VALUES = values();

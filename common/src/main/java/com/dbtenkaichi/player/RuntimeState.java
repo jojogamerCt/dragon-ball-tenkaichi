@@ -45,6 +45,7 @@ public final class RuntimeState {
     public int lockedTarget = -1;
     public int kaioken;
     public int skillStyle;
+    public long trialPromptUntil;
     public int skillSlot = -1;
     public long skillStart;
     public int activeBeam = -1;

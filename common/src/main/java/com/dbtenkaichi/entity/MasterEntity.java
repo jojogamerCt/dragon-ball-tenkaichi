@@ -42,6 +42,7 @@ import org.jspecify.annotations.Nullable;
 
 public class MasterEntity extends FighterNpc {
     private static final EntityDataAccessor<Integer> KIND = SynchedEntityData.defineId(MasterEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> MIRROR = SynchedEntityData.defineId(MasterEntity.class, EntityDataSerializers.INT);
     private @Nullable BlockPos home;
     private boolean trial;
     private int sparringPartner = -1;
@@ -63,6 +64,7 @@ public class MasterEntity extends FighterNpc {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(KIND, 0);
+        builder.define(MIRROR, -1);
     }
 
     public MasterKind kind() {
@@ -89,6 +91,23 @@ public class MasterEntity extends FighterNpc {
             block.set(type, Math.max(5, (int) Math.round(data.stat(type) * 0.9)));
         }
         applyStats(block, Race.HUMAN);
+        lookAtPoint(player.getBoundingBox().getCenter());
+    }
+
+    public int mirrorOf() {
+        return entityData.get(MIRROR);
+    }
+
+    public void prepareMirror(ServerPlayer player, PlayerData data, com.dbtenkaichi.form.FormDefinition form) {
+        trial = true;
+        entityData.set(MIRROR, player.getId());
+        StatBlock block = new StatBlock();
+        for (StatType type : StatType.all()) {
+            block.set(type, Math.max(5, (int) Math.round(data.stat(type) * 0.6)));
+        }
+        applyStats(block, data.race());
+        setFighterForm(form.id);
+        setCustomName(Component.translatable("entity.dbtenkaichi.mirror", player.getName(), Component.translatable(form.name)));
         lookAtPoint(player.getBoundingBox().getCenter());
     }
 

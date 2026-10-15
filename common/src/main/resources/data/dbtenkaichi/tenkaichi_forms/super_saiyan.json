@@ -1,14 +1,17 @@
 {
   "name": "form.dbtenkaichi.super_saiyan",
-  "races": ["saiyan", "half_saiyan"],
+  "races": [
+    "saiyan",
+    "half_saiyan"
+  ],
   "parent": "dbtenkaichi:base",
   "order": 10,
   "requirements": {
-    "battlePower": 9000,
+    "battlePower": 0,
     "stats": {
       "potential": 8
     },
-    "unlock": "rage"
+    "unlock": "trial"
   },
   "bpMultiplier": 50.0,
   "speedMultiplier": 1.15,
