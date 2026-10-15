@@ -369,6 +369,7 @@ public final class ClientSmokeTest {
                 LOG.add("character created client-side: " + data.isCreated() + " race=" + data.race().id());
                 Tenkaichi.LOG.info("[DBT-CLIENT] character created: {} race {} skills {}", data.isCreated(), data.race().id(), data.skills());
                 shot(mc, "02_character_hud");
+                LOG.add("outfit equipped: " + mc.player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.CHEST).getItem() + ", " + mc.player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.LEGS).getItem() + ", " + mc.player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.FEET).getItem());
             }
             case 120 -> action(ActionType.CHARGE_START, 0);
             case 150 -> shot(mc, "03_ki_charge_aura");

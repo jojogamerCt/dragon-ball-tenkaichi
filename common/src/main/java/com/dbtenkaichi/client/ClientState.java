@@ -76,6 +76,7 @@ public final class ClientState {
             }
         }
         if (entity instanceof Player player && player.isLocalPlayer()) {
+            visual.previewing = preview != null && previewRace != null;
             if (preview != null && previewRace != null) {
                 visual.appearance = preview;
                 visual.race = previewRace;

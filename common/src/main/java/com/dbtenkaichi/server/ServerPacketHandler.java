@@ -94,6 +94,8 @@ public final class ServerPacketHandler {
         data.setRace(race);
         data.setAppearance(appearance);
         data.setCreated(true);
+        com.dbtenkaichi.item.Outfits.equip(player, appearance);
+        data.setOutfitGiven(true);
         PlayerManager.refreshCaches(player, data);
         data.setKi(data.runtime().cachedMaxKi);
         data.setStamina(data.runtime().cachedMaxStamina);

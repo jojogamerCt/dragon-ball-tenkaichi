@@ -46,7 +46,7 @@ public final class TenkaichiLayers {
     }
 
     public static List<RenderLayer<AvatarRenderState, PlayerModel>> create(RenderLayerParent<AvatarRenderState, PlayerModel> parent, EntityModelSet models) {
-        return List.of(new TailLayer(parent, models), new FeatureLayer(parent, models), new GearLayer(parent, models), new HairLayer(parent, models),
+        return List.of(new OutfitLayer(parent, models), new TailLayer(parent, models), new FeatureLayer(parent, models), new GearLayer(parent, models), new HairLayer(parent, models),
                 new AuraLayer(parent, models));
     }
 
@@ -245,6 +245,72 @@ public final class TenkaichiLayers {
 
     public static int plateColor(int skin) {
         return EntityVisual.mix(0xF6F4F8, skin, 0.12f);
+    }
+
+    public static int[] outfitSpec(AvatarRenderState state, EntityVisual visual) {
+        int[] spec = {-1, 0, 0, -1, 0, 0, -1, 0, 0};
+        Minecraft mc = Minecraft.getInstance();
+        Entity entity = mc.level == null ? null : mc.level.getEntity(state.id);
+        boolean fromAppearance = !(entity instanceof net.minecraft.world.entity.player.Player) || visual.previewing;
+        if (fromAppearance) {
+            int style = visual.appearance.outfit;
+            if (style >= 0 && style < com.dbtenkaichi.player.Appearance.OUTFIT_NATURAL) {
+                for (int piece = 0; piece < 3; piece++) {
+                    spec[piece * 3] = style;
+                    spec[piece * 3 + 1] = visual.appearance.outfitPrimary;
+                    spec[piece * 3 + 2] = visual.appearance.outfitSecondary;
+                }
+            }
+            return spec;
+        }
+        if (!(entity instanceof net.minecraft.world.entity.LivingEntity living)) {
+            return spec;
+        }
+        net.minecraft.world.item.ItemStack[] stacks = {living.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.CHEST),
+                living.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.LEGS), living.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.FEET)};
+        for (int piece = 0; piece < 3; piece++) {
+            int style = com.dbtenkaichi.item.Outfits.style(stacks[piece], piece);
+            if (style >= 0) {
+                spec[piece * 3] = style;
+                spec[piece * 3 + 1] = com.dbtenkaichi.item.Outfits.primary(stacks[piece], visual.appearance.outfitPrimary);
+                spec[piece * 3 + 2] = com.dbtenkaichi.item.Outfits.secondary(stacks[piece], visual.appearance.outfitSecondary);
+            }
+        }
+        return spec;
+    }
+
+    static boolean hasOutfit(int[] spec) {
+        return spec[0] >= 0 || spec[3] >= 0 || spec[6] >= 0;
+    }
+
+    static final class OutfitLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
+        private final HairModel model;
+
+        OutfitLayer(RenderLayerParent<AvatarRenderState, PlayerModel> parent, EntityModelSet set) {
+            super(parent);
+            this.model = new HairModel(set.bakeLayer(TenkaichiModels.OUTFIT));
+        }
+
+        @Override
+        public void submit(PoseStack poseStack, SubmitNodeCollector collector, int light, AvatarRenderState state, float yRot, float xRot) {
+            try {
+                if (state.isInvisible) {
+                    return;
+                }
+                EntityVisual visual = visual(state);
+                if (visual == null || visual.appearance.useOwnSkin) {
+                    return;
+                }
+                int[] spec = outfitSpec(state, visual);
+                if (!hasOutfit(spec)) {
+                    return;
+                }
+                Identifier texture = CustomSkins.outfitTexture(visual.race, visual.appearance, spec);
+                collector.submitModel(model, state, poseStack, RenderTypes.entityCutout(texture), light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF, null, state.outlineColor);
+            } catch (RuntimeException e) {
+                RenderGuard.report("outfit_layer", e);
+            }
+        }
     }
 
     static final class GearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {

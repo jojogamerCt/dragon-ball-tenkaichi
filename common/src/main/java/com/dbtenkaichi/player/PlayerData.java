@@ -24,6 +24,7 @@ public final class PlayerData {
     public static final Codec<PlayerData> CODEC = CompoundTag.CODEC.xmap(PlayerData::fromTag, PlayerData::save);
 
     private boolean created;
+    private boolean outfitGiven;
     private Race race = Race.HUMAN;
     private Appearance appearance = Appearance.defaultsFor(Race.HUMAN);
     private StatBlock stats = new StatBlock();
@@ -281,6 +282,14 @@ public final class PlayerData {
         seenCinematics.add(id);
     }
 
+    public boolean outfitGiven() {
+        return outfitGiven;
+    }
+
+    public void setOutfitGiven(boolean given) {
+        outfitGiven = given;
+    }
+
     public void resetCharacter() {
         PlayerData fresh = new PlayerData();
         load(fresh.save());
@@ -294,6 +303,7 @@ public final class PlayerData {
         CompoundTag tag = new CompoundTag();
         tag.putInt("schema", SCHEMA);
         tag.putBoolean("created", created);
+        tag.putBoolean("outfit_given", outfitGiven);
         tag.putString("race", race.id());
         tag.put("appearance", appearance.save());
         tag.putIntArray("stats", stats.toArray());
@@ -333,6 +343,7 @@ public final class PlayerData {
     public void load(CompoundTag raw) {
         CompoundTag tag = PlayerDataMigrations.migrate(raw);
         created = tag.getBooleanOr("created", false);
+        outfitGiven = tag.getBooleanOr("outfit_given", false);
         Race loadedRace = Race.byId(tag.getStringOr("race", Race.HUMAN.id()));
         race = loadedRace == null ? Race.HUMAN : loadedRace;
         appearance = Appearance.defaultsFor(race);

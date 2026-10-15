@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "dbtenkaichi:item/gi_boots",
+    "layer1": "dbtenkaichi:item/gi_boots_overlay"
+  }
+}

@@ -16,6 +16,7 @@ public final class EntityVisual {
     public boolean created;
     public boolean beard;
     public boolean cat;
+    public boolean previewing;
     public String form = PlayerData.BASE_FORM;
     public int flags;
     public float kiRatio = 1.0f;

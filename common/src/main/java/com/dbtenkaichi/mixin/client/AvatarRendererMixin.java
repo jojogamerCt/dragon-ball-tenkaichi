@@ -73,6 +73,30 @@ public abstract class AvatarRendererMixin {
         return texture;
     }
 
+    @Inject(method = "renderHand", at = @At("TAIL"))
+    private void dbtenkaichi$outfitHand(PoseStack poseStack, net.minecraft.client.renderer.SubmitNodeCollector collector, int light, Identifier texture,
+                                        net.minecraft.client.model.geom.ModelPart arm, boolean sleeve, CallbackInfo ci) {
+        try {
+            EntityVisual visual = dbtenkaichi$localCustomVisual();
+            Minecraft mc = Minecraft.getInstance();
+            if (visual == null || mc.player == null) {
+                return;
+            }
+            net.minecraft.world.item.ItemStack chest = mc.player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.CHEST);
+            int style = com.dbtenkaichi.item.Outfits.style(chest, com.dbtenkaichi.item.Outfits.TOP);
+            if (style < 0) {
+                return;
+            }
+            int[] spec = {style, com.dbtenkaichi.item.Outfits.primary(chest, visual.appearance.outfitPrimary),
+                    com.dbtenkaichi.item.Outfits.secondary(chest, visual.appearance.outfitSecondary), -1, 0, 0, -1, 0, 0};
+            Identifier outfit = CustomSkins.outfitTexture(visual.race, visual.appearance, spec);
+            collector.submitModelPart(arm, poseStack, net.minecraft.client.renderer.rendertype.RenderTypes.entityTranslucent(outfit), light,
+                    net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY, null);
+        } catch (RuntimeException e) {
+            RenderGuard.report("outfit_hand", e);
+        }
+    }
+
     @ModifyVariable(method = "renderHand", at = @At("HEAD"), argsOnly = true)
     private boolean dbtenkaichi$handSleeve(boolean sleeve) {
         return sleeve || dbtenkaichi$localCustomVisual() != null;

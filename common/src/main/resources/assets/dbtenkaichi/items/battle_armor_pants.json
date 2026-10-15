@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "dbtenkaichi:item/battle_armor_pants",
+    "tints": [
+      {
+        "type": "minecraft:dye",
+        "default": -1018342
+      }
+    ]
+  }
+}

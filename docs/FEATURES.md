@@ -82,6 +82,9 @@ la colonna "Verifica" indica come è stata provata (vedi `TESTING.md`).
 - Aura riprogettata: fiamme rivolte alla camera, più opache al centro del corpo.
 - **Acconciature canoniche**: Goku, Vegeta, Gohan, Trunks del futuro, Yamcha, Radish, calvo (Crilin, Tensing), C-18,
   Videl e Chi-Chi; le trasformazioni cambiano i capelli in base all’acconciatura (`HairStyle.transformed`).
+- **Outfit come capi indossabili** (gi, armatura da battaglia, casual: maglia, pantaloni, stivali) consegnati alla
+  creazione; colore principale tingibile, colore dei dettagli salvato nell’oggetto; disegnati da `OutfitLayer` con una
+  texture separata dalla pelle (anche sulle braccia in prima persona).
 
 ## Non ancora implementato (dal documento di progetto)
 Trasformazioni per le razze non Saiyan, Super Saiyan God e oltre, cutscene dedicate per

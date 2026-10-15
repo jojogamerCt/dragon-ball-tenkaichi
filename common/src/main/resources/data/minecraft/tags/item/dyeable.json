@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "dbtenkaichi:gi_top",
+    "dbtenkaichi:gi_pants",
+    "dbtenkaichi:gi_boots",
+    "dbtenkaichi:battle_armor_top",
+    "dbtenkaichi:battle_armor_pants",
+    "dbtenkaichi:battle_armor_boots",
+    "dbtenkaichi:casual_top",
+    "dbtenkaichi:casual_pants",
+    "dbtenkaichi:casual_boots"
+  ]
+}

@@ -68,6 +68,11 @@ public final class PlayerManager {
             data.setStamina(data.runtime().cachedMaxStamina);
         }
         applyAttributes(player, data);
+        if (data.isCreated() && !data.outfitGiven()) {
+            com.dbtenkaichi.item.Outfits.equip(player, data.appearance());
+            data.setOutfitGiven(true);
+            data.runtime().dataDirty = true;
+        }
         Services.NETWORK.sendToPlayer(player, new Packets.ServerConfig(ConfigManager.serializeCommon()));
         Services.NETWORK.sendToPlayer(player, new Packets.Forms(FormRegistry.serializeServer()));
         markAllDirty(data);

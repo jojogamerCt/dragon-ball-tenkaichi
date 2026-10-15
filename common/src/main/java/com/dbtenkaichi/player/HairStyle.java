@@ -16,7 +16,8 @@ public enum HairStyle {
     SUPER_SPIKES,
     ASCENDED_SPIKES,
     LEGENDARY_MANE,
-    SSJ_VEGETA;
+    SSJ_VEGETA,
+    SSJ2_SPIKES;
 
     public static final int PLAYER_SELECTABLE = 10;
     private static final int[] LEGACY = {0, 1, 5, 4, 2, 9, 6};
@@ -35,14 +36,14 @@ public enum HairStyle {
         return switch (form) {
             case SUPER_SPIKES -> switch (base) {
                 case VEGETA -> SSJ_VEGETA;
-                case GOHAN -> ASCENDED_SPIKES;
+                case GOKU, GOHAN -> ASCENDED_SPIKES;
                 case RADITZ -> RADITZ;
                 default -> SUPER_SPIKES;
             };
             case ASCENDED_SPIKES -> switch (base) {
                 case VEGETA -> SSJ_VEGETA;
                 case RADITZ -> RADITZ;
-                default -> ASCENDED_SPIKES;
+                default -> SSJ2_SPIKES;
             };
             default -> form;
         };

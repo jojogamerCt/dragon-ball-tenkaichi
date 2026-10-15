@@ -152,3 +152,4 @@ Nessuna verifica automatica fallisce allo stato attuale.
   spostate da un mixin sul `CloudRenderer` più sbuffi di nuvole, lampi, crescita dei capelli, lampo finale), criniera SS3
   ricostruita a ciocche e compensata sull’inclinazione della testa. Verificate su Fabric e NeoForge.
 - Acconciature canoniche (10) con capelli trasformati per acconciatura e migrazione dei personaggi esistenti (schema dati 2).
+- Outfit come capi indossabili (9 oggetti tingibili) con livello di rendering dedicato; capelli di Goku rifatti sul riferimento; SSJ di Goku con punte verticali e SSJ2 con punte rigide; sfondo del creatore senza bande (`stretch_inner`).

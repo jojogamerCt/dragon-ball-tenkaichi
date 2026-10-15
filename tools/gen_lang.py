@@ -66,6 +66,7 @@ HAIR = {
     "ascended_spikes": ("Super Saiyan 2", "Super Saiyan 2"),
     "legendary_mane": ("Super Saiyan 3", "Super Saiyan 3"),
     "ssj_vegeta": ("Super Saiyan (Vegeta)", "Super Saiyan (Vegeta)"),
+    "ssj2_spikes": ("Super Saiyan 2 spikes", "Punte Super Saiyan 2"),
 }
 
 KEYS = {
@@ -136,6 +137,15 @@ def build():
 
     add("itemGroup.dbtenkaichi.main", "Dragon Block: Tenkaichi", "Dragon Block: Tenkaichi")
     add("item.dbtenkaichi.senzu_bean", "Senzu Bean", "Fagiolo Senzu")
+    add("item.dbtenkaichi.gi_top", "Martial Arts Gi Top", "Casacca del gi")
+    add("item.dbtenkaichi.gi_pants", "Martial Arts Gi Pants", "Pantaloni del gi")
+    add("item.dbtenkaichi.gi_boots", "Martial Arts Boots", "Stivali del gi")
+    add("item.dbtenkaichi.battle_armor_top", "Battle Armor Chestplate", "Corazza da battaglia")
+    add("item.dbtenkaichi.battle_armor_pants", "Battle Armor Suit", "Tuta da battaglia")
+    add("item.dbtenkaichi.battle_armor_boots", "Battle Armor Boots", "Stivali da battaglia")
+    add("item.dbtenkaichi.casual_top", "Casual Jacket", "Giacca casual")
+    add("item.dbtenkaichi.casual_pants", "Casual Pants", "Pantaloni casual")
+    add("item.dbtenkaichi.casual_boots", "Casual Shoes", "Scarpe casual")
     add("item.dbtenkaichi.master_spawn_egg", "Martial Arts Master Spawn Egg", "Uovo generatore Maestro di arti marziali")
     add("item.dbtenkaichi.saiyan_raider_spawn_egg", "Saiyan Raider Spawn Egg", "Uovo generatore Predone Saiyan")
     add("entity.dbtenkaichi.master", "Martial Arts Master", "Maestro di arti marziali")

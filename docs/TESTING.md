@@ -85,6 +85,8 @@ form: super_saiyan, beam clash active: true). Nessuna eccezione di rendering reg
 
 - Galleria delle 10 acconciature canoniche in forma base e Super Saiyan (`dbt_21_hair_*`, `dbt_22_ssj_*`) su entrambi i loader.
 
+- Outfit equipaggiato alla creazione (`outfit equipped: gi_top, gi_pants, gi_boots`) e visibile in terza e prima persona su entrambi i loader.
+
 ## 6. Non ancora verificato
 
 - Gioco con due client reali sullo stesso server dedicato (sincronizzazione tra giocatori distinti).

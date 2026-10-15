@@ -27,6 +27,7 @@ public final class TenkaichiModels {
     public static final ModelLayerLocation STINGER_TAIL = new ModelLayerLocation(Tenkaichi.id("stinger_tail"), "main");
     public static final ModelLayerLocation SHOULDER_PADS = new ModelLayerLocation(Tenkaichi.id("shoulder_pads"), "main");
     public static final ModelLayerLocation BEARD = new ModelLayerLocation(Tenkaichi.id("beard"), "main");
+    public static final ModelLayerLocation OUTFIT = new ModelLayerLocation(Tenkaichi.id("outfit"), "main");
     public static final ModelLayerLocation CAT_FEATURES = new ModelLayerLocation(Tenkaichi.id("cat_features"), "main");
     public static final ModelLayerLocation CAT_NOSE = new ModelLayerLocation(Tenkaichi.id("cat_nose"), "main");
     public static final Map<Race, Map<FeatureTint, ModelLayerLocation>> FEATURES = new EnumMap<>(Race.class);
@@ -84,6 +85,7 @@ public final class TenkaichiModels {
         registrar.accept(SHOULDER_PADS, TenkaichiModels::shoulderPads);
         registrar.accept(BEARD, TenkaichiModels::beard);
         registrar.accept(CAT_FEATURES, TenkaichiModels::catFeatures);
+        registrar.accept(OUTFIT, () -> LayerDefinition.create(net.minecraft.client.model.player.PlayerModel.createMesh(new net.minecraft.client.model.geom.builders.CubeDeformation(0.07f), false), 64, 64));
         registrar.accept(CAT_NOSE, TenkaichiModels::catNose);
         FEATURES.forEach((race, byTint) -> byTint.forEach((tint, location) ->
                 registrar.accept(location, () -> LayerDefinition.create(feature(race, tint), 64, 64))));
@@ -102,35 +104,36 @@ public final class TenkaichiModels {
         switch (style) {
             case GOKU -> {
                 b.cap(true);
-                b.spike(-2.6f, -7.6f, -3.6f, 2.35f, 0.15f, 0.0f, 4.5f, 2.6f);
-                b.spike(0.2f, -7.8f, -3.8f, 2.2f, 0.0f, 0.0f, 5.0f, 2.8f);
-                b.spike(2.7f, -7.6f, -3.4f, 2.4f, -0.2f, 0.0f, 4.0f, 2.4f);
-                b.spike(-3.0f, -8.0f, 0.5f, -0.55f, 0.0f, 0.45f, 7.0f, 3.2f);
-                b.spike(-1.0f, -8.2f, 1.0f, -0.35f, 0.0f, 0.12f, 7.5f, 3.4f);
-                b.spike(1.2f, -8.2f, 1.0f, -0.4f, 0.0f, -0.15f, 7.2f, 3.4f);
-                b.spike(3.0f, -8.0f, 0.5f, -0.6f, 0.0f, -0.5f, 6.5f, 3.0f);
-                b.spike(0.0f, -6.5f, 3.6f, -1.25f, 0.0f, 0.0f, 6.0f, 3.2f);
-                b.spike(-4.2f, -6.2f, -0.5f, 0.0f, 0.0f, 1.25f, 4.2f, 2.6f);
-                b.spike(4.2f, -6.2f, -0.5f, 0.0f, 0.0f, -1.25f, 4.2f, 2.6f);
-                b.spike(-2.5f, -4.5f, 3.8f, -2.2f, 0.0f, 0.4f, 4.5f, 2.6f);
-                b.spike(2.5f, -4.5f, 3.8f, -2.2f, 0.0f, -0.4f, 4.5f, 2.6f);
-                b.spike(-1.6f, -7.0f, -2.2f, 0.4f, 0.0f, 0.55f, 4.0f, 2.2f);
-                b.spike(1.8f, -7.0f, -2.2f, 0.4f, 0.0f, -0.55f, 4.0f, 2.2f);
+                b.spike(-2.5f, -7.5f, -4.0f, 2.6f, 0.0f, 0.4f, 4.6f, 2.6f);
+                b.spike(0.2f, -7.8f, -4.1f, 2.78f, 0.0f, -0.05f, 5.6f, 2.8f);
+                b.spike(2.6f, -7.4f, -3.9f, 2.55f, 0.0f, -0.45f, 4.2f, 2.4f);
+                b.spike(-0.6f, -8.4f, -2.6f, 0.4f, 0.0f, 0.1f, 5.5f, 3.0f);
+                for (int i = -2; i <= 2; i++) {
+                    float x = i * 1.75f;
+                    b.spike(x, -8.3f, 0.4f, -0.9f - Math.abs(i) * 0.1f, 0.0f, i * 0.34f, 9.0f - Math.abs(i) * 0.9f, 3.6f);
+                }
+                b.spike(-4.3f, -6.9f, -0.8f, 0.05f, 0.0f, -1.3f, 6.5f, 3.2f);
+                b.spike(-4.3f, -4.9f, 1.2f, -0.2f, 0.0f, -1.55f, 5.0f, 2.8f);
+                b.spike(4.3f, -6.9f, -0.8f, 0.05f, 0.0f, 1.3f, 6.5f, 3.2f);
+                b.spike(4.3f, -4.9f, 1.2f, -0.2f, 0.0f, 1.55f, 5.0f, 2.8f);
+                b.spike(0.0f, -6.6f, 4.0f, -1.55f, 0.0f, 0.0f, 6.5f, 3.2f);
+                b.spike(-2.4f, -4.6f, 4.0f, -2.2f, 0.0f, -0.35f, 5.0f, 2.8f);
+                b.spike(2.4f, -4.6f, 4.0f, -2.2f, 0.0f, 0.35f, 5.0f, 2.8f);
             }
             case SUPER_SPIKES -> {
                 b.cap(true);
-                b.spike(-1.2f, -7.8f, -3.9f, 2.55f, 0.1f, 0.15f, 5.0f, 2.4f);
-                b.spike(-3.2f, -8.0f, 0.0f, -0.4f, 0.0f, 0.68f, 9.0f, 3.4f);
-                b.spike(-1.2f, -8.3f, 0.6f, -0.52f, 0.0f, 0.26f, 10.0f, 3.6f);
-                b.spike(1.2f, -8.3f, 0.6f, -0.58f, 0.0f, -0.28f, 9.6f, 3.6f);
-                b.spike(3.2f, -8.0f, 0.0f, -0.42f, 0.0f, -0.7f, 8.6f, 3.4f);
+                b.spike(-1.2f, -7.8f, -3.9f, 2.55f, 0.1f, -0.15f, 5.0f, 2.4f);
+                b.spike(-3.2f, -8.0f, 0.0f, -0.4f, 0.0f, -0.68f, 9.0f, 3.4f);
+                b.spike(-1.2f, -8.3f, 0.6f, -0.52f, 0.0f, -0.26f, 10.0f, 3.6f);
+                b.spike(1.2f, -8.3f, 0.6f, -0.58f, 0.0f, 0.28f, 9.6f, 3.6f);
+                b.spike(3.2f, -8.0f, 0.0f, -0.42f, 0.0f, 0.7f, 8.6f, 3.4f);
                 b.spike(0.0f, -7.5f, 2.8f, -0.9f, 0.0f, 0.0f, 8.4f, 3.4f);
-                b.spike(-2.4f, -6.0f, 3.6f, -0.95f, 0.0f, 0.35f, 6.8f, 3.0f);
-                b.spike(2.4f, -6.0f, 3.6f, -0.95f, 0.0f, -0.35f, 6.8f, 3.0f);
-                b.spike(-4.2f, -6.8f, -0.5f, 0.0f, 0.0f, 0.75f, 5.0f, 2.6f);
-                b.spike(4.2f, -6.8f, -0.5f, 0.0f, 0.0f, -0.75f, 5.0f, 2.6f);
-                b.spike(-1.8f, -7.6f, -2.0f, 0.08f, 0.0f, 0.5f, 7.0f, 3.0f);
-                b.spike(1.8f, -7.6f, -2.0f, 0.08f, 0.0f, -0.5f, 7.0f, 3.0f);
+                b.spike(-2.4f, -6.0f, 3.6f, -0.95f, 0.0f, -0.35f, 6.8f, 3.0f);
+                b.spike(2.4f, -6.0f, 3.6f, -0.95f, 0.0f, 0.35f, 6.8f, 3.0f);
+                b.spike(-4.2f, -6.8f, -0.5f, 0.0f, 0.0f, -0.75f, 5.0f, 2.6f);
+                b.spike(4.2f, -6.8f, -0.5f, 0.0f, 0.0f, 0.75f, 5.0f, 2.6f);
+                b.spike(-1.8f, -7.6f, -2.0f, 0.08f, 0.0f, -0.5f, 7.0f, 3.0f);
+                b.spike(1.8f, -7.6f, -2.0f, 0.08f, 0.0f, 0.5f, 7.0f, 3.0f);
             }
             case ASCENDED_SPIKES -> {
                 b.cap(true);
@@ -144,6 +147,21 @@ public final class TenkaichiModels {
                 b.spike(2.6f, -5.6f, 3.6f, -1.05f, 0.0f, -0.4f, 7.5f, 2.6f);
                 b.spike(-4.2f, -6.8f, -0.8f, 0.0f, 0.0f, 0.7f, 5.5f, 2.2f);
                 b.spike(4.2f, -6.8f, -0.8f, 0.0f, 0.0f, -0.7f, 5.5f, 2.2f);
+            }
+            case SSJ2_SPIKES -> {
+                b.cap(true);
+                b.spike(-0.4f, -7.9f, -3.95f, 2.85f, 0.0f, 0.12f, 7.5f, 1.8f);
+                for (int i = 0; i < 7; i++) {
+                    float x = -3.6f + i * 1.2f;
+                    b.spike(x, -8.25f, 0.2f + (i % 2) * 0.7f, -0.16f - (i % 2) * 0.12f, 0.0f, (x * 0.13f), 11.5f + (i % 2) * 1.6f, 2.5f);
+                }
+                b.spike(-2.0f, -8.0f, -2.0f, 0.15f, 0.0f, -0.35f, 8.5f, 2.4f);
+                b.spike(2.0f, -8.0f, -2.0f, 0.15f, 0.0f, 0.35f, 8.5f, 2.4f);
+                b.spike(0.0f, -7.0f, 3.2f, -0.65f, 0.0f, 0.0f, 10.0f, 2.8f);
+                b.spike(-2.6f, -5.6f, 3.6f, -1.0f, 0.0f, -0.45f, 8.0f, 2.4f);
+                b.spike(2.6f, -5.6f, 3.6f, -1.0f, 0.0f, 0.45f, 8.0f, 2.4f);
+                b.spike(-4.2f, -6.8f, -0.8f, 0.0f, 0.0f, -0.85f, 6.5f, 2.2f);
+                b.spike(4.2f, -6.8f, -0.8f, 0.0f, 0.0f, 0.85f, 6.5f, 2.2f);
             }
             case VEGETA, SSJ_VEGETA -> {
                 float k = style == HairStyle.SSJ_VEGETA ? 1.3f : 1.0f;

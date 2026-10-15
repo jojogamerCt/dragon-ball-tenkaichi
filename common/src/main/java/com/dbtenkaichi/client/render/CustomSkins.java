@@ -38,7 +38,83 @@ public final class CustomSkins {
         return id;
     }
 
+    private static final Map<Long, Identifier> OUTFITS = new LinkedHashMap<>();
+    private static final int[][] TOP_REGIONS = {{16, 16, 40, 32}, {16, 32, 40, 48}, {40, 16, 56, 32}, {40, 32, 56, 48}, {32, 48, 48, 64}, {48, 48, 64, 64}};
+    private static final int[][] ARM_REGIONS = {{40, 16}, {40, 32}, {32, 48}, {48, 48}};
+    private static final int[][] LEG_REGIONS = {{0, 16}, {0, 32}, {16, 48}, {0, 48}};
+
+    public static Identifier outfitTexture(Race race, Appearance a, int[] spec) {
+        long key = 31L + race.ordinal() * 7L + a.presentation * 131L + a.build * 1009L;
+        for (int v : spec) {
+            key = key * 1_000_003L + v;
+        }
+        Identifier existing = OUTFITS.get(key);
+        if (existing != null) {
+            return existing;
+        }
+        NativeImage result = new NativeImage(128, 128, true);
+        for (int piece = 0; piece < 3; piece++) {
+            int style = spec[piece * 3];
+            if (style < 0) {
+                continue;
+            }
+            Appearance copy = Appearance.defaultsFor(race);
+            copy.load(a.save());
+            copy.outfit = style;
+            copy.outfitPrimary = spec[piece * 3 + 1];
+            copy.outfitSecondary = spec[piece * 3 + 2];
+            NativeImage layer = new SkinPainter(race, copy, 0, 0).paintOutfit();
+            for (int y = 0; y < 128; y++) {
+                for (int x = 0; x < 128; x++) {
+                    if (piece(x / 2, y / 2) == piece) {
+                        result.setPixel(x, y, layer.getPixel(x, y));
+                    }
+                }
+            }
+            layer.close();
+        }
+        for (int[] arm : ARM_REGIONS) {
+            for (int y = arm[1] * 2; y < (arm[1] + 4) * 2; y++) {
+                for (int x = (arm[0] + 8) * 2; x < (arm[0] + 12) * 2; x++) {
+                    result.setPixel(x, y, 0);
+                }
+            }
+        }
+        Identifier id = Tenkaichi.id("dynamic/outfit_" + (counter++));
+        Minecraft.getInstance().getTextureManager().register(id, new DynamicTexture(id::toString, result));
+        OUTFITS.put(key, id);
+        if (OUTFITS.size() > MAX_CACHED) {
+            Map.Entry<Long, Identifier> eldest = OUTFITS.entrySet().iterator().next();
+            OUTFITS.remove(eldest.getKey());
+            Minecraft.getInstance().getTextureManager().release(eldest.getValue());
+        }
+        return id;
+    }
+
+    private static int piece(int x, int y) {
+        for (int[] r : TOP_REGIONS) {
+            if (x >= r[0] && x < r[2] && y >= r[1] && y < r[3]) {
+                return 0;
+            }
+        }
+        for (int[] r : LEG_REGIONS) {
+            int lx = x - r[0];
+            int ly = y - r[1];
+            if (lx >= 0 && lx < 16 && ly >= 0 && ly < 16) {
+                if (ly < 4) {
+                    return lx >= 8 && lx < 12 ? 2 : 1;
+                }
+                return ly - 4 < 9 ? 1 : 2;
+            }
+        }
+        return -1;
+    }
+
     public static void clear() {
+        for (Identifier id : OUTFITS.values()) {
+            Minecraft.getInstance().getTextureManager().release(id);
+        }
+        OUTFITS.clear();
         for (Identifier id : CACHE.values()) {
             Minecraft.getInstance().getTextureManager().release(id);
         }
@@ -105,11 +181,17 @@ public final class CustomSkins {
             face();
             ears();
             raceDetails();
-            switch (Math.max(0, Math.min(Appearance.OUTFITS - 1, a.outfit))) {
+            natural();
+            return img;
+        }
+
+        NativeImage paintOutfit() {
+            switch (a.outfit) {
                 case 0 -> gi();
                 case 1 -> armor();
                 case 2 -> casual();
-                default -> natural();
+                default -> {
+                }
             }
             return img;
         }
