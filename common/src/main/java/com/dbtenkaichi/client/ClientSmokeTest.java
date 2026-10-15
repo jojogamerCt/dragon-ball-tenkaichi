@@ -56,6 +56,75 @@ public final class ClientSmokeTest {
     private static final String[] BEAMS = {"galick_gun", "masenko", "special_beam_cannon", "final_flash"};
     private static final String[] BLASTS = {"big_bang_attack", "death_beam"};
 
+    private static void forceForm(Minecraft mc, String name, String formId) {
+        IntegratedServer server = mc.getSingleplayerServer();
+        if (server == null) {
+            return;
+        }
+        server.execute(() -> {
+            ServerPlayer sp = server.getPlayerList().getPlayerByName(name);
+            if (sp == null) {
+                return;
+            }
+            PlayerData pd = com.dbtenkaichi.server.PlayerManager.data(sp);
+            if (formId == null) {
+                TransformationSystem.forceRevert(sp, pd, null);
+                return;
+            }
+            com.dbtenkaichi.form.FormDefinition form = com.dbtenkaichi.form.FormRegistry.get(formId, false);
+            if (form != null) {
+                TransformationSystem.begin(sp, pd, form, TransformationSystem.CINEMATIC_AUTO, true, sp.level().getGameTime());
+            }
+        });
+    }
+
+    private static void cutscenes(Minecraft mc, String name, int c) {
+        switch (c) {
+            case 0 -> command(mc, "tenkaichi restore " + name);
+            case 2 -> forceForm(mc, name, "dbtenkaichi:super_saiyan_2");
+            case 14 -> shot(mc, "19a_ssj2_face_streak");
+            case 35 -> shot(mc, "19b_ssj2_black_backdrop");
+            case 52 -> shot(mc, "19c_ssj2_red_streak");
+            case 74 -> shot(mc, "19d_ssj2_scream");
+            case 96 -> shot(mc, "19e_ssj2_flash");
+            case 114 -> shot(mc, "19f_ssj2_explosion");
+            case 143 -> shot(mc, "19g_ssj2_reveal");
+            case 158 -> {
+                LOG.add("form after ssj2 cutscene: " + Services.PLATFORM.playerData(mc.player).form());
+                forceForm(mc, name, null);
+            }
+            case 168 -> command(mc, "tenkaichi restore " + name);
+            case 170 -> forceForm(mc, name, "dbtenkaichi:super_saiyan_3");
+            case 188 -> shot(mc, "20a_ssj3_power");
+            case 218 -> shot(mc, "20b_ssj3_clouds");
+            case 227 -> shot(mc, "20c_ssj3_clouds_later");
+            case 256 -> shot(mc, "20d_ssj3_hair");
+            case 290 -> shot(mc, "20e_ssj3_storm");
+            case 302 -> shot(mc, "20f_ssj3_flash");
+            case 329 -> shot(mc, "20g_ssj3_reveal");
+            case 342 -> mc.gui.setScreen(new PosePreview(160.0f));
+            case 344 -> shot(mc, "20h_ssj3_hair_back");
+            case 345 -> mc.gui.setScreen(new PosePreview(25.0f));
+            case 347 -> shot(mc, "20i_ssj3_hair_front");
+            case 348 -> {
+                mc.gui.setScreen(null);
+                mc.player.setXRot(-75.0f);
+                mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+            }
+            case 352 -> shot(mc, "20j_ssj3_look_up");
+            case 353 -> {
+                mc.player.setXRot(0.0f);
+                mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+            }
+            case 356 -> {
+                LOG.add("form after ssj3 cutscene: " + Services.PLATFORM.playerData(mc.player).form());
+                forceForm(mc, name, null);
+            }
+            default -> {
+            }
+        }
+    }
+
     private static void showcase(Minecraft mc, String name, int t) {
         if (t < 0 || t >= 780) {
             return;
@@ -487,7 +556,7 @@ public final class ClientSmokeTest {
                 mc.gui.setScreen(new com.dbtenkaichi.client.screen.TrainingScreen(menu));
             }
             case 1048 -> shot(mc, "17_master_lessons");
-            case 1992 -> {
+            case 2412 -> {
                 mc.gui.setScreen(null);
                 finished = true;
                 Tenkaichi.LOG.info("[DBT-CLIENT] RESULT {}", LOG);
@@ -495,7 +564,8 @@ public final class ClientSmokeTest {
             }
             default -> {
                 showcase(mc, name, tick - 1052);
-                int gallery = tick - 1832;
+                cutscenes(mc, name, tick - 1832);
+                int gallery = tick - 2252;
                 if (gallery >= 0 && gallery < Race.values().length * 14) {
                     Race race = Race.values()[gallery / 14];
                     if (gallery % 14 == 0) {

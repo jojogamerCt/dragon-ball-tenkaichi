@@ -8,7 +8,7 @@ Classificazione: **Alta** (blocca funzioni importanti), **Media** (degrada l'esp
 | Media | Prestazioni non misurate | L'aura e i raggi generano geometria per frame (fino a ~20 fiamme × 6 segmenti × 4 strati). Livelli Low/Medium riducono il carico ma mancano benchmark. |
 | Media | Multiplayer con più giocatori reali non provato | La logica è autoritativa e i pacchetti sono inviati ai tracker, ma il test reale è stato fatto con un solo client. |
 | Media | Trasformazioni solo per Saiyan e Mezzo-Saiyan | Super Saiyan, SS2 e SS3 (più il Kaioken per tutti); le altre razze non hanno ancora forme proprie. |
-| Media | SS2 e SS3 usano la sequenza di trasformazione generica | Le cutscene dedicate (Gohan contro Cell perfetto, Goku contro Majin Bu) sono la prossima attività. |
+| Bassa | Nuvole della cutscene SSJ3 | Le nuvole vanilla corrono avanti e indietro solo se sono attive nelle opzioni e se in quel punto del cielo ce ne sono; gli sbuffi di nuvole generati dalla cutscene sono sempre visibili. |
 | Media | Prove dei Maestri non provate con input umano | Teletrasporto, conto alla rovescia, vittoria forzata e ritorno sono verificati dal test client su entrambi i loader; difficoltà e premi non sono stati giocati. |
 | Bassa | La Kame House può essere lontana dallo spawn | Viene costruita nell’oceano più vicino (ricerca fino a ~1,6 km); `/tenkaichi landmarks` mostra le coordinate. |
 | Bassa | Breve rallentamento alla prima generazione dei luoghi iconici | La costruzione carica i chunk necessari al primo avvio del mondo (circa 2-3 s). |

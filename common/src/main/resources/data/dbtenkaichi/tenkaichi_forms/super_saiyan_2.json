@@ -21,8 +21,8 @@
   "masteryDrainReduction": 0.6,
   "lowMasteryControlPenalty": 0.15,
   "kiActivationCost": 40.0,
-  "cinematicTicks": 90,
-  "cinematic": "power_up",
+  "cinematicTicks": 150,
+  "cinematic": "super_saiyan_2_awakening",
   "quickTicks": 10,
   "visual": {
     "hairStyle": "ascended_spikes",

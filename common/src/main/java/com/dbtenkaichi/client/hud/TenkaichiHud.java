@@ -346,6 +346,17 @@ public final class TenkaichiHud {
             g.fillGradient(0, 0, g.guiWidth(), g.guiHeight() / 2, a << 24 | 0x06100A, (a * 2 / 3) << 24 | 0x0A140C);
             g.fillGradient(0, g.guiHeight() / 2, g.guiWidth(), g.guiHeight(), (a * 2 / 3) << 24 | 0x0A140C, a << 24 | 0x06100A);
         }
+        com.dbtenkaichi.client.cinematic.CinematicScript.Backdrop backdrop = com.dbtenkaichi.client.cinematic.CinematicDirector.backdrop(visual, partial);
+        float streak = com.dbtenkaichi.client.cinematic.CinematicDirector.streak(visual, partial);
+        if (backdrop != null) {
+            g.fill(0, 0, g.guiWidth(), g.guiHeight(), 0xFF000000 | backdrop.color());
+            if (streak >= 0.0f) {
+                streak(g, streak, 1.0f);
+            }
+            bust(g, mc, backdrop, elapsed + partial);
+        } else if (streak >= 0.0f) {
+            streak(g, streak, 0.8f);
+        }
         float flash = com.dbtenkaichi.client.cinematic.CinematicDirector.flash(visual, partial);
         if (flash > 0.0f) {
             int a = Math.round(Math.min(1.0f, flash) * 255);
@@ -365,5 +376,42 @@ public final class TenkaichiHud {
             g.centeredText(mc.font, Component.translatable(form.name), 0, 0, color);
             g.pose().popMatrix();
         }
+    }
+
+    private static void streak(GuiGraphicsExtractor g, float progress, float alpha) {
+        int w = g.guiWidth();
+        int h = g.guiHeight();
+        float grow = Math.min(1.0f, progress * 2.4f);
+        float ease = 1.0f - (1.0f - grow) * (1.0f - grow);
+        float fade = progress < 0.7f ? 1.0f : Math.max(0.0f, 1.0f - (progress - 0.7f) / 0.3f);
+        int a = Math.round(255 * alpha * fade);
+        int length = (int) (w * 1.7f * ease);
+        if (a <= 0 || length <= 0) {
+            return;
+        }
+        int core = Math.max(2, h / 70);
+        int x0 = (int) (-w * 0.85f);
+        int x1 = x0 + length;
+        g.pose().pushMatrix();
+        g.pose().translate(w * 0.5f, h * 0.5f);
+        g.pose().rotate((float) Math.toRadians(-14.0));
+        g.fill(x0, -core * 6, x1, core * 6, (a * 60 / 255) << 24 | 0xC81400);
+        g.fill(x0, -core * 3, x1, core * 3, (a * 150 / 255) << 24 | 0xF02A10);
+        g.fill(x0, -core, x1, core, a << 24 | 0xFF5030);
+        g.fill(x0, -Math.max(1, core / 2), x1, Math.max(1, core / 2), a << 24 | 0xFFD8C0);
+        g.fill(x1 - core * 10, -core * 4, x1, core * 4, (a * 190 / 255) << 24 | 0xFFA070);
+        g.pose().popMatrix();
+    }
+
+    private static void bust(GuiGraphicsExtractor g, Minecraft mc, com.dbtenkaichi.client.cinematic.CinematicScript.Backdrop backdrop, float time) {
+        if (mc.player == null) {
+            return;
+        }
+        int w = g.guiWidth();
+        int h = g.guiHeight();
+        int size = Math.round(h * backdrop.zoom());
+        int cx = w / 2 + Math.round((float) Math.sin(time * 2.7f) * 1.5f);
+        int cy = Math.round(h * backdrop.centerY()) + Math.round((float) Math.cos(time * 3.1f) * 1.0f);
+        com.dbtenkaichi.client.screen.EntityPreview.draw(g, cx - w, cy - h, cx + w, cy + h, size, backdrop.yaw(), 0.0f, 1.0f, mc.player);
     }
 }

@@ -13,6 +13,9 @@ public final class CinematicScript {
     final List<Track> aura = new ArrayList<>();
     final List<Track> rocks = new ArrayList<>();
     final List<Track> flicker = new ArrayList<>();
+    final List<Track> streak = new ArrayList<>();
+    final List<Track> cloudRush = new ArrayList<>();
+    final List<Backdrop> backdrops = new ArrayList<>();
     float formFrom = 1.0f;
     float revealAt = 0.6f;
     int flashColor = 0xFFFFFF;
@@ -34,6 +37,9 @@ public final class CinematicScript {
     }
 
     public record Track(float from, float to, float a, float b) {
+    }
+
+    public record Backdrop(float from, float to, int color, float zoom, float centerY, float yaw) {
     }
 
     public enum EventKind {
@@ -93,6 +99,39 @@ public final class CinematicScript {
     public CinematicScript flicker(float from, float to) {
         flicker.add(new Track(from, to, 1.0f, 1.0f));
         return this;
+    }
+
+    public CinematicScript streak(float from, float to) {
+        streak.add(new Track(from, to, 0.0f, 1.0f));
+        return this;
+    }
+
+    public CinematicScript cloudRush(float from, float to, float a, float b) {
+        cloudRush.add(new Track(from, to, a, b));
+        return this;
+    }
+
+    public CinematicScript backdrop(float from, float to, int color, float zoom, float centerY, float yaw) {
+        backdrops.add(new Backdrop(from, to, color, zoom, centerY, yaw));
+        return this;
+    }
+
+    Backdrop backdropAt(float t) {
+        for (Backdrop backdrop : backdrops) {
+            if (t >= backdrop.from && t < backdrop.to) {
+                return backdrop;
+            }
+        }
+        return null;
+    }
+
+    static float progressIn(List<Track> tracks, float t) {
+        for (Track track : tracks) {
+            if (t >= track.from && t <= track.to) {
+                return track.to <= track.from ? 1.0f : (t - track.from) / (track.to - track.from);
+            }
+        }
+        return -1.0f;
     }
 
     public CinematicScript formFrom(float at) {

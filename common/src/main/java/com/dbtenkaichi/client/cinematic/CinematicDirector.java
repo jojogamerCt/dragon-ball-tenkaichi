@@ -85,6 +85,33 @@ public final class CinematicDirector {
         return active(visual) ? CinematicScript.sample(script(visual).flash, progress(visual, partial)) : 0.0f;
     }
 
+    public static CinematicScript.@Nullable Backdrop backdrop(EntityVisual visual, float partial) {
+        return active(visual) ? script(visual).backdropAt(progress(visual, partial)) : null;
+    }
+
+    public static float streak(EntityVisual visual, float partial) {
+        return active(visual) ? CinematicScript.progressIn(script(visual).streak, progress(visual, partial)) : -1.0f;
+    }
+
+    public static long cloudOffset() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) {
+            return 0L;
+        }
+        EntityVisual visual = ClientState.existing(mc.player.getId());
+        if (visual == null || !active(visual)) {
+            return 0L;
+        }
+        float t = progress(visual, partial());
+        float rush = CinematicScript.sample(script(visual).cloudRush, t);
+        if (rush <= 0.0f) {
+            return 0L;
+        }
+        float time = ClientState.clientTicks + partial();
+        double swing = Math.sin(time * 0.42) * 7000.0 + Math.sin(time * 1.13) * 2600.0;
+        return (long) (swing * rush);
+    }
+
     public static boolean revealed(EntityVisual visual) {
         return active(visual) && progress(visual, 0.0f) >= script(visual).revealAt;
     }
@@ -169,6 +196,10 @@ public final class CinematicDirector {
                 if (shake > 0.0f) {
                     CameraEffects.addShake(shake);
                 }
+                float rush = CinematicScript.sample(script.cloudRush, now);
+                if (rush > 0.0f) {
+                    skyRush(level, entity, rush);
+                }
             }
         }
     }
@@ -217,6 +248,21 @@ public final class CinematicDirector {
             cursor.move(0, -1, 0);
         }
         return y;
+    }
+
+    private static void skyRush(ClientLevel level, Entity entity, float rush) {
+        RandomSource random = level.getRandom();
+        double direction = Math.signum(Math.sin((ClientState.clientTicks) * 0.42)) * 1.6 * rush;
+        int count = Math.max(1, Math.round(4 * rush));
+        for (int i = 0; i < count; i++) {
+            double angle = random.nextDouble() * Math.PI * 2;
+            double radius = 8 + random.nextDouble() * 26;
+            double x = entity.getX() + Math.cos(angle) * radius;
+            double z = entity.getZ() + Math.sin(angle) * radius;
+            double y = entity.getY() + 14 + random.nextDouble() * 14;
+            int shade = 0xE8ECF2 - (random.nextInt(3) * 0x0A0A0A);
+            CombatFxHandler.spawn(ModParticles.DUST_PUFF, shade, x, y, z, direction, 0.0, direction * 0.35, 9.0f + random.nextFloat() * 6.0f);
+        }
     }
 
     public static void lightningBolt(ClientLevel level, Vec3 ground, int color, float strength) {

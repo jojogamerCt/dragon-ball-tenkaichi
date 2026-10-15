@@ -64,8 +64,26 @@ public final class TenkaichiLayers {
     }
 
     public static final class HairModel extends PlayerModel {
+        private final ModelPart mane;
+
         public HairModel(ModelPart root) {
             super(root, false);
+            ModelPart found = null;
+            try {
+                found = root.getChild("head").getChild("mane_root");
+            } catch (java.util.NoSuchElementException e) {
+                found = null;
+            }
+            this.mane = found;
+        }
+
+        @Override
+        public void setupAnim(AvatarRenderState state) {
+            super.setupAnim(state);
+            if (mane != null) {
+                mane.xRot = -head.xRot + (float) Math.sin(state.ageInTicks * 0.08f) * 0.03f;
+                mane.zRot = -head.zRot;
+            }
         }
     }
 

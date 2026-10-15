@@ -159,14 +159,28 @@ public final class TenkaichiModels {
             }
             case LONG_MANE, LEGENDARY_MANE -> {
                 boolean legend = style == HairStyle.LEGENDARY_MANE;
-                float length = legend ? 30.0f : 20.0f;
                 b.cap(true);
-                b.slab("mane", -4.8f, -8.4f, 2.6f, 9.6f, length, 3.4f, 0.12f);
-                b.slab("mane_inner", -4.2f, -6.0f, 1.8f, 8.4f, length * 0.7f, 1.4f, 0.08f);
-                for (int i = 0; i < 4; i++) {
-                    float x = -3.3f + i * 2.2f;
-                    b.spike(x, -8.4f + length - 1.0f, 3.6f + (float) Math.sin(length) * 0.05f, PI - 0.25f, 0.0f, (i - 1.5f) * 0.18f, 5.0f, 3.0f);
+                b.group("mane_root", 0.0f, -8.0f, 3.0f);
+                if (legend) {
+                    b.slab("mane", -4.8f, -0.4f, -0.4f, 9.6f, 10.0f, 3.2f, 0.1f);
+                    float[][] outer = {{-3.9f, 25.0f, 0.2f}, {-2.0f, 29.0f, 0.09f}, {0.0f, 31.0f, 0.0f}, {2.0f, 29.0f, -0.09f}, {3.9f, 25.0f, -0.2f}};
+                    for (float[] lock : outer) {
+                        b.spike(lock[0], 1.5f, 0.9f, PI - 0.14f, 0.0f, lock[2], lock[1], 4.2f);
+                    }
+                    float[][] inner = {{-2.9f, 21.0f, 0.14f}, {0.0f, 24.0f, 0.0f}, {2.9f, 21.0f, -0.14f}};
+                    for (float[] lock : inner) {
+                        b.spike(lock[0], 3.0f, 2.0f, PI - 0.3f, 0.0f, lock[2], lock[1], 3.6f);
+                    }
+                } else {
+                    float length = 20.0f;
+                    b.slab("mane", -4.8f, -0.4f, -0.4f, 9.6f, length, 3.4f, 0.12f);
+                    b.slab("mane_inner", -4.2f, 2.0f, -1.2f, 8.4f, length * 0.7f, 1.4f, 0.08f);
+                    for (int i = 0; i < 4; i++) {
+                        float x = -3.3f + i * 2.2f;
+                        b.spike(x, -1.4f + length, 0.6f, PI - 0.25f, 0.0f, (i - 1.5f) * 0.18f, 5.0f, 3.0f);
+                    }
                 }
+                b.endGroup();
                 if (legend) {
                     b.spike(-1.6f, -8.0f, -3.4f, -0.2f, 0.0f, 0.25f, 6.0f, 3.0f);
                     b.spike(1.6f, -8.0f, -3.4f, -0.2f, 0.0f, -0.25f, 6.0f, 3.0f);
@@ -476,10 +490,20 @@ public final class TenkaichiModels {
 
     private static final class Builder {
         private final PartDefinition head;
+        private PartDefinition target;
         private int counter;
 
         Builder(PartDefinition head) {
             this.head = head;
+            this.target = head;
+        }
+
+        void group(String name, float x, float y, float z) {
+            target = head.addOrReplaceChild(name, CubeListBuilder.create(), PartPose.offset(x, y, z));
+        }
+
+        void endGroup() {
+            target = head;
         }
 
         void cap(boolean volume) {
@@ -496,7 +520,7 @@ public final class TenkaichiModels {
         }
 
         void slab(String name, float x, float y, float z, float w, float h, float d, float tilt) {
-            head.addOrReplaceChild(name + "_" + counter++, CubeListBuilder.create().texOffs(0, 0).addBox(0.0f, 0.0f, 0.0f, w, h, d),
+            target.addOrReplaceChild(name + "_" + counter++, CubeListBuilder.create().texOffs(0, 0).addBox(0.0f, 0.0f, 0.0f, w, h, d),
                     PartPose.offsetAndRotation(x, y, z, tilt, 0.0f, 0.0f));
         }
 
@@ -508,7 +532,7 @@ public final class TenkaichiModels {
         void curved(float x, float y, float z, float xRot, float yRot, float zRot, float length, float base, float bendZ, float bendX) {
             float[] share = {0.34f, 0.28f, 0.22f, 0.16f};
             float[] width = {1.0f, 0.76f, 0.52f, 0.26f};
-            PartDefinition parent = head;
+            PartDefinition parent = target;
             String name = "spike_" + counter++;
             for (int i = 0; i < share.length; i++) {
                 float len = length * share[i];

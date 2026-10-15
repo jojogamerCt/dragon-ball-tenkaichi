@@ -79,6 +79,10 @@ form: super_saiyan, beam clash active: true). Nessuna eccezione di rendering reg
   Kame House, Torre di Karin e Palazzo del Supremo; menu delle lezioni; pose di carica e di sparo di Galick Gun,
   Masenko, Makankosappo, Final Flash, Big Bang Attack e Raggio della Morte (`dbt_18*`); Maestri canonici (`dbt_07_npcs`).
 
+- Cutscene SS2 e SS3 forzate dal test client su entrambi i loader (`dbt_19*`, `dbt_20*`): sfondo nero con mezzo busto e
+  scia rossa, sfondo giallo-verde, lampo, esplosione, cielo con le nuvole in corsa (disposizione diversa a 9 tick di
+  distanza), criniera SS3 vista da dietro, di fronte e con la testa alzata; forma finale corretta (SS2 / SS3).
+
 ## 6. Non ancora verificato
 
 - Gioco con due client reali sullo stesso server dedicato (sincronizzazione tra giocatori distinti).

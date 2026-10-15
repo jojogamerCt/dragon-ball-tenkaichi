@@ -12,6 +12,8 @@ public final class Cinematics {
 
     static {
         register(superSaiyanAwakening());
+        register(superSaiyan2Awakening());
+        register(superSaiyan3Awakening());
         register(darkRage());
         register(powerUp());
     }
@@ -60,6 +62,67 @@ public final class Cinematics {
                 .event(0.60f, EventKind.SOUND_SCREAM, 1.0f)
                 .event(0.68f, EventKind.BURST, 2.0f).event(0.68f, EventKind.SOUND_BURST, 1.0f).event(0.68f, EventKind.GROUND_BREAK, 2.0f)
                 .event(0.86f, EventKind.SOUND_POWER, 0.8f);
+    }
+
+    private static CinematicScript superSaiyan2Awakening() {
+        return CinematicScript.create("super_saiyan_2_awakening")
+                .colors(0xFFF8C8, 0x080406, 0xBFE4FF)
+                .cut(0.00f, 0.14f, cam(0, 2, 1.15f, 0.92f), cam(0, 2, 1.0f, 0.93f))
+                .cut(0.14f, 0.40f, cam(0, 2, 1.1f, 0.92f), cam(0, 2, 1.1f, 0.92f))
+                .cut(0.40f, 0.56f, cam(0, 0, 3.0f, 0.55f), cam(0, 0, 3.0f, 0.55f))
+                .cut(0.56f, 0.68f, cam(20, -14, 5.0f, 0.35f), cam(14, -18, 4.6f, 0.35f))
+                .shot(0.68f, 0.86f, cam(35, -10, 6.5f, 0.5f), cam(25, -6, 8.0f, 0.5f))
+                .shot(0.86f, 1.00f, cam(8, 2, 1.6f, 0.92f), cam(0, 2, 1.25f, 0.93f))
+                .darken(0.00f, 0.14f, 0.3f, 0.55f).darken(0.68f, 0.80f, 0.35f, 0.0f)
+                .streak(0.24f, 0.40f)
+                .backdrop(0.14f, 0.40f, 0x000000, 0.95f, 1.0f, 0.0f)
+                .backdrop(0.40f, 0.56f, 0xB8C25E, 0.42f, 0.56f, 0.0f)
+                .shake(0.00f, 0.14f, 0.1f, 0.25f).shake(0.56f, 0.68f, 0.6f, 1.2f).shake(0.68f, 0.86f, 1.6f, 0.4f)
+                .aura(0.00f, 0.40f, 0.1f, 0.3f).aura(0.40f, 0.56f, 0.6f, 1.0f).aura(0.56f, 0.68f, 1.0f, 1.3f).aura(0.68f, 0.86f, 1.7f, 1.2f).aura(0.86f, 1.0f, 1.0f, 0.8f)
+                .rocks(0.56f, 0.86f, 0.8f, 0.3f)
+                .flash(0.58f, 0.66f, 0.0f, 1.0f).flash(0.66f, 0.74f, 1.0f, 0.0f)
+                .flicker(0.42f, 0.56f)
+                .formFrom(0.66f)
+                .revealAt(0.86f)
+                .event(0.00f, EventKind.SOUND_RUMBLE, 0.8f)
+                .event(0.06f, EventKind.SOUND_THUNDER, 0.6f)
+                .event(0.24f, EventKind.SOUND_THUNDER, 1.1f)
+                .event(0.40f, EventKind.SOUND_SCREAM, 1.2f)
+                .event(0.56f, EventKind.SOUND_RUMBLE, 1.3f)
+                .event(0.66f, EventKind.BURST, 2.4f).event(0.66f, EventKind.SOUND_BURST, 1.2f).event(0.66f, EventKind.GROUND_BREAK, 2.4f)
+                .event(0.70f, EventKind.LIGHTNING, 1.2f).event(0.70f, EventKind.SOUND_THUNDER, 1.0f)
+                .event(0.76f, EventKind.LIGHTNING, 1.0f).event(0.76f, EventKind.SOUND_THUNDER, 0.9f)
+                .event(0.90f, EventKind.LIGHTNING, 0.6f).event(0.90f, EventKind.SOUND_THUNDER, 0.8f)
+                .event(0.86f, EventKind.SOUND_POWER, 0.9f);
+    }
+
+    private static CinematicScript superSaiyan3Awakening() {
+        return CinematicScript.create("super_saiyan_3_awakening")
+                .colors(0xFFFFFF, 0x10140A, 0xD8F0FF)
+                .shot(0.00f, 0.18f, cam(30, 0, 4.5f, 0.55f), cam(15, -4, 3.6f, 0.55f))
+                .shot(0.18f, 0.40f, cam(0, -62, 2.4f, 2.0f), cam(70, -66, 2.4f, 2.0f))
+                .cut(0.40f, 0.62f, cam(-22, 8, 1.4f, 0.93f), cam(-14, 6, 1.2f, 0.93f))
+                .shot(0.62f, 0.76f, cam(150, -8, 4.5f, 0.55f), cam(200, -6, 5.0f, 0.55f))
+                .shot(0.76f, 0.86f, cam(0, 4, 3.0f, 0.6f), cam(0, 2, 4.0f, 0.6f))
+                .shot(0.86f, 1.00f, cam(25, 2, 3.0f, 0.8f), cam(5, 2, 2.3f, 0.85f))
+                .cloudRush(0.04f, 0.18f, 0.2f, 0.7f).cloudRush(0.18f, 0.40f, 1.0f, 1.0f).cloudRush(0.40f, 0.76f, 0.8f, 1.0f).cloudRush(0.76f, 0.86f, 1.0f, 0.0f)
+                .darken(0.40f, 0.62f, 0.2f, 0.4f).darken(0.62f, 0.76f, 0.2f, 0.0f)
+                .shake(0.00f, 0.40f, 0.2f, 0.6f).shake(0.40f, 0.76f, 0.7f, 1.4f).shake(0.76f, 0.86f, 1.6f, 0.3f)
+                .aura(0.00f, 0.40f, 0.6f, 0.9f).aura(0.40f, 0.76f, 1.0f, 1.4f).aura(0.76f, 0.86f, 1.8f, 1.0f).aura(0.86f, 1.0f, 0.55f, 0.4f)
+                .rocks(0.18f, 0.80f, 0.6f, 1.0f)
+                .flash(0.70f, 0.78f, 0.0f, 1.0f).flash(0.78f, 0.86f, 1.0f, 0.0f)
+                .flicker(0.42f, 0.74f)
+                .formFrom(0.78f)
+                .revealAt(0.86f)
+                .event(0.00f, EventKind.SOUND_POWER, 0.9f).event(0.04f, EventKind.SOUND_RUMBLE, 1.0f)
+                .event(0.20f, EventKind.LIGHTNING, 1.0f).event(0.20f, EventKind.SOUND_THUNDER, 1.0f).event(0.20f, EventKind.GROUND_BREAK, 1.2f)
+                .event(0.30f, EventKind.LIGHTNING, 1.2f).event(0.30f, EventKind.SOUND_THUNDER, 1.1f).event(0.30f, EventKind.SOUND_RUMBLE, 1.3f)
+                .event(0.40f, EventKind.SOUND_SCREAM, 1.3f)
+                .event(0.52f, EventKind.LIGHTNING, 0.9f).event(0.52f, EventKind.SOUND_THUNDER, 1.0f)
+                .event(0.64f, EventKind.LIGHTNING, 1.3f).event(0.64f, EventKind.SOUND_THUNDER, 1.2f).event(0.64f, EventKind.GROUND_BREAK, 1.8f)
+                .event(0.70f, EventKind.SOUND_SCREAM, 1.0f)
+                .event(0.78f, EventKind.BURST, 2.6f).event(0.78f, EventKind.SOUND_BURST, 1.3f).event(0.78f, EventKind.GROUND_BREAK, 2.6f)
+                .event(0.86f, EventKind.SOUND_POWER, 1.0f);
     }
 
     private static CinematicScript darkRage() {

@@ -66,7 +66,8 @@ la colonna "Verifica" indica come è stata provata (vedi `TESTING.md`).
 | Razza demoniaca | Furia demoniaca | +30% danni sotto il 35% di HP; i colpi in mischia restituiscono Ki |
 
 ## Novità della 0.2.0
-- **Super Saiyan 2 e 3**: dal Super Saiyan / Super Saiyan 2 con BP base 60.000 / 200.000.
+- **Super Saiyan 2 e 3**: dal Super Saiyan / Super Saiyan 2 con BP base 60.000 / 200.000, con cutscene canoniche
+  abbreviate (Gohan contro Cell perfetto, Goku contro Majin Bu).
 - **Kaioken** per tutte le razze, separato dalle forme e combinabile con quelle compatibili (base e Super Saiyan,
   campo datapack `kaiokenCompatible`): livelli x2, x3, x4, x10, x20 sbloccati dalla padronanza, tasto Y, consuma Ki
   e salute, aura rossa e indicatore nell’HUD. Si compra dalla lista tecniche (600 TP, BP base 4.000).
@@ -82,6 +83,6 @@ la colonna "Verifica" indica come è stata provata (vedi `TESTING.md`).
 
 ## Non ancora implementato (dal documento di progetto)
 Trasformazioni per le razze non Saiyan, Super Saiyan God e oltre, acconciature canoniche, cutscene dedicate per
-SS2/SS3, fusioni, Sfere del Drago e Shenron, altre dimensioni (Namek, Aldilà con il pianeta di Re Kaioh...), viaggio
+fusioni, Sfere del Drago e Shenron, altre dimensioni (Namek, Aldilà con il pianeta di Re Kaioh...), viaggio
 spaziale, story mode (saga dei Saiyan), boss canonici, tornei, gilde/party, musica dinamica, mesh/shader personalizzati
 oltre alle pipeline vanilla, LOD dedicato, benchmark.

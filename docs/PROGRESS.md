@@ -148,3 +148,6 @@ Nessuna verifica automatica fallisce allo stato attuale.
   incrociate in prima persona, nomi dei Maestri non ripristinati al caricamento, statura degli NPC non applicata.
 - Un avvio del client NeoForge si è chiuso con un crash nativo del driver (0xC0000005) prima del caricamento della mod;
   il secondo avvio è passato.
+- Cutscene canoniche SS2 (sfondo nero, scia rossa, sfondo giallo-verde, lampo, esplosione) e SS3 (nuvole vanilla
+  spostate da un mixin sul `CloudRenderer` più sbuffi di nuvole, lampi, crescita dei capelli, lampo finale), criniera SS3
+  ricostruita a ciocche e compensata sull’inclinazione della testa. Verificate su Fabric e NeoForge.
