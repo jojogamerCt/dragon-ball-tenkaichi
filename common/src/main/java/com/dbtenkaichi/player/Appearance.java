@@ -108,6 +108,17 @@ public final class Appearance {
         useOwnSkin = tag.getBooleanOr("own_skin", useOwnSkin);
     }
 
+    public static int defaultHair(Race race, int presentation) {
+        if (presentation != 1 || !race.hasHair()) {
+            return defaultsFor(race).hairStyle;
+        }
+        return switch (race) {
+            case HUMAN -> HairStyle.CHI_CHI.ordinal();
+            case ANDROID, KAIOSHIN, DEMON -> HairStyle.ANDROID_18.ordinal();
+            default -> HairStyle.VIDEL.ordinal();
+        };
+    }
+
     public static Appearance defaultsFor(Race race) {
         Appearance a = new Appearance();
         a.tail = race.tailByDefault();

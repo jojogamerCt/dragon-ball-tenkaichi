@@ -28,6 +28,8 @@ public final class TenkaichiModels {
     public static final ModelLayerLocation SHOULDER_PADS = new ModelLayerLocation(Tenkaichi.id("shoulder_pads"), "main");
     public static final ModelLayerLocation BEARD = new ModelLayerLocation(Tenkaichi.id("beard"), "main");
     public static final ModelLayerLocation OUTFIT = new ModelLayerLocation(Tenkaichi.id("outfit"), "main");
+    public static final ModelLayerLocation OUTFIT_FEMININE = new ModelLayerLocation(Tenkaichi.id("outfit_feminine"), "main");
+    public static final ModelLayerLocation BUST = new ModelLayerLocation(Tenkaichi.id("bust"), "main");
     public static final ModelLayerLocation CAT_FEATURES = new ModelLayerLocation(Tenkaichi.id("cat_features"), "main");
     public static final ModelLayerLocation CAT_NOSE = new ModelLayerLocation(Tenkaichi.id("cat_nose"), "main");
     public static final Map<Race, Map<FeatureTint, ModelLayerLocation>> FEATURES = new EnumMap<>(Race.class);
@@ -85,6 +87,8 @@ public final class TenkaichiModels {
         registrar.accept(SHOULDER_PADS, TenkaichiModels::shoulderPads);
         registrar.accept(BEARD, TenkaichiModels::beard);
         registrar.accept(CAT_FEATURES, TenkaichiModels::catFeatures);
+        registrar.accept(OUTFIT_FEMININE, () -> bust(net.minecraft.client.model.player.PlayerModel.createMesh(new net.minecraft.client.model.geom.builders.CubeDeformation(0.07f), false), 0.07f));
+        registrar.accept(BUST, () -> bust(emptyPlayerMesh(), 0.0f));
         registrar.accept(OUTFIT, () -> LayerDefinition.create(net.minecraft.client.model.player.PlayerModel.createMesh(new net.minecraft.client.model.geom.builders.CubeDeformation(0.07f), false), 64, 64));
         registrar.accept(CAT_NOSE, TenkaichiModels::catNose);
         FEATURES.forEach((race, byTint) -> byTint.forEach((tint, location) ->
@@ -348,6 +352,13 @@ public final class TenkaichiModels {
                 .texOffs(0, 24).addBox(-1.2f, 4.0f, -4.4f, 2.4f, 2.4f, 1.0f), PartPose.ZERO);
         head.addOrReplaceChild("brow_l", CubeListBuilder.create().texOffs(16, 0).addBox(-3.6f, -5.0f, -4.4f, 2.6f, 0.9f, 0.6f), PartPose.rotation(0.0f, 0.0f, 0.15f));
         head.addOrReplaceChild("brow_r", CubeListBuilder.create().texOffs(16, 0).addBox(1.0f, -5.0f, -4.4f, 2.6f, 0.9f, 0.6f), PartPose.rotation(0.0f, 0.0f, -0.15f));
+        return LayerDefinition.create(mesh, 64, 64);
+    }
+
+    static LayerDefinition bust(MeshDefinition mesh, float inflate) {
+        PartDefinition body = mesh.getRoot().getChild("body");
+        body.addOrReplaceChild("bust", CubeListBuilder.create().texOffs(19, 19)
+                .addBox(-3.2f, 1.2f, -3.9f, 6.4f, 3.6f, 2.0f, new net.minecraft.client.model.geom.builders.CubeDeformation(inflate)), PartPose.rotation(-0.1f, 0.0f, 0.0f));
         return LayerDefinition.create(mesh, 64, 64);
     }
 

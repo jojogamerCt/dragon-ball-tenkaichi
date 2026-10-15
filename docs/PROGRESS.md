@@ -154,3 +154,4 @@ Nessuna verifica automatica fallisce allo stato attuale.
 - Acconciature canoniche (10) con capelli trasformati per acconciatura e migrazione dei personaggi esistenti (schema dati 2).
 - Outfit come capi indossabili (9 oggetti tingibili) con livello di rendering dedicato; capelli di Goku rifatti sul riferimento; SSJ di Goku con punte verticali e SSJ2 con punte rigide; sfondo del creatore senza bande (`stretch_inner`).
 - Sblocco delle trasformazioni con Potenziale e prova contro se stessi, nuove arene tematiche (Kame Island, terra sacra di Karin, Namecc, ring del Cell Game, canyon), arene separate per tipo e contenimento nel ring.
+- BP base bilanciati per le trasformazioni, presentazione femminile (busto, corporatura, ciglia, labbra, acconciature), pulsanti Prova e requisiti nel menu delle forme.

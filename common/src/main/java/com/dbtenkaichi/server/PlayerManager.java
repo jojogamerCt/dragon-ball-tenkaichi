@@ -174,6 +174,28 @@ public final class PlayerManager {
         com.dbtenkaichi.combat.CombatSystem.playSound(player.level(), player, com.dbtenkaichi.registry.ModSounds.UI_CONFIRM.get(), 1.0f, 1.0f);
     }
 
+    public static void formTrial(ServerPlayer player, PlayerData data, int index) {
+        java.util.List<FormDefinition> chain = new java.util.ArrayList<>(FormRegistry.chainFor(data.race(), false));
+        if (!data.isCreated() || index < 0 || index >= chain.size()) {
+            return;
+        }
+        FormDefinition form = chain.get(index);
+        if (data.hasUnlockedForm(form.id)) {
+            return;
+        }
+        if (!PlayerData.BASE_FORM.equals(form.parent) && !data.hasUnlockedForm(form.parent)) {
+            FormDefinition parent = FormRegistry.get(form.parent, false);
+            player.sendSystemMessage(Component.translatable("message.dbtenkaichi.form_trial_parent", Component.translatable(parent == null ? form.parent : parent.name)));
+            return;
+        }
+        String missing = com.dbtenkaichi.form.TransformationSystem.missingRequirement(player, data, form);
+        if (missing != null) {
+            player.sendSystemMessage(Component.translatable("message.dbtenkaichi.form_locked", Component.translatable(form.name), Component.translatable("requirement.dbtenkaichi." + missing.replace(':', '.'))));
+            return;
+        }
+        com.dbtenkaichi.training.TrialManager.startForm(player, data, form);
+    }
+
     private static void buyKaioken(ServerPlayer player, PlayerData data) {
         if (!data.isCreated() || data.hasSkill(com.dbtenkaichi.form.KaiokenSystem.ABILITY)) {
             return;

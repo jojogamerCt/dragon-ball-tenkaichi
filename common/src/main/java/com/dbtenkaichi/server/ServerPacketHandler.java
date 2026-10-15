@@ -168,6 +168,7 @@ public final class ServerPacketHandler {
             case LANDED -> FlightSystem.landed(player, data, arg, now);
             case KAIOKEN -> com.dbtenkaichi.form.KaiokenSystem.cycle(player, data, now);
             case BUY_TECHNIQUE -> PlayerManager.buyTechnique(player, data, arg);
+            case FORM_TRIAL -> PlayerManager.formTrial(player, data, arg);
             default -> {
             }
         }

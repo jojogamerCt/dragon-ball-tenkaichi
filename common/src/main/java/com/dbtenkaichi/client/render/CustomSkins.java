@@ -175,6 +175,9 @@ public final class CustomSkins {
                 bioBase();
             }
             torsoAnatomy();
+            if (a.presentation == 1) {
+                feminineBody();
+            }
             limbAnatomy(40, 16);
             limbAnatomy(32, 48);
             scalp();
@@ -382,10 +385,29 @@ public final class CustomSkins {
                 darken(fx + dx, fy + 15, 0.9f);
             }
             if (a.presentation == 1) {
-                px(fx + 2, fy + 11, mix(skin, 0xFF8080, 0.25f));
-                px(fx + 13, fy + 11, mix(skin, 0xFF8080, 0.25f));
-                px(fx + 3, fy + 8, shade(skin, 0.4f));
-                px(fx + 12, fy + 8, shade(skin, 0.4f));
+                int lash = shade(skin, 0.22f);
+                line(fx + 2, fy + 8, fx + 5, fy + 8, lash);
+                line(fx + 10, fy + 8, fx + 13, fy + 8, lash);
+                px(fx + 1, fy + 7, lash);
+                px(fx + 14, fy + 7, lash);
+                px(fx + 2, fy + 11, mix(skin, 0xFF7080, 0.35f));
+                px(fx + 13, fy + 11, mix(skin, 0xFF7080, 0.35f));
+                px(fx + 3, fy + 11, mix(skin, 0xFF7080, 0.2f));
+                px(fx + 12, fy + 11, mix(skin, 0xFF7080, 0.2f));
+                line(fx + 6, my, fx + 9, my, mix(skin, 0xC8384F, 0.7f));
+                line(fx + 6, my + 1, fx + 9, my + 1, mix(skin, 0xC8384F, 0.45f));
+            }
+        }
+
+        private void feminineBody() {
+            for (int y = 52; y < 60; y++) {
+                darken(40, y, 0.84f);
+                darken(41, y, 0.9f);
+                darken(54, y, 0.9f);
+                darken(55, y, 0.84f);
+            }
+            for (int x = 42; x < 54; x++) {
+                darken(x, 49, 0.86f);
             }
         }
 

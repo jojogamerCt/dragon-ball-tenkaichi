@@ -7,7 +7,7 @@
   "parent": "dbtenkaichi:base",
   "order": 10,
   "requirements": {
-    "battlePower": 0,
+    "battlePower": 20000,
     "stats": {
       "potential": 8
     },

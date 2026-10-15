@@ -130,6 +130,38 @@ public final class ClientSmokeTest {
         }
     }
 
+    private static final Race[] FEMALE = {Race.SAIYAN, Race.HALF_SAIYAN, Race.HUMAN, Race.NAMEKIAN, Race.FRIEZA_RACE, Race.MAJIN, Race.ANDROID, Race.DEMON};
+
+    private static void femaleGallery(Minecraft mc, int c) {
+        if (c == 0) {
+            mc.gui.setScreen(new com.dbtenkaichi.client.screen.CharacterScreen(2));
+        } else if (c == 4) {
+            shot(mc, "24_forms_menu");
+        } else if (c == 6) {
+            mc.gui.setScreen(null);
+        } else if (c >= 8 && c < 8 + FEMALE.length * 4) {
+            int i = (c - 8) / 4;
+            if ((c - 8) % 4 == 0) {
+                Race race = FEMALE[i];
+                com.dbtenkaichi.player.Appearance a = com.dbtenkaichi.player.Appearance.defaultsFor(race);
+                a.presentation = 1;
+                a.hairStyle = com.dbtenkaichi.player.Appearance.defaultHair(race, 1);
+                if (i % 2 == 1) {
+                    a.outfit = 0;
+                }
+                ClientState.preview = a;
+                ClientState.previewRace = race;
+                mc.gui.setScreen(new PosePreview(25.0f));
+            } else if ((c - 8) % 4 == 2) {
+                shot(mc, "24_female_" + FEMALE[i].id());
+            }
+        } else if (c == 8 + FEMALE.length * 4) {
+            ClientState.preview = null;
+            ClientState.previewRace = null;
+            mc.gui.setScreen(null);
+        }
+    }
+
     private static void quickForm(Minecraft mc, String name, String formId) {
         IntegratedServer server = mc.getSingleplayerServer();
         if (server == null) {
@@ -567,7 +599,7 @@ public final class ClientSmokeTest {
             case 612 -> mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
             case 588 -> shot(mc, "11_melee_combo");
             case 620 -> {
-                mc.gui.setScreen(new CharacterScreen());
+                mc.gui.setScreen(new CharacterScreen(2));
             }
             case 630 -> shot(mc, "12_character_menu");
             case 635 -> {
@@ -674,7 +706,7 @@ public final class ClientSmokeTest {
                 mc.gui.setScreen(new com.dbtenkaichi.client.screen.TrainingScreen(menu));
             }
             case 1048 -> shot(mc, "17_master_lessons");
-            case 3492 -> {
+            case 3560 -> {
                 mc.gui.setScreen(null);
                 finished = true;
                 Tenkaichi.LOG.info("[DBT-CLIENT] RESULT {}", LOG);
@@ -685,7 +717,8 @@ public final class ClientSmokeTest {
                 cutscenes(mc, name, tick - 1832);
                 hairGallery(mc, name, tick - 2252);
                 trialTour(mc, name, tick - 2332);
-                int gallery = tick - 3332;
+                femaleGallery(mc, tick - 3332);
+                int gallery = tick - 3400;
                 if (gallery >= 0 && gallery < Race.values().length * 14) {
                     Race race = Race.values()[gallery / 14];
                     if (gallery % 14 == 0) {

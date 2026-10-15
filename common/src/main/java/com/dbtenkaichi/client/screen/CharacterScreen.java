@@ -30,6 +30,11 @@ public class CharacterScreen extends Screen {
     private int tab;
     private String selectedSkill = "";
 
+    public CharacterScreen(int tab) {
+        this();
+        this.tab = tab;
+    }
+
     public CharacterScreen() {
         super(Component.translatable("screen.dbtenkaichi.character"));
     }
@@ -105,6 +110,20 @@ public class CharacterScreen extends Screen {
                     buyY += 22;
                 }
             }
+            case 2 -> {
+                List<FormDefinition> chain = new ArrayList<>(FormRegistry.chainFor(data.race(), true));
+                for (int i = 0; i < chain.size(); i++) {
+                    FormDefinition form = chain.get(i);
+                    if (data.hasUnlockedForm(form.id) || !"trial".equals(form.requirements.unlock)) {
+                        continue;
+                    }
+                    final int index = i;
+                    addRenderableWidget(TenkaichiButton.create(Component.translatable("screen.dbtenkaichi.character.trial"), b -> {
+                        Services.NETWORK.sendToServer(new Packets.Action(ActionType.FORM_TRIAL.ordinal(), index));
+                        onClose();
+                    }).bounds(left + 290, 47 + i * 38, 56, 14).build()).active = formReady(data, form);
+                }
+            }
             case 3 -> {
                 ClientConfig cfg = ConfigManager.client();
                 int y = 50;
@@ -145,6 +164,65 @@ public class CharacterScreen extends Screen {
             }
             default -> {
             }
+        }
+    }
+
+    private static boolean formReady(PlayerData data, FormDefinition form) {
+        if (!PlayerData.BASE_FORM.equals(form.parent) && !data.hasUnlockedForm(form.parent)) {
+            return false;
+        }
+        if (com.dbtenkaichi.stats.BattlePower.base(data.stats(), ConfigManager.balance()) < form.requirements.battlePower) {
+            return false;
+        }
+        for (java.util.Map.Entry<String, Integer> entry : form.requirements.stats.entrySet()) {
+            com.dbtenkaichi.stats.StatType type = com.dbtenkaichi.stats.StatType.byId(entry.getKey());
+            if (type != null && data.stat(type) < entry.getValue()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void requirements(GuiGraphicsExtractor g, PlayerData data, FormDefinition form, int x, int y) {
+        int ok = 0xFF7CFFB0;
+        int bad = 0xFFFF7A6A;
+        java.text.NumberFormat fmt = java.text.NumberFormat.getIntegerInstance(Locale.ROOT);
+        List<Component> parts = new ArrayList<>();
+        List<Integer> colors = new ArrayList<>();
+        for (java.util.Map.Entry<String, Integer> entry : form.requirements.stats.entrySet()) {
+            com.dbtenkaichi.stats.StatType type = com.dbtenkaichi.stats.StatType.byId(entry.getKey());
+            if (type != null) {
+                parts.add(Component.translatable(type.translationKey()).append(" " + data.stat(type) + "/" + entry.getValue()));
+                colors.add(data.stat(type) >= entry.getValue() ? ok : bad);
+            }
+        }
+        long bp = com.dbtenkaichi.stats.BattlePower.base(data.stats(), ConfigManager.balance());
+        if (form.requirements.battlePower > 0) {
+            parts.add(Component.translatable("screen.dbtenkaichi.character.req_bp", fmt.format(bp), fmt.format(form.requirements.battlePower)));
+            colors.add(bp >= form.requirements.battlePower ? ok : bad);
+        }
+        if (!PlayerData.BASE_FORM.equals(form.parent)) {
+            FormDefinition parent = FormRegistry.get(form.parent, true);
+            parts.add(Component.translatable("screen.dbtenkaichi.character.req_parent", Component.translatable(parent == null ? form.parent : parent.name)));
+            colors.add(data.hasUnlockedForm(form.parent) ? ok : bad);
+        }
+        if ("trial".equals(form.requirements.unlock)) {
+            parts.add(Component.translatable("screen.dbtenkaichi.character.req_trial"));
+            colors.add(0xFFC8C8C8);
+        }
+        int cx = x;
+        int cy = y;
+        int split = Math.max(1, (parts.size() + 1) / 2);
+        for (int i = 0; i < parts.size(); i++) {
+            if (i == split) {
+                cx = x;
+                cy += 10;
+            } else if (i > 0) {
+                g.text(this.font, " · ", cx, cy, 0xFF888888, true);
+                cx += this.font.width(" · ");
+            }
+            g.text(this.font, parts.get(i), cx, cy, colors.get(i), true);
+            cx += this.font.width(parts.get(i));
         }
     }
 
@@ -214,10 +292,12 @@ public class CharacterScreen extends Screen {
                     g.text(this.font, Component.translatable(form.name).append(" x" + (int) form.bpMultiplier), left, y, color, true);
                     float mastery = data.mastery(form.id);
                     TenkaichiUi.gauge(g, left + 180, y + 1, 102, 7, mastery, 0.0f, 0xFFFFE25A);
-                    String req = unlocked ? Component.translatable("screen.dbtenkaichi.character.unlocked").getString()
-                            : Component.translatable("screen.dbtenkaichi.character.requires", form.requirements.battlePower).getString();
-                    g.text(this.font, req, left + 10, y + 11, 0xFFAAAAAA, true);
-                    y += 26;
+                    if (unlocked) {
+                        g.text(this.font, Component.translatable("screen.dbtenkaichi.character.unlocked"), left + 10, y + 12, 0xFF7CFFB0, true);
+                    } else {
+                        requirements(g, data, form, left + 10, y + 12);
+                    }
+                    y += 38;
                 }
             }
             default -> {

@@ -104,7 +104,10 @@ public class CharacterCreatorScreen extends Screen {
                     appearance = fresh;
                     publishPreview();
                 }, i -> Component.translatable(races.get(i).translationKey()));
-                y = cycleRow(panelX, y, panelW, "presentation", () -> appearance.presentation, Appearance.PRESENTATIONS, i -> appearance.presentation = i,
+                y = cycleRow(panelX, y, panelW, "presentation", () -> appearance.presentation, Appearance.PRESENTATIONS, i -> {
+                            appearance.presentation = i;
+                            appearance.hairStyle = Appearance.defaultHair(race, i);
+                        },
                         i -> Component.translatable("screen.dbtenkaichi.creator.presentation." + i));
                 addRenderableWidget(new HeightSlider(panelX, y, panelW, 20));
                 y += 24;

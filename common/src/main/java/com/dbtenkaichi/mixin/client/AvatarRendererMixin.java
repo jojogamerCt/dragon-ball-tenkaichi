@@ -136,7 +136,7 @@ public abstract class AvatarRendererMixin {
     private void dbtenkaichi$build(AvatarRenderState state, PoseStack poseStack, CallbackInfo ci) {
         EntityVisual visual = TenkaichiLayers.visual(state);
         if (visual != null) {
-            float width = DBTENKAICHI_BUILD_WIDTH[Math.max(0, Math.min(2, visual.appearance.build))];
+            float width = DBTENKAICHI_BUILD_WIDTH[Math.max(0, Math.min(2, visual.appearance.build))] * (visual.appearance.presentation == 1 ? 0.93f : 1.0f);
             if (width != 1.0f) {
                 poseStack.scale(width, 1.0f, width);
             }

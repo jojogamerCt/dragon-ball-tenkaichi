@@ -7,7 +7,7 @@
   "parent": "dbtenkaichi:super_saiyan",
   "order": 20,
   "requirements": {
-    "battlePower": 0,
+    "battlePower": 90000,
     "stats": {
       "potential": 20
     },
