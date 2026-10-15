@@ -73,6 +73,8 @@ public abstract class AvatarRendererMixin {
         return texture;
     }
 
+    private static net.minecraft.client.model.geom.ModelPart dbtenkaichi$outfitModel;
+
     @Inject(method = "renderHand", at = @At("TAIL"))
     private void dbtenkaichi$outfitHand(PoseStack poseStack, net.minecraft.client.renderer.SubmitNodeCollector collector, int light, Identifier texture,
                                         net.minecraft.client.model.geom.ModelPart arm, boolean sleeve, CallbackInfo ci) {
@@ -90,7 +92,18 @@ public abstract class AvatarRendererMixin {
             int[] spec = {style, com.dbtenkaichi.item.Outfits.primary(chest, visual.appearance.outfitPrimary),
                     com.dbtenkaichi.item.Outfits.secondary(chest, visual.appearance.outfitSecondary), -1, 0, 0, -1, 0, 0};
             Identifier outfit = CustomSkins.outfitTexture(visual.race, visual.appearance, spec);
-            collector.submitModelPart(arm, poseStack, net.minecraft.client.renderer.rendertype.RenderTypes.entityTranslucent(outfit), light,
+            if (dbtenkaichi$outfitModel == null) {
+                dbtenkaichi$outfitModel = mc.getEntityModels().bakeLayer(com.dbtenkaichi.client.render.TenkaichiModels.OUTFIT);
+            }
+            net.minecraft.client.model.geom.ModelPart wide = dbtenkaichi$outfitModel.getChild(arm.x > 0.0f ? "left_arm" : "right_arm");
+            wide.loadPose(arm.storePose());
+            wide.visible = true;
+            for (String child : new String[]{"left_sleeve", "right_sleeve"}) {
+                if (wide.hasChild(child)) {
+                    wide.getChild(child).visible = true;
+                }
+            }
+            collector.submitModelPart(wide, poseStack, net.minecraft.client.renderer.rendertype.RenderTypes.entityTranslucent(outfit), light,
                     net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY, null);
         } catch (RuntimeException e) {
             RenderGuard.report("outfit_hand", e);
