@@ -151,3 +151,4 @@ Nessuna verifica automatica fallisce allo stato attuale.
 - Cutscene canoniche SS2 (sfondo nero, scia rossa, sfondo giallo-verde, lampo, esplosione) e SS3 (nuvole vanilla
   spostate da un mixin sul `CloudRenderer` più sbuffi di nuvole, lampi, crescita dei capelli, lampo finale), criniera SS3
   ricostruita a ciocche e compensata sull’inclinazione della testa. Verificate su Fabric e NeoForge.
+- Acconciature canoniche (10) con capelli trasformati per acconciatura e migrazione dei personaggi esistenti (schema dati 2).

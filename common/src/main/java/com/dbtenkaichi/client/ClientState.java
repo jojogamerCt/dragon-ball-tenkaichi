@@ -122,7 +122,7 @@ public final class ClientState {
 
     private static Appearance raiderAppearance() {
         Appearance a = Appearance.defaultsFor(Race.SAIYAN);
-        a.hairStyle = HairStyle.LONG_MANE.ordinal();
+        a.hairStyle = HairStyle.RADITZ.ordinal();
         a.hairColor = 0x0E0E12;
         a.auraColor = 0xC24BFF;
         a.skinColor = 0xD9A06B;

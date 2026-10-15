@@ -100,7 +100,7 @@ public final class TenkaichiModels {
         PartDefinition head = mesh.getRoot().getChild("head");
         Builder b = new Builder(head);
         switch (style) {
-            case WILD_SPIKES -> {
+            case GOKU -> {
                 b.cap(true);
                 b.spike(-2.6f, -7.6f, -3.6f, 2.35f, 0.15f, 0.0f, 4.5f, 2.6f);
                 b.spike(0.2f, -7.8f, -3.8f, 2.2f, 0.0f, 0.0f, 5.0f, 2.8f);
@@ -145,19 +145,20 @@ public final class TenkaichiModels {
                 b.spike(-4.2f, -6.8f, -0.8f, 0.0f, 0.0f, 0.7f, 5.5f, 2.2f);
                 b.spike(4.2f, -6.8f, -0.8f, 0.0f, 0.0f, -0.7f, 5.5f, 2.2f);
             }
-            case FLAME_UP -> {
+            case VEGETA, SSJ_VEGETA -> {
+                float k = style == HairStyle.SSJ_VEGETA ? 1.3f : 1.0f;
                 b.cap(true);
-                b.spike(0.0f, -8.2f, -3.8f, -0.15f, 0.0f, 0.0f, 3.5f, 2.2f);
+                b.spike(0.0f, -8.2f, -3.8f, -0.15f, 0.0f, 0.0f, 3.5f * k, 2.2f);
                 for (int i = 0; i < 7; i++) {
                     float x = -3.3f + i * 1.1f;
-                    b.spike(x, -8.3f, -1.2f + (i % 2) * 1.4f, -0.18f - (i % 3) * 0.06f, 0.0f, -x * 0.1f, 8.0f + (i % 2) * 1.5f, 3.0f);
+                    b.spike(x, -8.3f, -1.2f + (i % 2) * 1.4f, -0.18f - (i % 3) * 0.06f, 0.0f, -x * 0.1f * k, (8.0f + (i % 2) * 1.5f) * k, 3.0f);
                 }
-                b.spike(-2.0f, -7.8f, 2.4f, -0.55f, 0.0f, 0.2f, 7.5f, 3.0f);
-                b.spike(2.0f, -7.8f, 2.4f, -0.55f, 0.0f, -0.2f, 7.5f, 3.0f);
-                b.spike(-4.2f, -7.0f, -1.5f, -0.1f, 0.0f, 0.45f, 4.0f, 2.2f);
-                b.spike(4.2f, -7.0f, -1.5f, -0.1f, 0.0f, -0.45f, 4.0f, 2.2f);
+                b.spike(-2.0f, -7.8f, 2.4f, -0.55f, 0.0f, 0.2f, 7.5f * k, 3.0f);
+                b.spike(2.0f, -7.8f, 2.4f, -0.55f, 0.0f, -0.2f, 7.5f * k, 3.0f);
+                b.spike(-4.2f, -7.0f, -1.5f, -0.1f, 0.0f, 0.45f, 4.0f * k, 2.2f);
+                b.spike(4.2f, -7.0f, -1.5f, -0.1f, 0.0f, -0.45f, 4.0f * k, 2.2f);
             }
-            case LONG_MANE, LEGENDARY_MANE -> {
+            case RADITZ, LEGENDARY_MANE -> {
                 boolean legend = style == HairStyle.LEGENDARY_MANE;
                 b.cap(true);
                 b.group("mane_root", 0.0f, -8.0f, 3.0f);
@@ -193,27 +194,65 @@ public final class TenkaichiModels {
                     b.spike(4.4f, -6.0f, 0.0f, 0.3f, 0.0f, -1.1f, 4.0f, 2.4f);
                 }
             }
-            case SHORT_NEAT -> {
-                b.cap(false);
-                b.slab("fringe", -4.6f, -8.4f, -4.7f, 9.2f, 2.2f, 1.2f, 0.0f);
-                b.spike(-2.4f, -8.0f, -4.0f, 2.6f, 0.0f, -0.4f, 2.6f, 2.0f);
-                b.spike(0.6f, -8.1f, -4.0f, 2.6f, 0.0f, -0.3f, 2.8f, 2.0f);
+            case GOHAN -> {
+                b.cap(true);
+                b.spike(-1.8f, -7.6f, -3.8f, 2.55f, 0.0f, 0.25f, 4.2f, 2.2f);
+                b.spike(0.6f, -7.8f, -3.9f, 2.65f, 0.0f, -0.1f, 4.8f, 2.4f);
+                b.spike(2.6f, -7.4f, -3.6f, 2.45f, 0.0f, -0.35f, 3.6f, 2.0f);
+                for (int i = 0; i < 5; i++) {
+                    float x = -3.0f + i * 1.5f;
+                    b.spike(x, -8.2f, 0.2f + (i % 2) * 0.8f, -0.45f - (i % 2) * 0.12f, 0.0f, -x * 0.12f, 6.0f + (i % 2), 3.0f);
+                }
+                b.spike(0.0f, -6.8f, 3.6f, -1.3f, 0.0f, 0.0f, 5.0f, 2.8f);
+                b.spike(-2.0f, -5.0f, 3.8f, -2.3f, 0.0f, 0.3f, 4.5f, 2.6f);
+                b.spike(2.0f, -5.0f, 3.8f, -2.3f, 0.0f, -0.3f, 4.5f, 2.6f);
             }
-            case SIDE_SWEPT -> {
-                b.cap(false);
-                b.spike(-2.8f, -7.9f, -3.9f, 2.0f, 0.0f, -0.75f, 4.5f, 2.4f);
-                b.spike(-0.6f, -8.1f, -3.9f, 2.0f, 0.0f, -0.7f, 4.8f, 2.4f);
-                b.spike(1.6f, -8.0f, -3.9f, 2.05f, 0.0f, -0.65f, 4.4f, 2.2f);
-                b.spike(4.3f, -7.0f, -1.0f, 0.1f, 0.0f, -1.2f, 3.6f, 2.2f);
-                b.spike(-1.0f, -8.2f, 1.2f, -0.7f, 0.0f, 0.2f, 4.4f, 2.6f);
-                b.spike(1.6f, -8.2f, 1.6f, -0.8f, 0.0f, -0.3f, 4.2f, 2.6f);
+            case YAMCHA -> {
+                b.cap(true);
+                b.spike(-2.2f, -7.8f, -3.8f, 2.3f, 0.0f, 0.3f, 3.2f, 2.2f);
+                b.spike(0.4f, -7.9f, -3.9f, 2.25f, 0.0f, 0.0f, 3.6f, 2.4f);
+                b.spike(2.6f, -7.7f, -3.6f, 2.35f, 0.0f, -0.3f, 3.0f, 2.0f);
+                for (int i = 0; i < 6; i++) {
+                    float x = -3.2f + i * 1.28f;
+                    b.spike(x, -8.1f, 0.5f, -0.75f, 0.0f, -x * 0.1f, 4.0f, 2.8f);
+                }
+                b.spike(-1.6f, -5.5f, 3.8f, -2.0f, 0.0f, 0.2f, 3.2f, 2.4f);
+                b.spike(1.6f, -5.5f, 3.8f, -2.0f, 0.0f, -0.2f, 3.2f, 2.4f);
             }
-            case PONYTAIL -> {
+            case TRUNKS -> {
                 b.cap(false);
-                b.slab("fringe", -4.6f, -8.4f, -4.7f, 9.2f, 1.8f, 1.2f, 0.0f);
-                b.slab("tie", -1.2f, -7.4f, 4.2f, 2.4f, 2.4f, 1.6f, 0.0f);
-                b.curved(0.0f, -6.2f, 5.0f, PI - 0.35f, 0.0f, 0.0f, 12.0f, 3.4f, 0.0f, -0.12f);
-                b.spike(-3.0f, -7.8f, -3.8f, 2.5f, 0.0f, 0.3f, 3.0f, 2.0f);
+                b.slab("crown", -4.6f, -9.2f, -4.4f, 9.2f, 1.0f, 8.8f, 0.0f);
+                b.slab("fringe_r", -4.7f, -8.6f, -4.75f, 4.4f, 3.6f, 1.0f, 0.0f);
+                b.slab("fringe_l", 0.3f, -8.6f, -4.75f, 4.4f, 3.6f, 1.0f, 0.0f);
+                b.slab("side_r", -4.85f, -8.4f, -4.4f, 1.0f, 7.0f, 8.6f, 0.0f);
+                b.slab("side_l", 3.85f, -8.4f, -4.4f, 1.0f, 7.0f, 8.6f, 0.0f);
+                b.slab("back", -4.7f, -8.4f, 3.75f, 9.4f, 8.6f, 1.1f, 0.0f);
+            }
+            case ANDROID_18 -> {
+                b.cap(false);
+                b.slab("crown", -4.6f, -9.1f, -4.4f, 9.2f, 0.9f, 8.8f, 0.0f);
+                b.slab("fringe", -4.7f, -8.6f, -4.75f, 9.4f, 2.6f, 1.0f, 0.0f);
+                b.slab("lock", -4.6f, -6.2f, -4.7f, 2.6f, 2.2f, 0.9f, 0.0f);
+                b.slab("side_r", -4.9f, -8.4f, -4.3f, 1.1f, 8.2f, 8.6f, 0.0f);
+                b.slab("side_l", 3.8f, -8.4f, -1.0f, 1.1f, 6.8f, 5.3f, 0.0f);
+                b.slab("back", -4.8f, -8.4f, 3.7f, 9.6f, 8.6f, 1.2f, 0.0f);
+            }
+            case VIDEL -> {
+                b.cap(false);
+                b.slab("crown", -4.6f, -9.0f, -4.4f, 9.2f, 0.8f, 8.8f, 0.0f);
+                b.slab("fringe", -4.7f, -8.6f, -4.75f, 9.4f, 2.4f, 1.0f, 0.0f);
+                b.slab("tie_r", -5.3f, -6.8f, 1.4f, 1.3f, 1.6f, 1.6f, 0.0f);
+                b.slab("tie_l", 4.0f, -6.8f, 1.4f, 1.3f, 1.6f, 1.6f, 0.0f);
+                b.curved(-5.0f, -6.0f, 2.2f, PI - 0.15f, 0.0f, 0.25f, 9.0f, 2.8f, 0.0f, -0.08f);
+                b.curved(5.0f, -6.0f, 2.2f, PI - 0.15f, 0.0f, -0.25f, 9.0f, 2.8f, 0.0f, -0.08f);
+            }
+            case CHI_CHI -> {
+                b.cap(false);
+                b.slab("crown", -4.6f, -9.0f, -4.4f, 9.2f, 0.8f, 8.8f, 0.0f);
+                b.slab("fringe", -4.7f, -8.6f, -4.75f, 9.4f, 2.8f, 1.0f, 0.0f);
+                b.slab("bun", -2.2f, -8.6f, 4.0f, 4.4f, 4.2f, 2.8f, 0.0f);
+                b.slab("side_r", -4.9f, -6.5f, -4.4f, 1.0f, 6.0f, 1.6f, 0.0f);
+                b.slab("side_l", 3.9f, -6.5f, -4.4f, 1.0f, 6.0f, 1.6f, 0.0f);
             }
             default -> {
             }

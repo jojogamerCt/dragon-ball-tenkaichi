@@ -113,19 +113,19 @@ public final class Appearance {
         a.tail = race.tailByDefault();
         switch (race) {
             case SAIYAN -> {
-                a.hairStyle = HairStyle.WILD_SPIKES.ordinal();
+                a.hairStyle = HairStyle.GOKU.ordinal();
                 a.hairColor = 0x111111;
                 a.auraColor = 0xF2F6FF;
             }
             case HALF_SAIYAN -> {
-                a.hairStyle = HairStyle.SIDE_SWEPT.ordinal();
+                a.hairStyle = HairStyle.GOHAN.ordinal();
                 a.hairColor = 0x1A1410;
                 a.auraColor = 0xFFF2C0;
                 a.outfitPrimary = 0x6A2FA0;
                 a.outfitSecondary = 0xE0B030;
             }
             case HUMAN -> {
-                a.hairStyle = HairStyle.SHORT_NEAT.ordinal();
+                a.hairStyle = HairStyle.YAMCHA.ordinal();
                 a.hairColor = 0x3B2416;
                 a.auraColor = 0x9FD8FF;
             }
@@ -158,7 +158,7 @@ public final class Appearance {
                 a.skinColor = 0xF0CBA4;
                 a.featureColor = 0x9AA7B4;
                 a.eyeColor = 0x2A6FD0;
-                a.hairStyle = HairStyle.SHORT_NEAT.ordinal();
+                a.hairStyle = HairStyle.TRUNKS.ordinal();
                 a.hairColor = 0xE8D27A;
                 a.auraColor = 0xBFE8FF;
                 a.outfit = 2;
@@ -178,7 +178,7 @@ public final class Appearance {
             case KAIOSHIN -> {
                 a.skinColor = 0xC8A0E8;
                 a.featureColor = 0xF0D040;
-                a.hairStyle = HairStyle.FLAME_UP.ordinal();
+                a.hairStyle = HairStyle.VEGETA.ordinal();
                 a.hairColor = 0xF4F4F4;
                 a.auraColor = 0xFFFFFF;
                 a.outfitPrimary = 0x3A2A8A;
@@ -188,7 +188,7 @@ public final class Appearance {
                 a.skinColor = 0xC8484A;
                 a.featureColor = 0x2A1A30;
                 a.eyeColor = 0xF0D020;
-                a.hairStyle = HairStyle.LONG_MANE.ordinal();
+                a.hairStyle = HairStyle.RADITZ.ordinal();
                 a.hairColor = 0x1A0A24;
                 a.auraColor = 0x9A2AE0;
                 a.outfit = 1;

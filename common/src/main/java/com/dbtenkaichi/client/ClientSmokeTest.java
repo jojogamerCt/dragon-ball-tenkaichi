@@ -78,6 +78,71 @@ public final class ClientSmokeTest {
         });
     }
 
+    private static void quickForm(Minecraft mc, String name, String formId) {
+        IntegratedServer server = mc.getSingleplayerServer();
+        if (server == null) {
+            return;
+        }
+        server.execute(() -> {
+            ServerPlayer sp = server.getPlayerList().getPlayerByName(name);
+            com.dbtenkaichi.form.FormDefinition form = com.dbtenkaichi.form.FormRegistry.get(formId, false);
+            if (sp != null && form != null) {
+                TransformationSystem.begin(sp, com.dbtenkaichi.server.PlayerManager.data(sp), form, TransformationSystem.CINEMATIC_SKIP, false, sp.level().getGameTime());
+            }
+        });
+    }
+
+    private static void previewHair(Minecraft mc, int style) {
+        PlayerData data = Services.PLATFORM.playerData(mc.player);
+        com.dbtenkaichi.player.Appearance a = com.dbtenkaichi.player.Appearance.defaultsFor(Race.SAIYAN);
+        a.load(data.appearance().save());
+        a.hairStyle = style;
+        ClientState.preview = a;
+        ClientState.previewRace = Race.SAIYAN;
+        mc.gui.setScreen(new PosePreview(25.0f));
+    }
+
+    private static void hairGallery(Minecraft mc, String name, int c) {
+        int count = HairStyle.PLAYER_SELECTABLE;
+        if (c == 0) {
+            mc.gui.setScreen(null);
+            forceForm(mc, name, null);
+            return;
+        }
+        int base = c - 4;
+        if (base >= 0 && base < count * 3) {
+            int style = base / 3;
+            if (base % 3 == 0) {
+                previewHair(mc, style);
+            } else if (base % 3 == 2) {
+                shot(mc, "21_hair_" + HairStyle.byOrdinal(style).id());
+            }
+            return;
+        }
+        if (c == 4 + count * 3) {
+            ClientState.preview = null;
+            mc.gui.setScreen(null);
+            quickForm(mc, name, "dbtenkaichi:super_saiyan");
+            return;
+        }
+        int ssj = c - (16 + count * 3);
+        if (ssj >= 0 && ssj < count * 3) {
+            int style = ssj / 3;
+            if (ssj % 3 == 0) {
+                previewHair(mc, style);
+            } else if (ssj % 3 == 2) {
+                shot(mc, "22_ssj_" + HairStyle.byOrdinal(style).id());
+            }
+            return;
+        }
+        if (c == 16 + count * 6) {
+            ClientState.preview = null;
+            ClientState.previewRace = null;
+            mc.gui.setScreen(null);
+            forceForm(mc, name, null);
+        }
+    }
+
     private static void cutscenes(Minecraft mc, String name, int c) {
         switch (c) {
             case 0 -> command(mc, "tenkaichi restore " + name);
@@ -276,7 +341,7 @@ public final class ClientSmokeTest {
             }
             case 60 -> {
                 Appearance a = Appearance.defaultsFor(Race.SAIYAN);
-                a.hairStyle = HairStyle.WILD_SPIKES.ordinal();
+                a.hairStyle = HairStyle.GOKU.ordinal();
                 a.auraColor = 0xE8F4FF;
                 a.outfit = 0;
                 Services.NETWORK.sendToServer(new Packets.CreateCharacter(Race.SAIYAN.ordinal(), a.presentation, 1.0f, a.build, a.skinColor, a.eyeStyle, a.eyeColor,
@@ -556,7 +621,7 @@ public final class ClientSmokeTest {
                 mc.gui.setScreen(new com.dbtenkaichi.client.screen.TrainingScreen(menu));
             }
             case 1048 -> shot(mc, "17_master_lessons");
-            case 2412 -> {
+            case 2492 -> {
                 mc.gui.setScreen(null);
                 finished = true;
                 Tenkaichi.LOG.info("[DBT-CLIENT] RESULT {}", LOG);
@@ -565,7 +630,8 @@ public final class ClientSmokeTest {
             default -> {
                 showcase(mc, name, tick - 1052);
                 cutscenes(mc, name, tick - 1832);
-                int gallery = tick - 2252;
+                hairGallery(mc, name, tick - 2252);
+                int gallery = tick - 2332;
                 if (gallery >= 0 && gallery < Race.values().length * 14) {
                     Race race = Race.values()[gallery / 14];
                     if (gallery % 14 == 0) {

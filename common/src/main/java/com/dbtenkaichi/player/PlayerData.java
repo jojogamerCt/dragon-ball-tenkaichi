@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 public final class PlayerData {
-    public static final int SCHEMA = 1;
+    public static final int SCHEMA = 2;
     public static final int SKILL_SLOTS = 4;
     public static final String BASE_FORM = "dbtenkaichi:base";
 

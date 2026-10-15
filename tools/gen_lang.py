@@ -52,16 +52,20 @@ PASSIVES = {
 }
 
 HAIR = {
-    "wild_spikes": ("Wild spikes", "Punte ribelli"),
-    "flame_up": ("Rising flame", "Fiamma verticale"),
-    "long_mane": ("Long mane", "Criniera lunga"),
-    "short_neat": ("Short and neat", "Corti e ordinati"),
-    "side_swept": ("Side swept", "Ciuffo laterale"),
-    "ponytail": ("Ponytail", "Coda di cavallo"),
-    "bald": ("Bald", "Calvo"),
-    "super_spikes": ("Golden spikes", "Punte dorate"),
-    "ascended_spikes": ("Ascended spikes", "Punte ascese"),
-    "legendary_mane": ("Legendary mane", "Criniera leggendaria"),
+    "goku": ("Goku", "Goku"),
+    "vegeta": ("Vegeta", "Vegeta"),
+    "gohan": ("Gohan (Cell Saga)", "Gohan (saga di Cell)"),
+    "trunks": ("Future Trunks", "Trunks del futuro"),
+    "yamcha": ("Yamcha", "Yamcha"),
+    "raditz": ("Raditz", "Radish"),
+    "bald": ("Bald (Krillin, Tien)", "Calvo (Crilin, Tensing)"),
+    "android_18": ("Android 18", "C-18"),
+    "videl": ("Videl", "Videl"),
+    "chi_chi": ("Chi-Chi", "Chi-Chi"),
+    "super_spikes": ("Super Saiyan", "Super Saiyan"),
+    "ascended_spikes": ("Super Saiyan 2", "Super Saiyan 2"),
+    "legendary_mane": ("Super Saiyan 3", "Super Saiyan 3"),
+    "ssj_vegeta": ("Super Saiyan (Vegeta)", "Super Saiyan (Vegeta)"),
 }
 
 KEYS = {

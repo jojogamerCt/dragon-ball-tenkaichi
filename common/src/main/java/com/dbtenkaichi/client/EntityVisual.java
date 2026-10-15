@@ -49,11 +49,12 @@ public final class EntityVisual {
 
     public HairStyle hairStyle() {
         FormDefinition def = visualForm();
+        HairStyle base = HairStyle.byOrdinal(appearance.hairStyle);
         HairStyle formStyle = def == null ? null : def.hairStyle();
-        if (formStyle != null && race.hasHair()) {
-            return formStyle;
+        if (formStyle == null || !race.hasHair()) {
+            return base;
         }
-        return HairStyle.byOrdinal(appearance.hairStyle);
+        return HairStyle.transformed(base, formStyle);
     }
 
     public int hairColor() {

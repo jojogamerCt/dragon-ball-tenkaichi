@@ -80,9 +80,11 @@ la colonna "Verifica" indica come è stata provata (vedi `TESTING.md`).
 - **Luoghi iconici** generati una volta per mondo con il loro Maestro: Kame House nell’oceano più vicino, Torre di
   Karin con il santuario a disco, Palazzo del Supremo sopra la torre. `/tenkaichi landmarks` mostra le coordinate.
 - Aura riprogettata: fiamme rivolte alla camera, più opache al centro del corpo.
+- **Acconciature canoniche**: Goku, Vegeta, Gohan, Trunks del futuro, Yamcha, Radish, calvo (Crilin, Tensing), C-18,
+  Videl e Chi-Chi; le trasformazioni cambiano i capelli in base all’acconciatura (`HairStyle.transformed`).
 
 ## Non ancora implementato (dal documento di progetto)
-Trasformazioni per le razze non Saiyan, Super Saiyan God e oltre, acconciature canoniche, cutscene dedicate per
+Trasformazioni per le razze non Saiyan, Super Saiyan God e oltre, cutscene dedicate per
 fusioni, Sfere del Drago e Shenron, altre dimensioni (Namek, Aldilà con il pianeta di Re Kaioh...), viaggio
 spaziale, story mode (saga dei Saiyan), boss canonici, tornei, gilde/party, musica dinamica, mesh/shader personalizzati
 oltre alle pipeline vanilla, LOD dedicato, benchmark.

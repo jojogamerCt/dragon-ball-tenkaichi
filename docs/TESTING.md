@@ -83,6 +83,8 @@ form: super_saiyan, beam clash active: true). Nessuna eccezione di rendering reg
   scia rossa, sfondo giallo-verde, lampo, esplosione, cielo con le nuvole in corsa (disposizione diversa a 9 tick di
   distanza), criniera SS3 vista da dietro, di fronte e con la testa alzata; forma finale corretta (SS2 / SS3).
 
+- Galleria delle 10 acconciature canoniche in forma base e Super Saiyan (`dbt_21_hair_*`, `dbt_22_ssj_*`) su entrambi i loader.
+
 ## 6. Non ancora verificato
 
 - Gioco con due client reali sullo stesso server dedicato (sincronizzazione tra giocatori distinti).
