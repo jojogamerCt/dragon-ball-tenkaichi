@@ -68,6 +68,7 @@ public final class ClientController {
                 send(ActionType.OPEN_MENU, 0);
             }
             com.dbtenkaichi.client.ClientSmokeTest.tick(mc);
+            com.dbtenkaichi.client.MarketingCapture.tick(mc);
             return;
         }
         LockOn.tick(mc);
@@ -79,6 +80,7 @@ public final class ClientController {
         tickMovement(mc, player, data);
         CameraEffects.tick();
         com.dbtenkaichi.client.ClientSmokeTest.tick(mc);
+        com.dbtenkaichi.client.MarketingCapture.tick(mc);
     }
 
     private static void send(ActionType type, int arg) {

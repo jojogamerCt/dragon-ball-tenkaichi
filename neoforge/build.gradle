@@ -21,6 +21,10 @@ neoForge {
                 systemProperty('dbtenkaichi.clientSmoke', 'true')
                 programArguments.addAll('--quickPlaySingleplayer', 'dbt_test')
             }
+            if (project.hasProperty('dbtMarketing')) {
+                systemProperty('dbtenkaichi.marketing', 'true')
+                programArguments.addAll('--quickPlaySingleplayer', 'dbt_test', '--width', '1920', '--height', '1080')
+            }
         }
         server {
             server()

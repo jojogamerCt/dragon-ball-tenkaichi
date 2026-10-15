@@ -24,6 +24,10 @@ loom {
                 vmArg('-Ddbtenkaichi.clientSmoke=true')
                 programArgs('--quickPlaySingleplayer', 'dbt_test')
             }
+            if (project.hasProperty('dbtMarketing')) {
+                vmArg('-Ddbtenkaichi.marketing=true')
+                programArgs('--quickPlaySingleplayer', 'dbt_test', '--width', '1920', '--height', '1080')
+            }
         }
         server {
             server()
