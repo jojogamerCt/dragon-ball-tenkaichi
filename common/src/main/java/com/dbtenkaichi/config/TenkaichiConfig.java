@@ -23,8 +23,10 @@ public final class TenkaichiConfig {
         balance.statHardCap = (int) clamp(balance.statHardCap, 10, 100000);
         gameplay.minHeight = (float) clamp(gameplay.minHeight, 0.5, 1.0);
         gameplay.maxHeight = (float) clamp(gameplay.maxHeight, 1.0, 1.5);
-        gameplay.maxExplosionRadius = (int) clamp(gameplay.maxExplosionRadius, 0, 16);
-        gameplay.maxBlocksPerExplosion = (int) clamp(gameplay.maxBlocksPerExplosion, 0, 4096);
+        gameplay.maxExplosionRadius = (int) clamp(gameplay.maxExplosionRadius, 0, 24);
+        gameplay.maxBlocksPerExplosion = (int) clamp(gameplay.maxBlocksPerExplosion, 0, 12000);
+        gameplay.maxDestructionBlocksPerTick = (int) clamp(gameplay.maxDestructionBlocksPerTick, 50, 6000);
+        gameplay.landmarkSafeZoneRadius = (int) clamp(gameplay.landmarkSafeZoneRadius, 24, 128);
         gameplay.maxActionsPerSecond = (int) clamp(gameplay.maxActionsPerSecond, 5, 200);
         gameplay.maxFlightSpeed = clamp(gameplay.maxFlightSpeed, 0.2, 8.0);
         gameplay.maxLockOnDistance = (int) clamp(gameplay.maxLockOnDistance, 4, 128);

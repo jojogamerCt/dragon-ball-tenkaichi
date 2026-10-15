@@ -67,6 +67,9 @@ public final class TenkaichiHud {
                 cinematic(g, mc, visual);
                 return;
             }
+            if (mc.gui.hud.isHidden()) {
+                return;
+            }
             cinematic(g, mc, visual);
             g.pose().pushMatrix();
             g.pose().scale(scale, scale);
@@ -137,19 +140,46 @@ public final class TenkaichiHud {
         TenkaichiUi.gauge(g, fx, sy, gx + gw - 8 - fx, 4, food / 20.0f, 0.0f, 0xFFE8A040);
 
         int infoY = y + PANEL_H - 15;
-        g.text(font, Component.translatable("hud.dbtenkaichi.tp", ClientState.trainingPoints), x + 26, infoY, TenkaichiUi.MUTED, true);
+        int right = x + PANEL_W - 4;
+        Component tp = Component.translatable("hud.dbtenkaichi.tp", compact(ClientState.trainingPoints));
+        int cursor = x + 26;
+        g.text(font, tp, cursor, infoY, TenkaichiUi.MUTED, true);
+        cursor += font.width(tp) + 8;
         int armor = player.getArmorValue();
         if (armor > 0) {
-            g.text(font, "⛨ " + armor, x + 68, infoY, 0xFFBFD4E8, true);
+            String shield = "⛨ " + armor;
+            g.text(font, shield, cursor, infoY, 0xFFBFD4E8, true);
+            cursor += font.width(shield) + 8;
         }
         if (form != null) {
-            int mx = x + 102;
-            g.text(font, Component.translatable("hud.dbtenkaichi.mastery"), mx, infoY, TenkaichiUi.MUTED, true);
-            TenkaichiUi.gauge(g, mx + font.width(Component.translatable("hud.dbtenkaichi.mastery")) + 4, infoY + 2, 30, 4, visual.mastery, 0.0f, 0xFFFFE25A);
+            Component mastery = Component.translatable("hud.dbtenkaichi.mastery");
+            int labelWidth = font.width(mastery);
+            if (cursor + labelWidth + 4 + 16 <= right) {
+                g.text(font, mastery, cursor, infoY, TenkaichiUi.MUTED, true);
+                cursor += labelWidth + 4;
+            }
+            int gaugeWidth = Math.min(30, right - cursor);
+            if (gaugeWidth >= 8) {
+                TenkaichiUi.gauge(g, cursor, infoY + 2, gaugeWidth, 4, visual.mastery, 0.0f, 0xFFFFE25A);
+            }
         }
         if (ClientState.fatigue > 0.3f) {
             g.text(font, Component.translatable("hud.dbtenkaichi.fatigue", Math.round(ClientState.fatigue * 100)), x + PANEL_W + 4, y + 8, 0xFFFF9A6A, true);
         }
+    }
+
+    static String compact(long value) {
+        long abs = Math.abs(value);
+        if (abs < 100_000L) {
+            return NumberFormat.getIntegerInstance(Locale.ROOT).format(value);
+        }
+        if (abs < 1_000_000L) {
+            return String.format(Locale.ROOT, "%.1fK", value / 1_000.0);
+        }
+        if (abs < 1_000_000_000L) {
+            return String.format(Locale.ROOT, "%.2fM", value / 1_000_000.0);
+        }
+        return String.format(Locale.ROOT, "%.2fB", value / 1_000_000_000.0);
     }
 
     private static void smallText(GuiGraphicsExtractor g, Font font, String text, int x, int y) {

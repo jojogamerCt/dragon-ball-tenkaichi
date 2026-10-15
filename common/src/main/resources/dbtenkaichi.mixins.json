@@ -6,7 +6,9 @@
   "mixins": [
     "LivingEntityMixin",
     "PlayerMixin",
-    "ServerGamePacketListenerImplMixin"
+    "ServerExplosionMixin",
+    "ServerGamePacketListenerImplMixin",
+    "ServerLevelMixin"
   ],
   "client": [
     "client.AvatarRendererMixin",
@@ -14,6 +16,8 @@
     "client.CloudRendererMixin",
     "client.FirstPersonHandsMixin",
     "client.LocalPlayerMixin",
+    "client.RenderPipelinesAccessor",
+    "client.RenderTypeInvoker",
     "client.MinecraftMixin",
     "client.PlayerModelMixin"
   ],

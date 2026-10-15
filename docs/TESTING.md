@@ -50,15 +50,14 @@ Preparazione: copiare il mondo del server di test in `runs/client/saves/dbt_test
 ./scripts/gw.sh :neoforge:runClient -PdbtSmoke
 ```
 
-Il client entra nel mondo con Quick Play ed esegue `ClientSmokeTest`: apertura automatica del
-creator al primo accesso, creazione Saiyan via pacchetto, comandi `/tenkaichi`, carica del Ki,
-volo, trasformazione Super Saiyan con cinematica, NPC, lock-on, carica e sparo del Kamehameha,
-contro-raggio del Predone → **Beam Clash** sincronizzato, combo in posizione di combattimento,
-menu personaggio, 7 inquadrature della cutscene del Super Saiyan, posa di carica della Kamehameha (4 viste e prima persona), pugno in prima persona in posizione di combattimento, galleria delle 10 razze nel creator; salva screenshot in `runs/client/screenshots/dbt_*.png` e chiude il gioco.
+Il client entra nel mondo con Quick Play ed esegue `ClientSmokeTest`, ridotto ai controlli necessari:
+creazione Saiyan, carica del Ki con aura, volo, trasformazione Super Saiyan, NPC, Kamehameha e Beam Clash,
+combo, menu personaggio, Kaioken, trial del Ki sacro, tour dei luoghi iconici, Final Flash, cratere del
+Big Bang Attack, capelli Super Saiyan 2 per gli stili canonici e aura sopra l'acqua; salva gli screenshot in
+`runs/client/screenshots/dbt_*.png` e chiude il gioco.
 
-Esito: **Fabric e NeoForge completano tutti i passaggi** (character created: true, flying: true,
-form: super_saiyan, beam clash active: true). Nessuna eccezione di rendering registrata
-(`RenderGuard`). Screenshot significativi archiviati in `docs/screenshots/`.
+Lo smoke test del server verifica anche zone sicure (esplosioni e spawn bloccati), cratere, limiti
+delle esplosioni e la ricostruzione/migrazione dei luoghi iconici.
 
 ## 5. Verificato visivamente (dagli screenshot)
 

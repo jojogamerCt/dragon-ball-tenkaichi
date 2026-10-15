@@ -42,6 +42,7 @@ public class KiBlastEntity extends Entity {
     private int life;
     private int homingTarget = -1;
     private double power = 1.0;
+    private Technique technique = Techniques.KI_BLAST;
 
     public KiBlastEntity(EntityType<? extends KiBlastEntity> type, Level level) {
         super(type, level);
@@ -60,6 +61,7 @@ public class KiBlastEntity extends Entity {
         blast.entityData.set(SIZE, (float) technique.radius());
         blast.homingTarget = homingTarget;
         blast.power = power;
+        blast.technique = technique;
         return blast;
     }
 
@@ -100,13 +102,13 @@ public class KiBlastEntity extends Entity {
             return;
         }
         ServerLevel level = (ServerLevel) level();
-        if (++life > Techniques.KI_BLAST.duration()) {
+        if (++life > technique.duration()) {
             discard();
             return;
         }
         if (homingTarget >= 0 && level.getEntity(homingTarget) instanceof LivingEntity target && target.isAlive()) {
             Vec3 want = target.getBoundingBox().getCenter().subtract(position()).normalize().scale(motion.length());
-            motion = motion.add(want.subtract(motion).scale(Techniques.KI_BLAST.steer()));
+            motion = motion.add(want.subtract(motion).scale(technique.steer()));
             setDeltaMovement(motion);
         }
         Vec3 start = position();
@@ -159,7 +161,7 @@ public class KiBlastEntity extends Entity {
                 TenkaichiDamage.hurt(target, level, TenkaichiDamage.source(level, TenkaichiDamage.KI_BLAST, this, owner), 1.0f);
             } else {
                 Fighter attacker = owner == null ? defender : Fighter.of(owner);
-                double raw = DamageMath.ki(Techniques.KI_BLAST.baseDamage() * power, attacker.stat(StatType.KI_OUTPUT), 1.0, attacker.kiMultiplier(cfg), cfg);
+                double raw = DamageMath.ki(technique.baseDamage() * power, attacker.stat(StatType.KI_OUTPUT), 1.0, attacker.kiMultiplier(cfg), cfg);
                 double damage = DamageMath.finalDamage(raw, attacker.battlePower(), defender.battlePower(), defender.stat(StatType.DEFENSE), defender.defenseMultiplier(cfg), guard, defender.fatigue(), cfg);
                 DamageSource source = TenkaichiDamage.source(level, TenkaichiDamage.KI_BLAST, this, owner);
                 TenkaichiDamage.hurt(target, level, source, (float) damage);
@@ -184,7 +186,11 @@ public class KiBlastEntity extends Entity {
             }
         }
         if (!isTraining()) {
-            DestructionManager.explode(level, pos, Techniques.KI_BLAST.explosionRadius(), owner, 0.0, 0.0);
+            if (com.dbtenkaichi.ki.SkillStyle.of(technique.id()) == com.dbtenkaichi.ki.SkillStyle.BIG_BANG) {
+                DestructionManager.crater(level, pos, technique.explosionRadius(), owner, technique.baseDamage() * 0.5, 1.0);
+            } else {
+                DestructionManager.explode(level, pos, technique.explosionRadius(), owner, 0.0, 0.0);
+            }
         } else {
             level.playSound(null, pos.x, pos.y, pos.z, ModSounds.KI_IMPACT.get(), SoundSource.PLAYERS, 0.6f, 1.4f);
         }

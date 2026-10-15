@@ -11,6 +11,7 @@
   "cinematics.dbtenkaichi.short": "Short",
   "command.dbtenkaichi.done": "Done.",
   "command.dbtenkaichi.landmark": "%s: %s, %s, %s",
+  "command.dbtenkaichi.landmarks_rebuilt": "Rebuilt %s landmarks and refreshed their safe zones.",
   "command.dbtenkaichi.no_character": "That player has no character yet.",
   "command.dbtenkaichi.no_landmarks": "No landmarks have been generated yet.",
   "command.dbtenkaichi.reloaded": "Dragon Block: Tenkaichi data reloaded.",

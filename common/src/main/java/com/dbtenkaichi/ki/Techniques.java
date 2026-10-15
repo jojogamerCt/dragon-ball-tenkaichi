@@ -33,11 +33,11 @@ public final class Techniques {
             0xFFFFE6, 0xD070FF, StatType.KI_CONTROL));
 
     public static final Technique FINAL_FLASH = add(new Technique("dbtenkaichi:final_flash", Technique.Type.BEAM,
-            24.0, 45.0, 70.0, 20, 70, 2.8, 0.7, 1.0, 90, 44, 3.5, 3.0, 0.15, true, true, true, 100,
+            26.0, 45.0, 70.0, 20, 70, 3.0, 1.1, 1.5, 110, 50, 5.5, 4.5, 0.15, true, true, true, 100,
             0xFFFFF0, 0xFFE640, StatType.KI_OUTPUT));
 
     public static final Technique BIG_BANG_ATTACK = add(new Technique("dbtenkaichi:big_bang_attack", Technique.Type.BLAST,
-            18.0, 30.0, 0.0, 0, 0, 1.3, 0.75, 0.0, 64, 80, 4.5, 0.0, 0.02, false, false, false, 80,
+            18.0, 30.0, 0.0, 0, 0, 1.3, 0.9, 0.0, 64, 80, 7.0, 0.0, 0.02, false, false, false, 80,
             0xFFFFFF, 0x7FC8FF, StatType.KI_OUTPUT));
 
     public static final Technique DEATH_BEAM = add(new Technique("dbtenkaichi:death_beam", Technique.Type.BLAST,

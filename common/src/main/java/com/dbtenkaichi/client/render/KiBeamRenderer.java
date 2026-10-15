@@ -48,7 +48,7 @@ public class KiBeamRenderer extends EntityRenderer<KiBeamEntity, KiBeamRenderer.
             float fade = state.beamState == KiBeamEntity.STATE_FADING ? 0.45f : 1.0f;
             boolean clashing = state.beamState == KiBeamEntity.STATE_CLASHING;
             int quality = ConfigManager.client().quality().auraLayers;
-            collector.submitCustomGeometry(poseStack, RenderTypes.lightning(),
+            collector.submitCustomGeometry(poseStack, TenkaichiRenderTypes.aura(),
                     (pose, buffer) -> {
                         EnergyMesh.beam(pose.pose(), buffer, state.direction, state.length, state.spiral ? state.radius * 0.4f : state.radius, state.core, state.glow, state.time, fade, clashing, quality);
                         if (state.spiral) {

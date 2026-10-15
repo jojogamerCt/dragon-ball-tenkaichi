@@ -32,7 +32,7 @@ public class KiBlastRenderer extends EntityRenderer<KiBlastEntity, KiBlastRender
     @Override
     public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
         try {
-            collector.submitCustomGeometry(poseStack, RenderTypes.lightning(),
+            collector.submitCustomGeometry(poseStack, TenkaichiRenderTypes.aura(),
                     (pose, buffer) -> EnergyMesh.orb(pose.pose(), buffer, new Vec3(0, state.size, 0), state.size, 0xFFFFFF, state.color, state.motion, state.time));
         } catch (RuntimeException e) {
             RenderGuard.report("ki_blast", e);

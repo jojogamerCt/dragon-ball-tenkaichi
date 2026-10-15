@@ -38,13 +38,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.ArrayList;
+import org.jspecify.annotations.Nullable;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.entity.item.ItemEntity;
+import com.dbtenkaichi.config.ConfigManager;
 
 public final class Landmarks {
     public static final String KAME_HOUSE = "kame_house";
     public static final String KORIN_TOWER = "korin_tower";
     public static final String KAMI_LOOKOUT = "kami_lookout";
+    public static final int DATA_VERSION = 2;
+
+    private static final String FILE = "dbtenkaichi_landmarks.properties";
+    private static final String VERSION_KEY = "version";
+    private static final String GENERATION_KEY = "generation";
+    private static final String KAME_ORIGIN = "kame_house.origin";
+    private static final String KORIN_ORIGIN = "korin_tower.origin";
+    private static final String KORIN_TOP = "korin_tower.top";
+    private static final String LOOKOUT_CENTER = "kami_lookout.center";
 
     private static MinecraftServer checked;
+    private static int generation;
+    private static @Nullable String spawning;
     private static final Map<String, BlockPos> SITES = new LinkedHashMap<>();
 
     private Landmarks() {
@@ -54,13 +71,68 @@ public final class Landmarks {
         return Map.copyOf(SITES);
     }
 
+    public static int generation() {
+        return generation;
+    }
+
     public static void tick(MinecraftServer server) {
         if (checked == server) {
+            if (server.getTickCount() % 40 == 0) {
+                SafeZones.sweep(server.overworld());
+            }
             return;
         }
         checked = server;
         SITES.clear();
-        Path file = server.getWorldPath(LevelResource.ROOT).resolve("dbtenkaichi_landmarks.properties");
+        SafeZones.set(List.of());
+        Path file = server.getWorldPath(LevelResource.ROOT).resolve(FILE);
+        Properties props = load(file);
+        boolean existed = !props.isEmpty();
+        ServerLevel level = server.overworld();
+        generation = parseInt(props.getProperty(GENERATION_KEY), 0);
+        int version = parseInt(props.getProperty(VERSION_KEY), existed ? 1 : DATA_VERSION);
+        boolean changed = !existed;
+        if (version < DATA_VERSION) {
+            WorldMigration.migrate(level, props, version);
+            changed = true;
+        }
+        if (generation <= 0) {
+            generation = 1;
+            changed = true;
+        }
+        BlockPos spawn = level.getRespawnData().pos();
+        if (!props.containsKey(KAME_HOUSE)) {
+            BlockPos site = oceanSite(level, spawn);
+            BlockPos origin = new BlockPos(site.getX(), level.getSeaLevel(), site.getZ());
+            props.setProperty(KAME_ORIGIN, format(origin));
+            props.setProperty(KAME_HOUSE, format(withLandmark(KAME_HOUSE, () -> kameHouse(level, origin))));
+            changed = true;
+        }
+        if (!props.containsKey(KORIN_TOWER)) {
+            BlockPos origin = spawn.offset(-170, 0, -150);
+            int ground = Structures.ground(level, origin.getX(), origin.getZ());
+            BlockPos npc = withLandmark(KORIN_TOWER, () -> korinTower(level, origin, ground, 120, true));
+            props.setProperty(KORIN_ORIGIN, format(new BlockPos(origin.getX(), ground, origin.getZ())));
+            props.setProperty(KORIN_TOP, Integer.toString(npc.getY() - 1));
+            BlockPos center = new BlockPos(npc.getX(), Math.min(level.getMaxY() - 12, npc.getY() + 62), npc.getZ() - 6);
+            props.setProperty(LOOKOUT_CENTER, format(center));
+            props.setProperty(KORIN_TOWER, format(npc));
+            props.setProperty(KAMI_LOOKOUT, format(withLandmark(KAMI_LOOKOUT, () -> lookout(level, center, true))));
+            changed = true;
+        }
+        fillOrigins(level, props);
+        collectSites(props);
+        SafeZones.set(zones(level, props));
+        props.setProperty(VERSION_KEY, Integer.toString(DATA_VERSION));
+        props.setProperty(GENERATION_KEY, Integer.toString(generation));
+        if (changed) {
+            save(file, props);
+            Tenkaichi.LOG.info("Dragon Ball landmarks ready (data version {}, generation {}): {}", DATA_VERSION, generation, SITES);
+        }
+        SafeZones.sweep(level);
+    }
+
+    private static Properties load(Path file) {
         Properties props = new Properties();
         if (Files.exists(file)) {
             try (Reader reader = Files.newBufferedReader(file)) {
@@ -69,32 +141,156 @@ public final class Landmarks {
                 Tenkaichi.LOG.warn("Could not read landmarks file", e);
             }
         }
-        ServerLevel level = server.overworld();
-        BlockPos spawn = level.getRespawnData().pos();
-        boolean changed = false;
-        if (!props.containsKey(KAME_HOUSE)) {
-            props.setProperty(KAME_HOUSE, format(kameHouse(level, oceanSite(level, spawn))));
-            changed = true;
+        return props;
+    }
+
+    private static void save(Path file, Properties props) {
+        try (Writer writer = Files.newBufferedWriter(file)) {
+            props.store(writer, "Dragon Block: Tenkaichi landmarks");
+        } catch (IOException e) {
+            Tenkaichi.LOG.warn("Could not save landmarks file", e);
         }
-        if (!props.containsKey(KORIN_TOWER)) {
-            BlockPos top = korinTower(level, spawn.offset(-170, 0, -150));
-            props.setProperty(KORIN_TOWER, format(top));
-            props.setProperty(KAMI_LOOKOUT, format(lookout(level, new BlockPos(top.getX(), Math.min(level.getMaxY() - 12, top.getY() + 62), top.getZ() - 6))));
-            changed = true;
-        }
+    }
+
+    private static void collectSites(Properties props) {
+        SITES.clear();
         for (String key : new String[]{KAME_HOUSE, KORIN_TOWER, KAMI_LOOKOUT}) {
             BlockPos pos = parse(props.getProperty(key));
             if (pos != null) {
                 SITES.put(key, pos);
             }
         }
-        if (changed) {
-            try (Writer writer = Files.newBufferedWriter(file)) {
-                props.store(writer, "Dragon Block: Tenkaichi landmarks");
-            } catch (IOException e) {
-                Tenkaichi.LOG.warn("Could not save landmarks file", e);
+    }
+
+    private static BlockPos withLandmark(String id, Supplier<BlockPos> builder) {
+        spawning = id;
+        try {
+            return builder.get();
+        } finally {
+            spawning = null;
+        }
+    }
+
+    static void fillOrigins(ServerLevel level, Properties props) {
+        BlockPos kame = parse(props.getProperty(KAME_HOUSE));
+        if (kame != null && !props.containsKey(KAME_ORIGIN)) {
+            props.setProperty(KAME_ORIGIN, format(new BlockPos(kame.getX() + 1, level.getSeaLevel(), kame.getZ() - 7)));
+        }
+        BlockPos korin = parse(props.getProperty(KORIN_TOWER));
+        if (korin != null && !props.containsKey(KORIN_ORIGIN)) {
+            int x = korin.getX();
+            int z = korin.getZ() - 6;
+            int ground = level.getChunkSource().getGenerator().getBaseHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG, level, level.getChunkSource().randomState());
+            props.setProperty(KORIN_ORIGIN, format(new BlockPos(x, Math.min(ground, korin.getY() - 40), z)));
+        }
+        if (korin != null && !props.containsKey(KORIN_TOP)) {
+            props.setProperty(KORIN_TOP, Integer.toString(korin.getY() - 1));
+        }
+        BlockPos kami = parse(props.getProperty(KAMI_LOOKOUT));
+        if (kami != null && !props.containsKey(LOOKOUT_CENTER)) {
+            props.setProperty(LOOKOUT_CENTER, format(kami.offset(0, -1, -8)));
+        }
+    }
+
+    static List<SafeZones.Zone> zones(ServerLevel level, Properties props) {
+        int radius = ConfigManager.gameplay().landmarkSafeZoneRadius;
+        List<SafeZones.Zone> zones = new ArrayList<>();
+        BlockPos kame = parse(props.getProperty(KAME_ORIGIN));
+        if (kame != null) {
+            zones.add(new SafeZones.Zone(KAME_HOUSE, level.dimension(), kame.getX(), kame.getZ(), radius, kame.getY() - 16, kame.getY() + 40));
+        }
+        BlockPos korin = parse(props.getProperty(KORIN_ORIGIN));
+        if (korin != null) {
+            zones.add(new SafeZones.Zone(KORIN_TOWER, level.dimension(), korin.getX(), korin.getZ(), radius, korin.getY() - 12, level.getMaxY()));
+        }
+        return zones;
+    }
+
+    static int rebuild(ServerLevel level, Properties props) {
+        fillOrigins(level, props);
+        generation = Math.max(1, generation) + 1;
+        int rebuilt = 0;
+        BlockPos kame = parse(props.getProperty(KAME_ORIGIN));
+        if (kame != null) {
+            clear(level, kame, 21, kame.getY(), kame.getY() + 28);
+            props.setProperty(KAME_HOUSE, format(withLandmark(KAME_HOUSE, () -> kameHouse(level, kame))));
+            rebuilt++;
+        }
+        BlockPos korin = parse(props.getProperty(KORIN_ORIGIN));
+        int top = parseInt(props.getProperty(KORIN_TOP), Integer.MIN_VALUE);
+        if (korin != null && top != Integer.MIN_VALUE) {
+            BlockPos axis = new BlockPos(korin.getX(), top, korin.getZ());
+            clear(level, axis, 12, top - 6, top + 12);
+            props.setProperty(KORIN_TOWER, format(withLandmark(KORIN_TOWER, () -> korinTower(level, axis, korin.getY(), top - korin.getY(), true))));
+            rebuilt++;
+        }
+        BlockPos center = parse(props.getProperty(LOOKOUT_CENTER));
+        if (center != null) {
+            clear(level, center, 24, center.getY() - 16, center.getY() + 18);
+            props.setProperty(KAMI_LOOKOUT, format(withLandmark(KAMI_LOOKOUT, () -> lookout(level, center, true))));
+            rebuilt++;
+        }
+        props.setProperty(GENERATION_KEY, Integer.toString(generation));
+        collectSites(props);
+        List<SafeZones.Zone> zones = zones(level, props);
+        SafeZones.set(zones);
+        for (SafeZones.Zone zone : zones) {
+            for (ItemEntity item : level.getEntitiesOfClass(ItemEntity.class, zone.bounds(), e -> zone.contains(e.getX(), e.getY(), e.getZ()))) {
+                item.discard();
             }
-            Tenkaichi.LOG.info("Generated Dragon Ball landmarks: {}", SITES);
+            for (MasterEntity master : level.getEntitiesOfClass(MasterEntity.class, zone.bounds(), MasterEntity::isStaleLandmarkMaster)) {
+                master.discard();
+            }
+        }
+        SafeZones.sweep(level);
+        return rebuilt;
+    }
+
+    public static int rebuildNow(MinecraftServer server) {
+        Path file = server.getWorldPath(LevelResource.ROOT).resolve(FILE);
+        Properties props = load(file);
+        checked = server;
+        generation = parseInt(props.getProperty(GENERATION_KEY), 1);
+        int rebuilt = rebuild(server.overworld(), props);
+        props.setProperty(VERSION_KEY, Integer.toString(DATA_VERSION));
+        save(file, props);
+        return rebuilt;
+    }
+
+    private static void clear(ServerLevel level, BlockPos center, int radius, int minY, int maxY) {
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dz = -radius; dz <= radius; dz++) {
+                if (dx * dx + dz * dz > (radius + 0.5) * (radius + 0.5)) {
+                    continue;
+                }
+                int x = center.getX() + dx;
+                int z = center.getZ() + dz;
+                level.getChunk(x >> 4, z >> 4);
+                for (int y = minY; y <= maxY; y++) {
+                    Structures.set(level, new BlockPos(x, y, z), Blocks.AIR);
+                }
+            }
+        }
+    }
+
+    public static boolean isStaleMaster(@Nullable String landmark, int masterGeneration, @Nullable BlockPos home) {
+        if (checked == null || generation <= 0) {
+            return false;
+        }
+        if (landmark != null) {
+            return SITES.containsKey(landmark) && masterGeneration < generation;
+        }
+        return home != null && generation > 1 && SITES.containsValue(home);
+    }
+
+    private static int parseInt(@Nullable String value, int fallback) {
+        if (value == null) {
+            return fallback;
+        }
+        try {
+            return Integer.parseInt(value.trim());
+        } catch (NumberFormatException e) {
+            return fallback;
         }
     }
 
@@ -102,7 +298,7 @@ public final class Landmarks {
         return pos.getX() + "," + pos.getY() + "," + pos.getZ();
     }
 
-    private static BlockPos parse(String value) {
+    private static @Nullable BlockPos parse(@Nullable String value) {
         if (value == null) {
             return null;
         }
@@ -119,6 +315,9 @@ public final class Landmarks {
         if (master != null) {
             master.setKind(kind);
             master.setHome(pos);
+            if (spawning != null) {
+                master.setLandmark(spawning, generation);
+            }
         }
     }
 

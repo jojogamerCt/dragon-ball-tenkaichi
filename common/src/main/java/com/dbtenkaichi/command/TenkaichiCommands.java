@@ -118,6 +118,8 @@ public final class TenkaichiCommands {
                             data.setFatigue(0);
                             player.setHealth(player.getMaxHealth());
                             data.runtime().vitalsDirty = true;
+                            data.runtime().lastCombat = 0;
+                            data.runtime().stunnedUntil = 0;
                             ctx.getSource().sendSuccess(() -> Component.translatable("command.dbtenkaichi.done"), true);
                             return 1;
                         })));
@@ -131,7 +133,13 @@ public final class TenkaichiCommands {
                     sites.forEach((id, pos) -> ctx.getSource().sendSuccess(() -> Component.translatable("command.dbtenkaichi.landmark",
                             Component.translatable("landmark.dbtenkaichi." + id), pos.getX(), pos.getY(), pos.getZ()), false));
                     return sites.size();
-                }));
+                })
+                .then(Commands.literal("rebuild").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                        .executes(ctx -> {
+                            int rebuilt = com.dbtenkaichi.world.Landmarks.rebuildNow(ctx.getSource().getServer());
+                            ctx.getSource().sendSuccess(() -> Component.translatable("command.dbtenkaichi.landmarks_rebuilt", rebuilt), true);
+                            return rebuilt;
+                        })));
         root.then(Commands.literal("trial").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(Commands.literal("start")
                         .then(Commands.argument("player", EntityArgument.player())

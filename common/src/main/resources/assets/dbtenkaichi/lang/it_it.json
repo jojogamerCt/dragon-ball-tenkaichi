@@ -11,6 +11,7 @@
   "cinematics.dbtenkaichi.short": "Brevi",
   "command.dbtenkaichi.done": "Fatto.",
   "command.dbtenkaichi.landmark": "%s: %s, %s, %s",
+  "command.dbtenkaichi.landmarks_rebuilt": "Ricostruiti %s luoghi iconici e aggiornate le loro zone sicure.",
   "command.dbtenkaichi.no_character": "Quel giocatore non ha ancora un personaggio.",
   "command.dbtenkaichi.no_landmarks": "Nessun luogo iconico generato.",
   "command.dbtenkaichi.reloaded": "Dati di Dragon Block: Tenkaichi ricaricati.",

@@ -408,7 +408,7 @@ public final class TenkaichiLayers {
                 ClientConfig.Quality quality = ConfigManager.client().quality();
                 float scale = visual.auraScale();
                 long seed = state.id * 31L;
-                collector.order(2).submitCustomGeometry(poseStack, RenderTypes.lightning(),
+                collector.order(2).submitCustomGeometry(poseStack, TenkaichiRenderTypes.aura(),
                         (pose, buffer) -> AuraMesh.flames(pose.pose(), buffer, quality.auraFlames, quality.auraLayers, level, scale, time, primary, secondary, seed));
             } catch (RuntimeException e) {
                 RenderGuard.report("aura", e);

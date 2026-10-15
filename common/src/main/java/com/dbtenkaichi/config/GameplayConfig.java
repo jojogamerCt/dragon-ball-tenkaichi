@@ -39,11 +39,15 @@ public final class GameplayConfig {
     public boolean protectSpawnArea = true;
 
     public String destructionMode = "real";
-    public int maxExplosionRadius = 6;
-    public int maxBlocksPerExplosion = 220;
+    public int maxExplosionRadius = 14;
+    public int maxBlocksPerExplosion = 3000;
+    public int maxDestructionBlocksPerTick = 1500;
+    public boolean scaleExplosionsWithBattlePower = true;
     public int terrainRegenSeconds = 0;
     public List<String> destructionDimensionBlacklist = new ArrayList<>();
     public float maxBlockHardness = 50.0f;
+    public boolean protectLandmarks = true;
+    public int landmarkSafeZoneRadius = 48;
 
     public int maxActionsPerSecond = 40;
     public int cinematicTicks = 200;

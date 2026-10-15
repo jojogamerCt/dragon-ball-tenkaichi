@@ -44,6 +44,8 @@ public class MasterEntity extends FighterNpc {
     private static final EntityDataAccessor<Integer> KIND = SynchedEntityData.defineId(MasterEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> MIRROR = SynchedEntityData.defineId(MasterEntity.class, EntityDataSerializers.INT);
     private @Nullable BlockPos home;
+    private @Nullable String landmark;
+    private int landmarkGeneration;
     private boolean trial;
     private int sparringPartner = -1;
     private int drillPartner = -1;
@@ -78,6 +80,15 @@ public class MasterEntity extends FighterNpc {
 
     public void setHome(@Nullable BlockPos pos) {
         home = pos;
+    }
+
+    public void setLandmark(String id, int generation) {
+        landmark = id;
+        landmarkGeneration = generation;
+    }
+
+    public boolean isStaleLandmarkMaster() {
+        return !trial && com.dbtenkaichi.world.Landmarks.isStaleMaster(landmark, landmarkGeneration, home);
     }
 
     public boolean inTrial() {
@@ -149,6 +160,10 @@ public class MasterEntity extends FighterNpc {
         if (home != null) {
             output.putIntArray("master_home", new int[]{home.getX(), home.getY(), home.getZ()});
         }
+        if (landmark != null) {
+            output.putString("master_landmark", landmark);
+            output.putInt("master_landmark_generation", landmarkGeneration);
+        }
     }
 
     @Override
@@ -160,6 +175,8 @@ public class MasterEntity extends FighterNpc {
             setCustomName(Component.translatable(kind.translationKey()));
         }
         home = input.getIntArray("master_home").filter(a -> a.length == 3).map(a -> new BlockPos(a[0], a[1], a[2])).orElse(null);
+        landmark = input.getString("master_landmark").orElse(null);
+        landmarkGeneration = input.getIntOr("master_landmark_generation", 0);
     }
 
     @Override
@@ -240,6 +257,10 @@ public class MasterEntity extends FighterNpc {
     protected void customServerAiStep(ServerLevel level) {
         super.customServerAiStep(level);
         long now = level.getGameTime();
+        if (now % 40 == 0 && isStaleLandmarkMaster()) {
+            discard();
+            return;
+        }
         ServerPlayer sparring = partner(sparringPartner);
         if (sparringPartner >= 0 && sparring == null) {
             sparringPartner = -1;

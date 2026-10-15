@@ -16,7 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 public final class ConfigManager {
-    public static final int COMMON_SCHEMA = 3;
+    public static final int COMMON_SCHEMA = 4;
     public static final int CLIENT_SCHEMA = 1;
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().serializeSpecialFloatingPointValues().create();
 
@@ -126,6 +126,15 @@ public final class ConfigManager {
             JsonObject gameplay = obj.getAsJsonObject("gameplay");
             if (gameplay.has("cinematicTicks") && gameplay.get("cinematicTicks").getAsInt() == 70) {
                 gameplay.addProperty("cinematicTicks", 200);
+            }
+        }
+        if (fromVersion < 4 && obj.has("gameplay") && obj.get("gameplay").isJsonObject()) {
+            JsonObject gameplay = obj.getAsJsonObject("gameplay");
+            if (gameplay.has("maxExplosionRadius") && gameplay.get("maxExplosionRadius").getAsInt() == 6) {
+                gameplay.addProperty("maxExplosionRadius", 14);
+            }
+            if (gameplay.has("maxBlocksPerExplosion") && gameplay.get("maxBlocksPerExplosion").getAsInt() == 220) {
+                gameplay.addProperty("maxBlocksPerExplosion", 3000);
             }
         }
         obj.addProperty("schemaVersion", COMMON_SCHEMA);

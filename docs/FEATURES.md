@@ -39,7 +39,8 @@ la colonna "Verifica" indica come è stata provata (vedi `TESTING.md`).
 | Trasformazioni | Tre cutscene distinte: `super_saiyan_awakening` (ispirata alla prima trasformazione su Namek, ~7,5 s), `dark_rage` (Predone), `power_up` (predefinita per le forme future) | Implementata | Super Saiyan provata; `dark_rage` e `power_up` solo codice |
 | Ki | Ki Blast con homing, Kamehameha con carica/sterzata/trincea | Implementata | smoke server + client |
 | Ki | Beam Clash autoritativo con battiti, stagger, vittoria/pareggio | Implementata | non verificata in gioco |
-| Mondo | Distruzione off/visual/real/regenerating, budget, protezioni | Implementata | smoke server (aria aperta) |
+| Mondo | Distruzione off/visual/real/regenerating, raggio proporzionale al BP con tetto, lavoro distribuito su più tick, crateri (Big Bang Attack), protezioni | Implementata | smoke server (cratere, limiti) |
+| Zone sicure | Luoghi iconici indistruttibili (giocatori, tecniche, TNT/creeper), nessuno spawn di mob tranne i Maestri, migrazione dei mondi vecchi con ricostruzione | Implementata | smoke server (protezione, spawn, migrazione) |
 | Trasformazioni | Sistema data-driven + Super Saiyan (rabbia, cinematica, padronanza, drenaggio) | Implementata | client scriptato |
 | NPC | Maestro: meditazione, controllo Ki, sparring, schivate, insegna il Kamehameha | Implementata | codice, verifica parziale |
 | NPC | Predone Saiyan: FSM 10 stati, raffiche, cannone, schivate, seconda fase | Implementata | smoke server su entrambi i loader |

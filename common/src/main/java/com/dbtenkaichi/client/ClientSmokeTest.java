@@ -53,8 +53,8 @@ public final class ClientSmokeTest {
     }
 
     private static net.minecraft.world.phys.Vec3 trialOrigin;
-    private static final String[] BEAMS = {"galick_gun", "masenko", "special_beam_cannon", "final_flash"};
-    private static final String[] BLASTS = {"big_bang_attack", "death_beam"};
+    private static final String[] BEAMS = {"final_flash"};
+    private static final String[] BLASTS = {"big_bang_attack"};
 
     private static void forceForm(Minecraft mc, String name, String formId) {
         IntegratedServer server = mc.getSingleplayerServer();
@@ -76,90 +76,6 @@ public final class ClientSmokeTest {
                 TransformationSystem.begin(sp, pd, form, TransformationSystem.CINEMATIC_AUTO, true, sp.level().getGameTime());
             }
         });
-    }
-
-    private static final String[] TRIALS = {"form dbtenkaichi:super_saiyan", "form dbtenkaichi:super_saiyan_2", "form dbtenkaichi:super_saiyan_3", "start time_chamber"};
-    private static net.minecraft.world.phys.Vec3 trialStand;
-
-    private static void trialTour(Minecraft mc, String name, int c) {
-        if (c < 0 || c >= TRIALS.length * 250) {
-            return;
-        }
-        int index = c / 250;
-        int t = c % 250;
-        String label = "23" + (char) ('a' + index);
-        switch (t) {
-            case 0 -> {
-                mc.gui.setScreen(null);
-                command(mc, "tenkaichi restore " + name);
-                String[] parts = TRIALS[index].split(" ");
-                command(mc, "tenkaichi trial " + parts[0] + " " + name + " " + parts[1]);
-            }
-            case 30 -> {
-                trialStand = mc.player.position();
-                LOG.add(label + " trial dimension " + mc.player.level().dimension().identifier());
-                mc.player.setYRot(mc.player.getYRot() + 35.0f);
-                shot(mc, label + "_trial_arena");
-            }
-            case 112 -> {
-                java.util.List<com.dbtenkaichi.entity.MasterEntity> rivals = mc.level.getEntitiesOfClass(com.dbtenkaichi.entity.MasterEntity.class, mc.player.getBoundingBox().inflate(30));
-                LOG.add(label + " opponents " + rivals.size() + (rivals.isEmpty() ? "" : " mirror " + (rivals.get(0).mirrorOf() == mc.player.getId()) + " form " + rivals.get(0).visualForm()));
-                shot(mc, label + "_trial_fight");
-                if (index == 0) {
-                    IntegratedServer server = mc.getSingleplayerServer();
-                    if (server != null) {
-                        server.execute(() -> {
-                            ServerPlayer sp = server.getPlayerList().getPlayerByName(name);
-                            if (sp != null) {
-                                LOG.add(String.format(java.util.Locale.ROOT, "pushed out from %.1f %.1f %.1f", sp.getX(), sp.getY(), sp.getZ()));
-                                sp.teleportTo(sp.getX() + 40.0, sp.getY() + 10.0, sp.getZ());
-                            }
-                        });
-                    }
-                }
-            }
-            case 120 -> {
-                if (index == 0 && trialStand != null) {
-                    LOG.add(String.format(java.util.Locale.ROOT, "containment: distance from stand after push %.1f at %.1f %.1f %.1f", mc.player.position().distanceTo(trialStand), mc.player.getX(), mc.player.getY(), mc.player.getZ()));
-                }
-            }
-            case 125 -> command(mc, "tenkaichi trial end " + name + (index == 0 || index == 3 ? " win" : " lose"));
-            case 140 -> LOG.add(label + " back in " + mc.player.level().dimension().identifier());
-            default -> {
-            }
-        }
-    }
-
-    private static final Race[] FEMALE = {Race.SAIYAN, Race.HALF_SAIYAN, Race.HUMAN, Race.NAMEKIAN, Race.FRIEZA_RACE, Race.MAJIN, Race.ANDROID, Race.DEMON};
-
-    private static void femaleGallery(Minecraft mc, int c) {
-        if (c == 0) {
-            mc.gui.setScreen(new com.dbtenkaichi.client.screen.CharacterScreen(2));
-        } else if (c == 4) {
-            shot(mc, "24_forms_menu");
-        } else if (c == 6) {
-            mc.gui.setScreen(null);
-        } else if (c >= 8 && c < 8 + FEMALE.length * 4) {
-            int i = (c - 8) / 4;
-            if ((c - 8) % 4 == 0) {
-                Race race = FEMALE[i];
-                com.dbtenkaichi.player.Appearance a = com.dbtenkaichi.player.Appearance.defaultsFor(race);
-                a.presentation = 1;
-                a.hairStyle = com.dbtenkaichi.player.Appearance.defaultHair(race, 1);
-                if (i % 2 == 1) {
-                    a.outfit = 0;
-                }
-                ClientState.preview = a;
-                ClientState.previewRace = race;
-                mc.gui.setScreen(new PosePreview(25.0f));
-            } else if ((c - 8) % 4 == 2) {
-                shot(mc, "24_female_" + FEMALE[i].id());
-            }
-        } else if (c == 8 + FEMALE.length * 4) {
-            ClientState.preview = null;
-            ClientState.previewRace = null;
-            mc.gui.setScreen(null);
-        }
     }
 
     private static void quickForm(Minecraft mc, String name, String formId) {
@@ -186,40 +102,25 @@ public final class ClientSmokeTest {
         mc.gui.setScreen(new PosePreview(25.0f));
     }
 
+    private static final HairStyle[] SSJ2_HAIR = {HairStyle.GOKU, HairStyle.GOHAN, HairStyle.VEGETA, HairStyle.TRUNKS, HairStyle.YAMCHA};
+
     private static void hairGallery(Minecraft mc, String name, int c) {
-        int count = HairStyle.PLAYER_SELECTABLE;
         if (c == 0) {
             mc.gui.setScreen(null);
-            forceForm(mc, name, null);
+            quickForm(mc, name, "dbtenkaichi:super_saiyan_2");
             return;
         }
-        int base = c - 4;
-        if (base >= 0 && base < count * 3) {
-            int style = base / 3;
+        int base = c - 12;
+        if (base >= 0 && base < SSJ2_HAIR.length * 3) {
+            HairStyle style = SSJ2_HAIR[base / 3];
             if (base % 3 == 0) {
-                previewHair(mc, style);
+                previewHair(mc, style.ordinal());
             } else if (base % 3 == 2) {
-                shot(mc, "21_hair_" + HairStyle.byOrdinal(style).id());
+                shot(mc, "21_ssj2_" + style.id());
             }
             return;
         }
-        if (c == 4 + count * 3) {
-            ClientState.preview = null;
-            mc.gui.setScreen(null);
-            quickForm(mc, name, "dbtenkaichi:super_saiyan");
-            return;
-        }
-        int ssj = c - (16 + count * 3);
-        if (ssj >= 0 && ssj < count * 3) {
-            int style = ssj / 3;
-            if (ssj % 3 == 0) {
-                previewHair(mc, style);
-            } else if (ssj % 3 == 2) {
-                shot(mc, "22_ssj_" + HairStyle.byOrdinal(style).id());
-            }
-            return;
-        }
-        if (c == 16 + count * 6) {
+        if (c == 12 + SSJ2_HAIR.length * 3) {
             ClientState.preview = null;
             ClientState.previewRace = null;
             mc.gui.setScreen(null);
@@ -227,55 +128,8 @@ public final class ClientSmokeTest {
         }
     }
 
-    private static void cutscenes(Minecraft mc, String name, int c) {
-        switch (c) {
-            case 0 -> command(mc, "tenkaichi restore " + name);
-            case 2 -> forceForm(mc, name, "dbtenkaichi:super_saiyan_2");
-            case 14 -> shot(mc, "19a_ssj2_face_streak");
-            case 35 -> shot(mc, "19b_ssj2_black_backdrop");
-            case 52 -> shot(mc, "19c_ssj2_red_streak");
-            case 74 -> shot(mc, "19d_ssj2_scream");
-            case 96 -> shot(mc, "19e_ssj2_flash");
-            case 114 -> shot(mc, "19f_ssj2_explosion");
-            case 143 -> shot(mc, "19g_ssj2_reveal");
-            case 158 -> {
-                LOG.add("form after ssj2 cutscene: " + Services.PLATFORM.playerData(mc.player).form());
-                forceForm(mc, name, null);
-            }
-            case 168 -> command(mc, "tenkaichi restore " + name);
-            case 170 -> forceForm(mc, name, "dbtenkaichi:super_saiyan_3");
-            case 188 -> shot(mc, "20a_ssj3_power");
-            case 218 -> shot(mc, "20b_ssj3_clouds");
-            case 227 -> shot(mc, "20c_ssj3_clouds_later");
-            case 256 -> shot(mc, "20d_ssj3_hair");
-            case 290 -> shot(mc, "20e_ssj3_storm");
-            case 302 -> shot(mc, "20f_ssj3_flash");
-            case 329 -> shot(mc, "20g_ssj3_reveal");
-            case 342 -> mc.gui.setScreen(new PosePreview(160.0f));
-            case 344 -> shot(mc, "20h_ssj3_hair_back");
-            case 345 -> mc.gui.setScreen(new PosePreview(25.0f));
-            case 347 -> shot(mc, "20i_ssj3_hair_front");
-            case 348 -> {
-                mc.gui.setScreen(null);
-                mc.player.setXRot(-75.0f);
-                mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
-            }
-            case 352 -> shot(mc, "20j_ssj3_look_up");
-            case 353 -> {
-                mc.player.setXRot(0.0f);
-                mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
-            }
-            case 356 -> {
-                LOG.add("form after ssj3 cutscene: " + Services.PLATFORM.playerData(mc.player).form());
-                forceForm(mc, name, null);
-            }
-            default -> {
-            }
-        }
-    }
-
     private static void showcase(Minecraft mc, String name, int t) {
-        if (t < 0 || t >= 780) {
+        if (t < 0 || t >= 8 + BEAMS.length * 140 + BLASTS.length * 100) {
             return;
         }
         if (t == 0) {
@@ -342,13 +196,12 @@ public final class ClientSmokeTest {
                     command(mc, "tenkaichi restore " + name);
                     Services.NETWORK.sendToServer(new Packets.AssignSlot(0, "dbtenkaichi:" + BLASTS[blast]));
                 }
-                case 5 -> mc.gui.setScreen(new PosePreview(25.0f));
+                case 5 -> mc.player.setXRot(55.0f);
                 case 6 -> action(ActionType.SKILL_PRESS, 0);
                 case 10 -> shot(mc, label + "_fire");
-                case 11 -> {
-                    action(ActionType.SKILL_RELEASE, 0);
-                    mc.gui.setScreen(null);
-                }
+                case 11 -> action(ActionType.SKILL_RELEASE, 0);
+                case 60 -> shot(mc, label + "_crater");
+                case 61 -> mc.player.setXRot(0.0f);
                 default -> {
                 }
             }
@@ -467,11 +320,6 @@ public final class ClientSmokeTest {
             }
             case 220 -> action(ActionType.TRANSFORM_UP, TransformationSystem.CINEMATIC_AUTO);
             case 227 -> shot(mc, "05a_ssj_face_closeup");
-            case 249 -> shot(mc, "05b_ssj_lightning_wide");
-            case 271 -> shot(mc, "05c_ssj_full_body_rocks");
-            case 297 -> shot(mc, "05d_ssj_hair_flicker");
-            case 314 -> shot(mc, "05e_ssj_scream");
-            case 336 -> shot(mc, "05f_ssj_aura_back");
             case 361 -> shot(mc, "05g_ssj_reveal");
             case 385 -> {
                 LOG.add("form after transformation: " + data.form());
@@ -503,22 +351,11 @@ public final class ClientSmokeTest {
                 }
             }
             case 496 -> mc.options.setCameraType(CameraType.THIRD_PERSON_FRONT);
-            case 502 -> shot(mc, "08a_kamehameha_pose_front");
             case 504 -> {
                 mc.player.getInventory().setSelectedSlot(8);
                 mc.options.setCameraType(CameraType.FIRST_PERSON);
             }
-            case 509 -> shot(mc, "08b_kamehameha_pose_first_person");
             case 511 -> mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
-            case 512 -> mc.gui.setScreen(new PosePreview(0.0f));
-            case 514 -> shot(mc, "08c_kamehameha_pose_view_front");
-            case 515 -> mc.gui.setScreen(new PosePreview(-90.0f));
-            case 517 -> shot(mc, "08d_kamehameha_pose_view_left");
-            case 518 -> mc.gui.setScreen(new PosePreview(180.0f));
-            case 520 -> shot(mc, "08e_kamehameha_pose_view_back");
-            case 521 -> mc.gui.setScreen(new PosePreview(90.0f));
-            case 523 -> shot(mc, "08f_kamehameha_pose_view_right");
-            case 524 -> mc.gui.setScreen(null);
             case 528 -> shot(mc, "08_kamehameha_charge");
             case 530 -> {
                 int slot = kamehamehaSlot(data);
@@ -706,7 +543,18 @@ public final class ClientSmokeTest {
                 mc.gui.setScreen(new com.dbtenkaichi.client.screen.TrainingScreen(menu));
             }
             case 1048 -> shot(mc, "17_master_lessons");
-            case 3560 -> {
+            case 1350 -> {
+                mc.gui.setScreen(null);
+                net.minecraft.core.BlockPos kame = com.dbtenkaichi.world.Landmarks.sites().get(com.dbtenkaichi.world.Landmarks.KAME_HOUSE);
+                if (kame != null) {
+                    command(mc, "tp " + name + " " + (kame.getX() + 0.5) + " " + (kame.getY() - 1.6) + " " + (kame.getZ() + 26.5) + " 180 10");
+                }
+                mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+            }
+            case 1354 -> action(ActionType.CHARGE_START, 0);
+            case 1364 -> shot(mc, "25_aura_over_water");
+            case 1366 -> action(ActionType.CHARGE_END, 0);
+            case 1370 -> {
                 mc.gui.setScreen(null);
                 finished = true;
                 Tenkaichi.LOG.info("[DBT-CLIENT] RESULT {}", LOG);
@@ -714,21 +562,7 @@ public final class ClientSmokeTest {
             }
             default -> {
                 showcase(mc, name, tick - 1052);
-                cutscenes(mc, name, tick - 1832);
-                hairGallery(mc, name, tick - 2252);
-                trialTour(mc, name, tick - 2332);
-                femaleGallery(mc, tick - 3332);
-                int gallery = tick - 3400;
-                if (gallery >= 0 && gallery < Race.values().length * 14) {
-                    Race race = Race.values()[gallery / 14];
-                    if (gallery % 14 == 0) {
-                        net.minecraft.nbt.CompoundTag tag = new net.minecraft.nbt.CompoundTag();
-                        tag.putString("races", race.id());
-                        mc.gui.setScreen(new CharacterCreatorScreen(tag));
-                    } else if (gallery % 14 == 12) {
-                        shot(mc, "13_race_" + race.id());
-                    }
-                }
+                hairGallery(mc, name, tick - 1310);
             }
         }
     }

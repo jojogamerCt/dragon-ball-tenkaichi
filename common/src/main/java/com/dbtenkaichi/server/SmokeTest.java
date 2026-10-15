@@ -168,6 +168,92 @@ public final class SmokeTest {
             DestructionManager.explode(level, sky, 3.0, null, 0.0, 0.0);
             check(true, "explosion in open air handled");
         }
+        if (tick == 240) {
+            safeZones(level);
+        }
+        if (tick == 300) {
+            craterCheck(level);
+            migration(level.getServer());
+        }
+        if (tick == 340) {
+            residents(level);
+        }
+    }
+
+    private static BlockPos craterCenter;
+
+    private static void safeZones(ServerLevel level) {
+        var zones = com.dbtenkaichi.world.SafeZones.zones();
+        check(zones.size() == 2, "landmark safe zones registered " + zones.size());
+        BlockPos kame = com.dbtenkaichi.world.Landmarks.sites().get(com.dbtenkaichi.world.Landmarks.KAME_HOUSE);
+        BlockPos korin = com.dbtenkaichi.world.Landmarks.sites().get(com.dbtenkaichi.world.Landmarks.KORIN_TOWER);
+        if (kame == null || korin == null) {
+            check(false, "landmark sites available for safe zone checks");
+            return;
+        }
+        level.getChunk(kame.getX() >> 4, kame.getZ() >> 4);
+        level.getChunk(korin.getX() >> 4, korin.getZ() >> 4);
+        BlockPos floor = kame.below();
+        var before = level.getBlockState(floor);
+        check(com.dbtenkaichi.world.SafeZones.isProtected(level, floor) && com.dbtenkaichi.world.SafeZones.isProtected(level, korin.below()), "landmark blocks are inside a safe zone");
+        DestructionManager.explode(level, Vec3.atCenterOf(floor), 8.0, null, 0.0, 0.0);
+        level.explode(null, floor.getX() + 0.5, floor.getY() + 1.0, floor.getZ() + 0.5, 4.0f, net.minecraft.world.level.Level.ExplosionInteraction.TNT);
+        DestructionManager.explode(level, Vec3.atCenterOf(korin.below()), 8.0, null, 0.0, 0.0);
+        check(level.getBlockState(floor) == before && !level.getBlockState(korin.below()).isAir(), "Tenkaichi and vanilla explosions cannot damage landmarks");
+        var zombie = EntityTypes.ZOMBIE.spawn(level, kame.offset(2, 0, 0), EntitySpawnReason.COMMAND);
+        check(zombie == null || level.getEntity(zombie.getUUID()) == null, "mobs cannot spawn inside a landmark safe zone");
+        level.getChunk(40 >> 4, 40 >> 4);
+        craterCenter = new BlockPos(40, level.getMaxY() - 40, 40);
+        for (BlockPos pos : BlockPos.betweenClosed(craterCenter.offset(-9, -8, -9), craterCenter.offset(9, 0, 9))) {
+            level.setBlock(pos, net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(), 2);
+        }
+        check(!com.dbtenkaichi.world.SafeZones.isProtected(level, craterCenter), "crater test site is outside safe zones");
+        DestructionManager.crater(level, Vec3.atCenterOf(craterCenter), Techniques.BIG_BANG_ATTACK.explosionRadius(), null, 0.0, 1.0);
+        check(DestructionManager.battlePowerScale(null) == 1.0 && DestructionManager.scaledRadius(raider, 1000.0) <= com.dbtenkaichi.config.ConfigManager.gameplay().maxExplosionRadius, "explosion size is clamped");
+        check(raider == null || DestructionManager.battlePowerScale(raider) >= 0.7 && DestructionManager.battlePowerScale(raider) <= 2.8, "battle power explosion scale stays in range");
+    }
+
+    private static void craterCheck(ServerLevel level) {
+        if (craterCenter == null) {
+            return;
+        }
+        int air = 0;
+        for (BlockPos pos : BlockPos.betweenClosed(craterCenter.offset(-3, -3, -3), craterCenter.offset(3, 0, 3))) {
+            if (level.getBlockState(pos).isAir()) {
+                air++;
+            }
+        }
+        check(air > 60 && DestructionManager.pendingJobs() == 0, "Big Bang Attack carved a crater (" + air + " air blocks below the impact)");
+    }
+
+    private static void migration(MinecraftServer server) {
+        ServerLevel level = server.overworld();
+        BlockPos kame = com.dbtenkaichi.world.Landmarks.sites().get(com.dbtenkaichi.world.Landmarks.KAME_HOUSE);
+        BlockPos korin = com.dbtenkaichi.world.Landmarks.sites().get(com.dbtenkaichi.world.Landmarks.KORIN_TOWER);
+        if (kame == null || korin == null) {
+            return;
+        }
+        for (BlockPos site : com.dbtenkaichi.world.Landmarks.sites().values()) {
+            level.setChunkForced(site.getX() >> 4, site.getZ() >> 4, true);
+        }
+        var floor = level.getBlockState(kame.below());
+        level.setBlock(kame.below(), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 3);
+        level.setBlock(korin.below(), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 3);
+        level.setBlock(kame.above(3), net.minecraft.world.level.block.Blocks.COBBLESTONE.defaultBlockState(), 3);
+        int generation = com.dbtenkaichi.world.Landmarks.generation();
+        int rebuilt = com.dbtenkaichi.world.Landmarks.rebuildNow(server);
+        check(rebuilt == 3 && com.dbtenkaichi.world.Landmarks.generation() == generation + 1, "landmark rebuild ran for all structures (generation " + com.dbtenkaichi.world.Landmarks.generation() + ")");
+        check(level.getBlockState(kame.below()) == floor && !level.getBlockState(korin.below()).isAir(), "damaged landmarks were rebuilt");
+        check(level.getBlockState(kame.above(3)).isAir(), "debris inside a landmark was cleaned up");
+        check(com.dbtenkaichi.world.SafeZones.zones().size() == 2, "safe zones registered again after the rebuild");
+    }
+
+    private static void residents(ServerLevel level) {
+        for (var entry : com.dbtenkaichi.world.Landmarks.sites().entrySet()) {
+            BlockPos pos = entry.getValue();
+            List<MasterEntity> masters = level.getEntitiesOfClass(MasterEntity.class, new net.minecraft.world.phys.AABB(pos).inflate(30), m -> m.isAlive() && !m.isStaleLandmarkMaster());
+            check(masters.size() == 1, "landmark " + entry.getKey() + " has exactly one master after migration (" + masters.size() + ")");
+        }
     }
 
     private static void finish(MinecraftServer server) {
@@ -184,6 +270,9 @@ public final class SmokeTest {
             Tenkaichi.LOG.error("[DBT-SMOKE] RESULT FAIL {}", FAILURES);
         }
         server.overworld().setChunkForced(0, 0, false);
+        for (BlockPos site : com.dbtenkaichi.world.Landmarks.sites().values()) {
+            server.overworld().setChunkForced(site.getX() >> 4, site.getZ() >> 4, false);
+        }
         server.halt(false);
     }
 }
