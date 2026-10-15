@@ -49,6 +49,68 @@ public final class PlayerData {
     private final RuntimeState runtime = new RuntimeState();
     private final float[] practice = new float[StatType.COUNT];
     private int trainingSessions;
+    private String targetForm = "";
+    private int tailState;
+    private long tailRegrowAt;
+    private int absorptions;
+    private int absorbedStacks;
+    private final com.dbtenkaichi.mission.MissionState missions = new com.dbtenkaichi.mission.MissionState();
+
+    public static final int TAIL_FREE = 0;
+    public static final int TAIL_WRAPPED = 1;
+    public static final int TAIL_LOST = 2;
+
+    public String targetForm() {
+        return targetForm;
+    }
+
+    public void setTargetForm(String targetForm) {
+        this.targetForm = targetForm == null ? "" : targetForm;
+    }
+
+    public int tailState() {
+        return tailState;
+    }
+
+    public void setTailState(int tailState) {
+        this.tailState = Math.max(0, Math.min(2, tailState));
+    }
+
+    public long tailRegrowAt() {
+        return tailRegrowAt;
+    }
+
+    public void setTailRegrowAt(long tailRegrowAt) {
+        this.tailRegrowAt = tailRegrowAt;
+    }
+
+    public boolean hasTail() {
+        return race.has(com.dbtenkaichi.race.RacePassive.TAIL) && appearance.tail && tailState != TAIL_LOST;
+    }
+
+    public boolean tailExposed() {
+        return hasTail() && tailState == TAIL_FREE;
+    }
+
+    public int absorptions() {
+        return absorptions;
+    }
+
+    public void addAbsorption() {
+        absorptions++;
+    }
+
+    public int absorbedStacks() {
+        return absorbedStacks;
+    }
+
+    public void setAbsorbedStacks(int stacks) {
+        this.absorbedStacks = Math.max(0, Math.min(10, stacks));
+    }
+
+    public com.dbtenkaichi.mission.MissionState missions() {
+        return missions;
+    }
 
     public RuntimeState runtime() {
         return runtime;
@@ -334,6 +396,12 @@ public final class PlayerData {
         }
         tag.put("practice", practiceTag);
         tag.putInt("sessions", trainingSessions);
+        tag.putString("target_form", targetForm);
+        tag.putInt("tail_state", tailState);
+        tag.putLong("tail_regrow", tailRegrowAt);
+        tag.putInt("absorptions", absorptions);
+        tag.putInt("absorbed_stacks", absorbedStacks);
+        tag.put("missions", missions.save());
         if (returnPoint != null) {
             tag.put("return_point", returnPoint.copy());
         }
@@ -384,6 +452,12 @@ public final class PlayerData {
             practice[type.ordinal()] = Math.max(0.0f, practiceTag.getFloatOr(type.id(), 0.0f));
         }
         trainingSessions = tag.getIntOr("sessions", 0);
+        targetForm = tag.getStringOr("target_form", "");
+        tailState = tag.getIntOr("tail_state", TAIL_FREE);
+        tailRegrowAt = tag.getLongOr("tail_regrow", 0L);
+        absorptions = tag.getIntOr("absorptions", 0);
+        absorbedStacks = tag.getIntOr("absorbed_stacks", 0);
+        missions.load(tag.getCompoundOrEmpty("missions"));
     }
 
     public static PlayerData fromTag(CompoundTag tag) {

@@ -25,6 +25,22 @@ public class FighterNpcRenderer extends LivingEntityRenderer<FighterNpc, AvatarR
     }
 
     @Override
+    public boolean shouldRender(FighterNpc entity, net.minecraft.client.renderer.culling.Frustum frustum, double x, double y, double z, float partial) {
+        if (entity instanceof com.dbtenkaichi.entity.StoryNpc npc && npc.hidden()) {
+            return false;
+        }
+        return super.shouldRender(entity, frustum, x, y, z, partial);
+    }
+
+    @Override
+    protected boolean shouldShowName(FighterNpc entity, double distanceSqr) {
+        if (com.dbtenkaichi.client.story.ScenePlayer.active()) {
+            return false;
+        }
+        return super.shouldShowName(entity, distanceSqr);
+    }
+
+    @Override
     public AvatarRenderState createRenderState() {
         return new AvatarRenderState();
     }
@@ -49,9 +65,17 @@ public class FighterNpcRenderer extends LivingEntityRenderer<FighterNpc, AvatarR
     protected void scale(AvatarRenderState state, PoseStack poseStack) {
         super.scale(state, poseStack);
         EntityVisual visual = TenkaichiLayers.visual(state);
-        if (visual != null && Math.abs(visual.appearance.height - 1.0f) > 0.01f) {
-            float h = visual.appearance.height;
+        if (visual != null && Math.abs(visual.look().height - 1.0f) > 0.01f) {
+            float h = visual.look().height;
             poseStack.scale(h, h, h);
+        }
+        if (visual != null) {
+            float[] widths = {0.93f, 1.0f, 1.09f, 1.2f};
+            float width = widths[Math.max(0, Math.min(3, visual.look().build))] * (visual.look().presentation == 1 ? 0.93f : 1.0f);
+            float grow = com.dbtenkaichi.client.cinematic.CinematicDirector.growScale(visual);
+            if (width != 1.0f || grow != 1.0f) {
+                poseStack.scale(width * grow, grow, width * grow);
+            }
         }
     }
 
@@ -61,7 +85,7 @@ public class FighterNpcRenderer extends LivingEntityRenderer<FighterNpc, AvatarR
         if (visual == null) {
             return DefaultPlayerSkin.getDefaultSkin().body().texturePath();
         }
-        return CustomSkins.textureFor(visual.race, visual.appearance, visual.eyeColor(), visual.hairColor());
+        return CustomSkins.textureFor(visual.race, visual.look(), visual.eyeColor(), visual.hairColor());
     }
 
     @Override

@@ -104,6 +104,7 @@ public final class Lessons {
     }
 
     public static void grant(ServerPlayer player, PlayerData data, Lesson lesson) {
+        data.missions().setFlag("lesson:" + lesson.id(), true);
         switch (lesson.reward()) {
             case SKILL -> {
                 data.learnSkill(lesson.skill());

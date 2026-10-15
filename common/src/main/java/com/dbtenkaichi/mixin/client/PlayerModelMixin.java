@@ -17,8 +17,18 @@ public abstract class PlayerModelMixin {
     private void dbtenkaichi$applyPose(AvatarRenderState state, CallbackInfo ci) {
         try {
             EntityVisual visual = TenkaichiLayers.visual(state);
+            PlayerModel model = (PlayerModel) (Object) this;
             if (visual != null) {
-                PoseApplier.apply((PlayerModel) (Object) this, visual, state.ageInTicks);
+                PoseApplier.apply(model, visual, state.ageInTicks);
+            }
+            if (model.getClass() == PlayerModel.class) {
+                boolean show = visual == null || !visual.greatApe();
+                model.head.visible = show;
+                model.body.visible = show;
+                model.rightArm.visible = show;
+                model.leftArm.visible = show;
+                model.rightLeg.visible = show;
+                model.leftLeg.visible = show;
             }
         } catch (RuntimeException e) {
             RenderGuard.report("pose", e);

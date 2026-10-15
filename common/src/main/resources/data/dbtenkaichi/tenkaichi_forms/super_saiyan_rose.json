@@ -1,0 +1,55 @@
+{
+  "name": "form.dbtenkaichi.super_saiyan_rose",
+  "races": [
+    "saiyan"
+  ],
+  "parent": "dbtenkaichi:base",
+  "order": 58,
+  "requirements": {
+    "battlePower": 500000,
+    "stats": {
+      "potential": 50
+    },
+    "unlock": "trial",
+    "requiredForm": "dbtenkaichi:super_saiyan_god"
+  },
+  "bpMultiplier": 2500.0,
+  "speedMultiplier": 1.3,
+  "kiDrainPerSecond": 11.0,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 48.0,
+  "cinematicTicks": 170,
+  "cinematic": "super_saiyan_rose",
+  "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "god_ki",
+      "amount": 0.0
+    },
+    {
+      "type": "ki_power",
+      "amount": 0.35
+    },
+    {
+      "type": "intimidate",
+      "amount": 0.15
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.2,
+    "auraIntensity": 1.0,
+    "hairStyle": "super_spikes",
+    "hairColor": "#FF6FB4",
+    "hairGlow": true,
+    "eyeColor": "#E0306A",
+    "auraColor": "#FF5FA8",
+    "auraSecondary": "#FFD0E8"
+  },
+  "trialArena": "RUINED_CITY"
+}

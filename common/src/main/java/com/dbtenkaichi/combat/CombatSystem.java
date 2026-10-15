@@ -254,6 +254,9 @@ public final class CombatSystem {
         if (defRt != null && defRt.guarding && facing(target, attacker)) {
             guard = now - defRt.guardStart <= gp.perfectGuardWindowTicks ? DamageMath.GuardState.PERFECT : DamageMath.GuardState.GUARD;
         }
+        if (guard == DamageMath.GuardState.NONE && target instanceof ServerPlayer tailTarget) {
+            com.dbtenkaichi.race.TailSystem.onMeleeHit(attacker, tailTarget, PlayerManager.data(tailTarget), now);
+        }
 
         if (guard == DamageMath.GuardState.GUARD && (move == MeleeMove.GUARD_BREAK || move == MeleeMove.SMASH)) {
             defRt.guarding = false;

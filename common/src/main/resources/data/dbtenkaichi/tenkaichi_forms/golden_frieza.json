@@ -1,0 +1,49 @@
+{
+  "name": "form.dbtenkaichi.golden_frieza",
+  "races": [
+    "frieza_race"
+  ],
+  "parent": "dbtenkaichi:frieza_final_form",
+  "order": 50,
+  "requirements": {
+    "battlePower": 500000,
+    "stats": {
+      "potential": 50
+    },
+    "unlock": "trial"
+  },
+  "bpMultiplier": 1200.0,
+  "speedMultiplier": 1.35,
+  "kiDrainPerSecond": 10.0,
+  "staminaDrainPerSecond": 3.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 45.0,
+  "cinematicTicks": 180,
+  "cinematic": "golden_frieza",
+  "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "ki_power",
+      "amount": 0.3
+    },
+    {
+      "type": "speed",
+      "amount": 0.15
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.25,
+    "auraIntensity": 1.0,
+    "featureStyle": 3,
+    "skinColor": "#E8C030",
+    "featureColor": "#7A2FC0",
+    "auraColor": "#FFD43B",
+    "auraSecondary": "#FFF6C0"
+  },
+  "trialArena": "CANYON"
+}

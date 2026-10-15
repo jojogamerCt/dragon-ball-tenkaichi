@@ -1,0 +1,52 @@
+{
+  "name": "form.dbtenkaichi.semi_perfect",
+  "races": [
+    "bio_android"
+  ],
+  "parent": "dbtenkaichi:base",
+  "order": 10,
+  "requirements": {
+    "battlePower": 60000,
+    "stats": {
+      "potential": 12
+    },
+    "unlock": "absorb",
+    "absorptions": 1
+  },
+  "bpMultiplier": 8.0,
+  "speedMultiplier": 1.0,
+  "kiDrainPerSecond": 1.0,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 18.0,
+  "cinematicTicks": 160,
+  "cinematic": "semi_perfect",
+  "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "strike",
+      "amount": 0.2
+    },
+    {
+      "type": "regeneration",
+      "amount": 0.01
+    },
+    {
+      "type": "giant",
+      "amount": 1.25
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.0,
+    "auraIntensity": 1.0,
+    "build": 3,
+    "skinColor": "#6FAE3C",
+    "auraColor": "#B8FF8A",
+    "auraSecondary": "#FFFFFF"
+  }
+}

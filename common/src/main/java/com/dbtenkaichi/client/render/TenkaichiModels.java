@@ -32,6 +32,19 @@ public final class TenkaichiModels {
     public static final ModelLayerLocation BUST = new ModelLayerLocation(Tenkaichi.id("bust"), "main");
     public static final ModelLayerLocation CAT_FEATURES = new ModelLayerLocation(Tenkaichi.id("cat_features"), "main");
     public static final ModelLayerLocation CAT_NOSE = new ModelLayerLocation(Tenkaichi.id("cat_nose"), "main");
+    public static final ModelLayerLocation GREAT_APE_FUR = new ModelLayerLocation(Tenkaichi.id("great_ape_fur"), "main");
+    public static final ModelLayerLocation GREAT_APE_SKIN = new ModelLayerLocation(Tenkaichi.id("great_ape_skin"), "main");
+    public static final ModelLayerLocation GREAT_APE_EYES = new ModelLayerLocation(Tenkaichi.id("great_ape_eyes"), "main");
+    public static final ModelLayerLocation SSJ4_FUR = new ModelLayerLocation(Tenkaichi.id("ssj4_fur"), "main");
+    public static final ModelLayerLocation SCOUTER_FRAME = new ModelLayerLocation(Tenkaichi.id("scouter_frame"), "main");
+    public static final ModelLayerLocation SCOUTER_LENS = new ModelLayerLocation(Tenkaichi.id("scouter_lens"), "main");
+    public static final ModelLayerLocation HALO = new ModelLayerLocation(Tenkaichi.id("halo"), "main");
+    public static final ModelLayerLocation TAIL_WRAP = new ModelLayerLocation(Tenkaichi.id("tail_wrap"), "main");
+    public static final ModelLayerLocation MUSTACHE = new ModelLayerLocation(Tenkaichi.id("mustache"), "main");
+    public static final ModelLayerLocation FRIEZA_SECOND_HORNS = new ModelLayerLocation(Tenkaichi.id("frieza_second_horns"), "main");
+    public static final ModelLayerLocation FRIEZA_SECOND_DOME = new ModelLayerLocation(Tenkaichi.id("frieza_second_dome"), "main");
+    public static final ModelLayerLocation FRIEZA_THIRD_DOME = new ModelLayerLocation(Tenkaichi.id("frieza_third_dome"), "main");
+    public static final ModelLayerLocation FRIEZA_FINAL_DOME = new ModelLayerLocation(Tenkaichi.id("frieza_final_dome"), "main");
     public static final Map<Race, Map<FeatureTint, ModelLayerLocation>> FEATURES = new EnumMap<>(Race.class);
     public static final int TAIL_SEGMENTS = 8;
     public static final int THICK_TAIL_SEGMENTS = 9;
@@ -91,6 +104,19 @@ public final class TenkaichiModels {
         registrar.accept(BUST, () -> bust(emptyPlayerMesh(), 0.0f));
         registrar.accept(OUTFIT, () -> LayerDefinition.create(net.minecraft.client.model.player.PlayerModel.createMesh(new net.minecraft.client.model.geom.builders.CubeDeformation(0.07f), false), 64, 64));
         registrar.accept(CAT_NOSE, TenkaichiModels::catNose);
+        registrar.accept(GREAT_APE_FUR, () -> greatApe(0));
+        registrar.accept(GREAT_APE_SKIN, () -> greatApe(1));
+        registrar.accept(GREAT_APE_EYES, () -> greatApe(2));
+        registrar.accept(SSJ4_FUR, TenkaichiModels::ssj4Fur);
+        registrar.accept(SCOUTER_FRAME, () -> scouter(false));
+        registrar.accept(SCOUTER_LENS, () -> scouter(true));
+        registrar.accept(HALO, TenkaichiModels::halo);
+        registrar.accept(TAIL_WRAP, TenkaichiModels::tailWrap);
+        registrar.accept(MUSTACHE, TenkaichiModels::mustache);
+        registrar.accept(FRIEZA_SECOND_HORNS, () -> friezaForm(1, true));
+        registrar.accept(FRIEZA_SECOND_DOME, () -> friezaForm(1, false));
+        registrar.accept(FRIEZA_THIRD_DOME, () -> friezaForm(2, false));
+        registrar.accept(FRIEZA_FINAL_DOME, () -> friezaForm(3, false));
         FEATURES.forEach((race, byTint) -> byTint.forEach((tint, location) ->
                 registrar.accept(location, () -> LayerDefinition.create(feature(race, tint), 64, 64))));
     }
@@ -220,6 +246,39 @@ public final class TenkaichiModels {
                     b.spike(-4.4f, -6.0f, 0.0f, 0.3f, 0.0f, 1.1f, 4.0f, 2.4f);
                     b.spike(4.4f, -6.0f, 0.0f, 0.3f, 0.0f, -1.1f, 4.0f, 2.4f);
                 }
+            }
+            case SSJ4_MANE -> {
+                b.cap(true);
+                b.group("mane_root", 0.0f, -8.0f, 3.0f);
+                b.slab("mane", -4.9f, -0.4f, -0.4f, 9.8f, 15.0f, 3.8f, 0.16f);
+                b.slab("mane_inner", -4.2f, 1.6f, -1.2f, 8.4f, 10.0f, 1.4f, 0.1f);
+                float[][] tips = {{-3.8f, 6.0f, 0.35f}, {-1.9f, 7.5f, 0.15f}, {0.0f, 8.0f, 0.0f}, {1.9f, 7.5f, -0.15f}, {3.8f, 6.0f, -0.35f}};
+                for (float[] tip : tips) {
+                    b.spike(tip[0], 13.6f, 0.8f, PI - 0.3f, 0.0f, tip[2], tip[1], 3.2f);
+                }
+                b.endGroup();
+                b.spike(-2.6f, -7.8f, -3.7f, 2.45f, 0.1f, 0.15f, 4.0f, 2.4f);
+                b.spike(-0.4f, -8.0f, -3.8f, 2.55f, 0.0f, 0.0f, 4.6f, 2.6f);
+                b.spike(2.0f, -7.8f, -3.7f, 2.4f, -0.1f, -0.2f, 3.6f, 2.2f);
+                for (int i = 0; i < 5; i++) {
+                    float x = -3.2f + i * 1.6f;
+                    b.spike(x, -8.2f, -0.6f + (i % 2) * 0.9f, -0.55f - (i % 2) * 0.15f, 0.0f, -x * 0.14f, 6.5f + (i % 2) * 1.5f, 3.0f);
+                }
+                b.spike(-4.4f, -6.6f, -0.4f, -0.25f, 0.0f, -1.0f, 5.5f, 2.6f);
+                b.spike(4.4f, -6.6f, -0.4f, -0.25f, 0.0f, 1.0f, 5.5f, 2.6f);
+            }
+            case BEAST_SPIRE -> {
+                b.cap(true);
+                b.spike(0.0f, -8.2f, 0.2f, -0.1f, 0.0f, 0.0f, 17.0f, 4.8f);
+                b.spike(-1.7f, -8.0f, 1.0f, -0.3f, 0.0f, -0.18f, 13.0f, 3.8f);
+                b.spike(1.7f, -8.0f, 1.0f, -0.3f, 0.0f, 0.18f, 13.0f, 3.8f);
+                b.spike(-1.0f, -8.0f, 2.4f, -0.55f, 0.0f, -0.1f, 11.0f, 3.4f);
+                b.spike(1.0f, -8.0f, 2.4f, -0.55f, 0.0f, 0.1f, 11.0f, 3.4f);
+                b.spike(0.0f, -6.6f, 3.6f, -1.05f, 0.0f, 0.0f, 9.0f, 3.2f);
+                b.spike(-1.4f, -7.6f, -3.8f, 2.6f, 0.0f, 0.22f, 4.4f, 2.2f);
+                b.spike(1.2f, -7.8f, -3.8f, 2.5f, 0.0f, -0.18f, 3.6f, 2.0f);
+                b.spike(-4.3f, -6.8f, -0.6f, -0.35f, 0.0f, -0.85f, 6.0f, 2.6f);
+                b.spike(4.3f, -6.8f, -0.6f, -0.35f, 0.0f, 0.85f, 6.0f, 2.6f);
             }
             case GOHAN -> {
                 b.cap(true);
@@ -559,6 +618,124 @@ public final class TenkaichiModels {
             default -> any = false;
         }
         return any ? mesh : null;
+    }
+
+    private static LayerDefinition greatApe(int part) {
+        MeshDefinition mesh = emptyPlayerMesh();
+        PartDefinition root = mesh.getRoot();
+        PartDefinition head = root.getChild("head");
+        PartDefinition body = root.getChild("body");
+        PartDefinition rightArm = root.getChild("right_arm");
+        PartDefinition leftArm = root.getChild("left_arm");
+        PartDefinition rightLeg = root.getChild("right_leg");
+        PartDefinition leftLeg = root.getChild("left_leg");
+        switch (part) {
+            case 0 -> {
+                head.addOrReplaceChild("ape_head", CubeListBuilder.create().texOffs(0, 0).addBox(-5.0f, -9.5f, -4.6f, 10.0f, 10.0f, 9.0f)
+                        .texOffs(0, 20).addBox(-5.6f, -10.2f, -3.6f, 11.2f, 2.0f, 8.4f), PartPose.ZERO);
+                head.addOrReplaceChild("ear_r", CubeListBuilder.create().texOffs(40, 0).addBox(-7.2f, -6.8f, -1.0f, 2.4f, 3.4f, 2.0f), PartPose.ZERO);
+                head.addOrReplaceChild("ear_l", CubeListBuilder.create().texOffs(40, 0).addBox(4.8f, -6.8f, -1.0f, 2.4f, 3.4f, 2.0f), PartPose.ZERO);
+                body.addOrReplaceChild("ape_torso", CubeListBuilder.create().texOffs(0, 32).addBox(-7.0f, -1.5f, -4.2f, 14.0f, 14.0f, 8.4f)
+                        .texOffs(0, 0).addBox(-6.0f, -2.5f, -3.4f, 12.0f, 2.0f, 6.8f), PartPose.rotation(0.12f, 0.0f, 0.0f));
+                rightArm.addOrReplaceChild("ape_arm", CubeListBuilder.create().texOffs(0, 0).addBox(-6.0f, -3.0f, -3.2f, 6.4f, 14.0f, 6.4f), PartPose.ZERO);
+                leftArm.addOrReplaceChild("ape_arm", CubeListBuilder.create().texOffs(0, 0).addBox(-0.4f, -3.0f, -3.2f, 6.4f, 14.0f, 6.4f), PartPose.ZERO);
+                rightLeg.addOrReplaceChild("ape_leg", CubeListBuilder.create().texOffs(0, 0).addBox(-3.6f, -1.0f, -3.4f, 6.6f, 11.0f, 6.8f), PartPose.ZERO);
+                leftLeg.addOrReplaceChild("ape_leg", CubeListBuilder.create().texOffs(0, 0).addBox(-3.0f, -1.0f, -3.4f, 6.6f, 11.0f, 6.8f), PartPose.ZERO);
+            }
+            case 1 -> {
+                head.addOrReplaceChild("face", CubeListBuilder.create().texOffs(0, 0).addBox(-4.2f, -7.2f, -4.9f, 8.4f, 5.4f, 0.6f)
+                        .texOffs(0, 8).addBox(-3.4f, -3.6f, -7.4f, 6.8f, 4.0f, 3.0f), PartPose.ZERO);
+                head.addOrReplaceChild("ear_in_r", CubeListBuilder.create().texOffs(0, 16).addBox(-7.4f, -6.2f, -0.6f, 0.4f, 2.2f, 1.2f), PartPose.ZERO);
+                head.addOrReplaceChild("ear_in_l", CubeListBuilder.create().texOffs(0, 16).addBox(7.0f, -6.2f, -0.6f, 0.4f, 2.2f, 1.2f), PartPose.ZERO);
+                body.addOrReplaceChild("chest", CubeListBuilder.create().texOffs(0, 20).addBox(-5.4f, 0.5f, -4.6f, 10.8f, 9.5f, 0.6f), PartPose.rotation(0.12f, 0.0f, 0.0f));
+                rightArm.addOrReplaceChild("hand", CubeListBuilder.create().texOffs(0, 32).addBox(-6.2f, 11.0f, -3.4f, 6.8f, 3.0f, 6.8f), PartPose.ZERO);
+                leftArm.addOrReplaceChild("hand", CubeListBuilder.create().texOffs(0, 32).addBox(-0.6f, 11.0f, -3.4f, 6.8f, 3.0f, 6.8f), PartPose.ZERO);
+                rightLeg.addOrReplaceChild("foot", CubeListBuilder.create().texOffs(0, 44).addBox(-3.8f, 10.0f, -4.6f, 7.0f, 2.0f, 8.0f), PartPose.ZERO);
+                leftLeg.addOrReplaceChild("foot", CubeListBuilder.create().texOffs(0, 44).addBox(-3.2f, 10.0f, -4.6f, 7.0f, 2.0f, 8.0f), PartPose.ZERO);
+            }
+            default -> {
+                head.addOrReplaceChild("eye_r", CubeListBuilder.create().texOffs(0, 0).addBox(-3.4f, -6.2f, -5.1f, 2.4f, 1.2f, 0.4f), PartPose.ZERO);
+                head.addOrReplaceChild("eye_l", CubeListBuilder.create().texOffs(0, 0).addBox(1.0f, -6.2f, -5.1f, 2.4f, 1.2f, 0.4f), PartPose.ZERO);
+                head.addOrReplaceChild("teeth", CubeListBuilder.create().texOffs(0, 4).addBox(-2.6f, -1.4f, -7.6f, 5.2f, 0.6f, 0.3f), PartPose.ZERO);
+            }
+        }
+        return LayerDefinition.create(mesh, 64, 64);
+    }
+
+    private static LayerDefinition ssj4Fur() {
+        MeshDefinition mesh = emptyPlayerMesh();
+        PartDefinition root = mesh.getRoot();
+        CubeDeformation fur = new CubeDeformation(0.16f);
+        root.getChild("body").addOrReplaceChild("fur", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0f, 0.0f, -2.0f, 8.0f, 9.0f, 4.0f, fur)
+                .texOffs(0, 16).addBox(-4.0f, 9.0f, -2.0f, 8.0f, 3.0f, 4.0f, new CubeDeformation(0.2f)), PartPose.ZERO);
+        root.getChild("right_arm").addOrReplaceChild("fur", CubeListBuilder.create().texOffs(32, 0).addBox(-3.0f, -2.0f, -2.0f, 4.0f, 9.0f, 4.0f, fur), PartPose.ZERO);
+        root.getChild("left_arm").addOrReplaceChild("fur", CubeListBuilder.create().texOffs(32, 0).addBox(-1.0f, -2.0f, -2.0f, 4.0f, 9.0f, 4.0f, fur), PartPose.ZERO);
+        return LayerDefinition.create(mesh, 64, 64);
+    }
+
+    private static LayerDefinition scouter(boolean lens) {
+        MeshDefinition mesh = emptyPlayerMesh();
+        PartDefinition head = mesh.getRoot().getChild("head");
+        if (lens) {
+            head.addOrReplaceChild("lens", CubeListBuilder.create().texOffs(0, 0).addBox(0.8f, -6.6f, -5.0f, 3.6f, 2.6f, 0.3f), PartPose.ZERO);
+        } else {
+            head.addOrReplaceChild("ear", CubeListBuilder.create().texOffs(0, 0).addBox(4.1f, -6.2f, -1.6f, 1.0f, 3.2f, 3.2f)
+                    .texOffs(0, 8).addBox(4.2f, -6.0f, -4.8f, 0.8f, 1.0f, 3.4f)
+                    .texOffs(0, 12).addBox(4.0f, -6.8f, -5.2f, 0.8f, 3.4f, 0.8f), PartPose.ZERO);
+        }
+        return LayerDefinition.create(mesh, 64, 64);
+    }
+
+    private static LayerDefinition halo() {
+        MeshDefinition mesh = emptyPlayerMesh();
+        PartDefinition head = mesh.getRoot().getChild("head");
+        head.addOrReplaceChild("halo", CubeListBuilder.create().texOffs(0, 0)
+                .addBox(-3.0f, -12.4f, -3.0f, 6.0f, 0.6f, 1.0f)
+                .addBox(-3.0f, -12.4f, 2.0f, 6.0f, 0.6f, 1.0f)
+                .addBox(-3.0f, -12.4f, -2.0f, 1.0f, 0.6f, 4.0f)
+                .addBox(2.0f, -12.4f, -2.0f, 1.0f, 0.6f, 4.0f), PartPose.ZERO);
+        return LayerDefinition.create(mesh, 64, 64);
+    }
+
+    private static LayerDefinition tailWrap() {
+        MeshDefinition mesh = emptyPlayerMesh();
+        mesh.getRoot().getChild("body").addOrReplaceChild("belt", CubeListBuilder.create().texOffs(0, 0)
+                .addBox(-4.4f, 9.2f, -2.5f, 8.8f, 1.5f, 0.5f)
+                .addBox(-4.4f, 9.2f, 2.0f, 8.8f, 1.5f, 0.5f)
+                .addBox(-4.4f, 9.2f, -2.5f, 0.5f, 1.5f, 5.0f)
+                .addBox(3.9f, 9.2f, -2.5f, 0.5f, 1.5f, 5.0f)
+                .addBox(1.5f, 8.4f, -2.7f, 1.6f, 1.2f, 0.6f), PartPose.ZERO);
+        return LayerDefinition.create(mesh, 64, 64);
+    }
+
+    private static LayerDefinition mustache() {
+        MeshDefinition mesh = emptyPlayerMesh();
+        PartDefinition head = mesh.getRoot().getChild("head");
+        head.addOrReplaceChild("moustache_l", CubeListBuilder.create().texOffs(0, 0).addBox(-3.4f, -2.9f, -4.6f, 3.2f, 0.9f, 0.6f), PartPose.rotation(0.0f, 0.0f, -0.25f));
+        head.addOrReplaceChild("moustache_r", CubeListBuilder.create().texOffs(0, 0).addBox(0.2f, -2.9f, -4.6f, 3.2f, 0.9f, 0.6f), PartPose.rotation(0.0f, 0.0f, 0.25f));
+        return LayerDefinition.create(mesh, 64, 64);
+    }
+
+    private static LayerDefinition friezaForm(int style, boolean horns) {
+        MeshDefinition mesh = emptyPlayerMesh();
+        PartDefinition head = mesh.getRoot().getChild("head");
+        Builder b = new Builder(head);
+        if (horns) {
+            b.curved(-4.2f, -7.2f, 0.2f, 0.0f, 0.0f, -0.95f, 11.0f, 3.0f, 0.62f, 0.0f);
+            b.curved(4.2f, -7.2f, 0.2f, 0.0f, 0.0f, 0.95f, 11.0f, 3.0f, -0.62f, 0.0f);
+        } else if (style == 1) {
+            head.addOrReplaceChild("dome", CubeListBuilder.create().texOffs(0, 0).addBox(-4.6f, -9.3f, -4.6f, 9.2f, 3.9f, 9.2f)
+                    .texOffs(0, 24).addBox(-4.6f, -5.5f, 1.0f, 9.2f, 3.6f, 3.7f), PartPose.ZERO);
+        } else if (style == 2) {
+            head.addOrReplaceChild("dome", CubeListBuilder.create().texOffs(0, 0).addBox(-4.4f, -8.9f, -4.45f, 8.8f, 3.4f, 8.9f), PartPose.ZERO);
+            head.addOrReplaceChild("crest_a", CubeListBuilder.create().texOffs(0, 14).addBox(-3.8f, -3.0f, 0.0f, 7.6f, 3.2f, 8.0f), PartPose.offsetAndRotation(0.0f, -8.2f, -1.6f, 0.62f, 0.0f, 0.0f));
+            head.addOrReplaceChild("crest_b", CubeListBuilder.create().texOffs(0, 26).addBox(-2.8f, -2.6f, 0.0f, 5.6f, 2.6f, 6.0f), PartPose.offsetAndRotation(0.0f, -10.8f, 4.6f, 0.9f, 0.0f, 0.0f));
+            head.addOrReplaceChild("crest_c", CubeListBuilder.create().texOffs(0, 36).addBox(-1.8f, -2.0f, 0.0f, 3.6f, 2.0f, 4.0f), PartPose.offsetAndRotation(0.0f, -13.6f, 8.4f, 1.05f, 0.0f, 0.0f));
+        } else {
+            head.addOrReplaceChild("dome", CubeListBuilder.create().texOffs(0, 0).addBox(-4.4f, -8.8f, -4.45f, 8.8f, 1.6f, 8.9f)
+                    .texOffs(0, 12).addBox(-3.0f, -9.2f, -3.0f, 6.0f, 0.5f, 6.0f), PartPose.ZERO);
+        }
+        return LayerDefinition.create(mesh, 64, 64);
     }
 
     private static final class Builder {

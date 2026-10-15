@@ -1,0 +1,49 @@
+{
+  "name": "form.dbtenkaichi.frieza_full_power",
+  "races": [
+    "frieza_race"
+  ],
+  "parent": "dbtenkaichi:frieza_final_form",
+  "order": 35,
+  "requirements": {
+    "battlePower": 250000,
+    "stats": {
+      "potential": 35
+    },
+    "unlock": "trial"
+  },
+  "bpMultiplier": 80.0,
+  "speedMultiplier": 1.2,
+  "kiDrainPerSecond": 9.0,
+  "staminaDrainPerSecond": 2.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 42.0,
+  "cinematicTicks": 160,
+  "cinematic": "frieza_full_power",
+  "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "strike",
+      "amount": 0.35
+    },
+    {
+      "type": "ki_power",
+      "amount": 0.2
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.3,
+    "auraIntensity": 1.0,
+    "featureStyle": 3,
+    "build": 3,
+    "auraColor": "#9A50FF",
+    "auraSecondary": "#F0E0FF",
+    "lightning": true
+  },
+  "trialArena": "NAMEK"
+}

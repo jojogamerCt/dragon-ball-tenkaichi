@@ -1,8 +1,7 @@
 {
   "name": "form.dbtenkaichi.super_saiyan_3",
   "races": [
-    "saiyan",
-    "half_saiyan"
+    "saiyan"
   ],
   "parent": "dbtenkaichi:super_saiyan_2",
   "order": 30,
@@ -22,20 +21,32 @@
   "masteryPerSecond": 0.0008,
   "masteryDrainReduction": 0.6,
   "lowMasteryControlPenalty": 0.15,
-  "kiActivationCost": 80.0,
+  "kiActivationCost": 80,
   "cinematicTicks": 170,
   "cinematic": "super_saiyan_3_awakening",
   "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "strike",
+      "amount": 0.2
+    },
+    {
+      "type": "ki_power",
+      "amount": 0.2
+    }
+  ],
   "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.4,
+    "auraIntensity": 1.3,
     "hairStyle": "legendary_mane",
     "hairColor": "#FFD640",
     "hairGlow": true,
     "eyeColor": "#2FD8B4",
     "auraColor": "#FFC830",
     "auraSecondary": "#FFF4C0",
-    "auraStyle": "flame",
-    "lightning": true,
-    "auraScale": 1.4,
-    "auraIntensity": 1.3
-  }
+    "lightning": true
+  },
+  "trialArena": "CANYON"
 }

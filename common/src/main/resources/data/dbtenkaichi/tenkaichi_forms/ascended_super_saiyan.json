@@ -1,0 +1,52 @@
+{
+  "name": "form.dbtenkaichi.ascended_super_saiyan",
+  "races": [
+    "saiyan",
+    "half_saiyan"
+  ],
+  "parent": "dbtenkaichi:super_saiyan",
+  "order": 12,
+  "requirements": {
+    "battlePower": 60000,
+    "stats": {
+      "potential": 12
+    },
+    "unlock": "trial"
+  },
+  "bpMultiplier": 60.0,
+  "speedMultiplier": 1.1,
+  "kiDrainPerSecond": 4.5,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 28.5,
+  "cinematicTicks": 140,
+  "cinematic": "ascended_super_saiyan",
+  "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "strike",
+      "amount": 0.15
+    },
+    {
+      "type": "guard",
+      "amount": 0.1
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.25,
+    "auraIntensity": 1.0,
+    "hairStyle": "super_spikes",
+    "build": 2,
+    "hairColor": "#FFE25A",
+    "hairGlow": true,
+    "eyeColor": "#33D6B0",
+    "auraColor": "#FFD43B",
+    "auraSecondary": "#FFF6B8"
+  },
+  "trialArena": "TIME_CHAMBER"
+}

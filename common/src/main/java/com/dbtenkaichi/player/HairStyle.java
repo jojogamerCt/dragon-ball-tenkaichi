@@ -17,7 +17,9 @@ public enum HairStyle {
     ASCENDED_SPIKES,
     LEGENDARY_MANE,
     SSJ_VEGETA,
-    SSJ2_SPIKES;
+    SSJ2_SPIKES,
+    SSJ4_MANE,
+    BEAST_SPIRE;
 
     public static final int PLAYER_SELECTABLE = 10;
     private static final int[] LEGACY = {0, 1, 5, 4, 2, 9, 6};

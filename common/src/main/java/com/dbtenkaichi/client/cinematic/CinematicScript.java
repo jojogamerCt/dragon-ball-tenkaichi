@@ -16,6 +16,13 @@ public final class CinematicScript {
     final List<Track> streak = new ArrayList<>();
     final List<Track> cloudRush = new ArrayList<>();
     final List<Backdrop> backdrops = new ArrayList<>();
+    final List<ColorTrack> tints = new ArrayList<>();
+    final List<ColorTrack> swirls = new ArrayList<>();
+    final List<ColorTrack> cocoons = new ArrayList<>();
+    final List<Track> grow = new ArrayList<>();
+    final List<Track> speedLines = new ArrayList<>();
+    final List<Track> heartbeat = new ArrayList<>();
+    final List<Orb> orbs = new ArrayList<>();
     float formFrom = 1.0f;
     float revealAt = 0.6f;
     int flashColor = 0xFFFFFF;
@@ -42,6 +49,12 @@ public final class CinematicScript {
     public record Backdrop(float from, float to, int color, float zoom, float centerY, float yaw) {
     }
 
+    public record ColorTrack(float from, float to, int color, float a, float b) {
+    }
+
+    public record Orb(float from, float to, int color, float x, float y, float radius) {
+    }
+
     public enum EventKind {
         LIGHTNING,
         GROUND_BREAK,
@@ -50,7 +63,11 @@ public final class CinematicScript {
         SOUND_RUMBLE,
         SOUND_SCREAM,
         SOUND_BURST,
-        SOUND_POWER
+        SOUND_POWER,
+        SOUND_ROAR,
+        SOUND_HEARTBEAT,
+        SOUND_CHIME,
+        SOUND_SLASH
     }
 
     public record Event(float at, EventKind kind, float strength) {
@@ -109,6 +126,55 @@ public final class CinematicScript {
     public CinematicScript cloudRush(float from, float to, float a, float b) {
         cloudRush.add(new Track(from, to, a, b));
         return this;
+    }
+
+    public CinematicScript tint(float from, float to, int color, float a, float b) {
+        tints.add(new ColorTrack(from, to, color, a, b));
+        return this;
+    }
+
+    public CinematicScript swirl(float from, float to, int color, float a, float b) {
+        swirls.add(new ColorTrack(from, to, color, a, b));
+        return this;
+    }
+
+    public CinematicScript cocoon(float from, float to, int color, float a, float b) {
+        cocoons.add(new ColorTrack(from, to, color, a, b));
+        return this;
+    }
+
+    public CinematicScript grow(float from, float to, float a, float b) {
+        grow.add(new Track(from, to, a, b));
+        return this;
+    }
+
+    public CinematicScript speedLines(float from, float to, float a, float b) {
+        speedLines.add(new Track(from, to, a, b));
+        return this;
+    }
+
+    public CinematicScript heartbeat(float from, float to, float a, float b) {
+        heartbeat.add(new Track(from, to, a, b));
+        return this;
+    }
+
+    public CinematicScript orb(float from, float to, int color, float x, float y, float radius) {
+        orbs.add(new Orb(from, to, color, x, y, radius));
+        return this;
+    }
+
+    static ColorTrack colorAt(List<ColorTrack> tracks, float t) {
+        for (ColorTrack track : tracks) {
+            if (t >= track.from && t <= track.to) {
+                return track;
+            }
+        }
+        return null;
+    }
+
+    static float colorValue(ColorTrack track, float t) {
+        float k = track.to <= track.from ? 1.0f : (t - track.from) / (track.to - track.from);
+        return track.a + (track.b - track.a) * k;
     }
 
     public CinematicScript backdrop(float from, float to, int color, float zoom, float centerY, float yaw) {

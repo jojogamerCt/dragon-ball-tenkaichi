@@ -1,0 +1,68 @@
+{
+  "name": "form.dbtenkaichi.legendary_super_saiyan",
+  "races": [
+    "saiyan"
+  ],
+  "parent": "dbtenkaichi:wrathful",
+  "order": 47,
+  "requirements": {
+    "battlePower": 500000,
+    "stats": {
+      "potential": 50
+    },
+    "unlock": "trial"
+  },
+  "bpMultiplier": 3000.0,
+  "speedMultiplier": 1.15,
+  "kiDrainPerSecond": 13.0,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 54.0,
+  "cinematicTicks": 190,
+  "cinematic": "legendary_super_saiyan",
+  "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "strike",
+      "amount": 0.4
+    },
+    {
+      "type": "super_armor",
+      "amount": 0.0
+    },
+    {
+      "type": "intimidate",
+      "amount": 0.25
+    },
+    {
+      "type": "last_stand",
+      "amount": 0.2
+    },
+    {
+      "type": "rampage",
+      "amount": 0.4
+    },
+    {
+      "type": "giant",
+      "amount": 1.3
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.5,
+    "auraIntensity": 1.0,
+    "hairStyle": "super_spikes",
+    "hairColor": "#C8FF5A",
+    "hairGlow": true,
+    "eyeColor": "#F4F4F4",
+    "build": 3,
+    "auraColor": "#66FF44",
+    "auraSecondary": "#E8FFB0",
+    "lightning": true
+  },
+  "trialArena": "GLACIER"
+}

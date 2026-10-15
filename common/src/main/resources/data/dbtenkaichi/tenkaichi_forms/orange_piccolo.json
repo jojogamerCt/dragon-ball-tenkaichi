@@ -1,0 +1,53 @@
+{
+  "name": "form.dbtenkaichi.orange_piccolo",
+  "races": [
+    "namekian"
+  ],
+  "parent": "dbtenkaichi:super_namekian",
+  "order": 30,
+  "requirements": {
+    "battlePower": 650000,
+    "stats": {
+      "potential": 60
+    },
+    "unlock": "trial"
+  },
+  "bpMultiplier": 1500.0,
+  "speedMultiplier": 1.25,
+  "kiDrainPerSecond": 9.0,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 42.0,
+  "cinematicTicks": 170,
+  "cinematic": "orange_piccolo",
+  "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "strike",
+      "amount": 0.25
+    },
+    {
+      "type": "guard",
+      "amount": 0.2
+    },
+    {
+      "type": "regeneration",
+      "amount": 0.01
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.25,
+    "auraIntensity": 1.0,
+    "skinColor": "#E8862E",
+    "build": 2,
+    "eyeColor": "#E81E1E",
+    "auraColor": "#FF9A3A",
+    "auraSecondary": "#FFE0B0"
+  },
+  "trialArena": "RED_RIBBON_BASE"
+}

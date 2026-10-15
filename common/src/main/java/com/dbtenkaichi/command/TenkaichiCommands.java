@@ -140,6 +140,41 @@ public final class TenkaichiCommands {
                             ctx.getSource().sendSuccess(() -> Component.translatable("command.dbtenkaichi.landmarks_rebuilt", rebuilt), true);
                             return rebuilt;
                         })));
+        root.then(Commands.literal("mission").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                .then(Commands.literal("start").then(Commands.argument("player", EntityArgument.player())
+                        .then(Commands.argument("id", StringArgumentType.word())
+                                .suggests((ctx, b) -> SharedSuggestionProvider.suggest(com.dbtenkaichi.mission.Missions.all().keySet(), b))
+                                .executes(ctx -> {
+                                    ServerPlayer player = EntityArgument.getPlayer(ctx, "player");
+                                    var mission = com.dbtenkaichi.mission.Missions.get(StringArgumentType.getString(ctx, "id"));
+                                    if (mission == null) {
+                                        return 0;
+                                    }
+                                    com.dbtenkaichi.mission.MissionManager.start(player, PlayerManager.data(player), mission);
+                                    ctx.getSource().sendSuccess(() -> Component.translatable("command.dbtenkaichi.done"), true);
+                                    return 1;
+                                }))))
+                .then(Commands.literal("advance").then(Commands.argument("player", EntityArgument.player())
+                        .then(Commands.argument("id", StringArgumentType.word())
+                                .suggests((ctx, b) -> SharedSuggestionProvider.suggest(com.dbtenkaichi.mission.Missions.all().keySet(), b))
+                                .executes(ctx -> {
+                                    ServerPlayer player = EntityArgument.getPlayer(ctx, "player");
+                                    com.dbtenkaichi.mission.MissionManager.forceComplete(player, PlayerManager.data(player), StringArgumentType.getString(ctx, "id"));
+                                    ctx.getSource().sendSuccess(() -> Component.translatable("command.dbtenkaichi.done"), true);
+                                    return 1;
+                                }))))
+                .then(Commands.literal("reset").then(Commands.argument("player", EntityArgument.player())
+                        .executes(ctx -> {
+                            ServerPlayer player = EntityArgument.getPlayer(ctx, "player");
+                            PlayerData data = PlayerManager.data(player);
+                            com.dbtenkaichi.mission.MissionManager.onLeave(player);
+                            data.missions().reset();
+                            data.runtime().dataDirty = true;
+                            data.runtime().appearanceDirty = true;
+                            com.dbtenkaichi.mission.MissionManager.sync(player, data);
+                            ctx.getSource().sendSuccess(() -> Component.translatable("command.dbtenkaichi.done"), true);
+                            return 1;
+                        }))));
         root.then(Commands.literal("trial").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(Commands.literal("start")
                         .then(Commands.argument("player", EntityArgument.player())

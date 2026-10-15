@@ -18,9 +18,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
@@ -93,6 +91,63 @@ public final class CinematicDirector {
         return active(visual) ? CinematicScript.progressIn(script(visual).streak, progress(visual, partial)) : -1.0f;
     }
 
+    public static float growScale(EntityVisual visual) {
+        if (!active(visual)) {
+            return 1.0f;
+        }
+        CinematicScript script = script(visual);
+        if (script.grow.isEmpty()) {
+            return 1.0f;
+        }
+        FormDefinition form = targetForm(visual);
+        double giant = FormDefinition.passive(form, com.dbtenkaichi.form.FormPassive.GIANT);
+        if (giant <= 0) {
+            return 1.0f;
+        }
+        float k = CinematicScript.sample(script.grow, progress(visual, partial()));
+        return (float) (1.0 + (giant - 1.0) * Math.max(0.0f, Math.min(1.0f, k)));
+    }
+
+    public static int tintColor(EntityVisual visual, float partial) {
+        if (!active(visual)) {
+            return 0;
+        }
+        CinematicScript script = script(visual);
+        float t = progress(visual, partial);
+        CinematicScript.ColorTrack track = CinematicScript.colorAt(script.tints, t);
+        if (track == null) {
+            return 0;
+        }
+        int a = Math.round(Math.max(0.0f, Math.min(1.0f, CinematicScript.colorValue(track, t))) * 255);
+        return a << 24 | (track.color() & 0xFFFFFF);
+    }
+
+    public static float speedLines(EntityVisual visual, float partial) {
+        return active(visual) ? CinematicScript.sample(script(visual).speedLines, progress(visual, partial)) : 0.0f;
+    }
+
+    public static float heartbeat(EntityVisual visual, float partial) {
+        return active(visual) ? CinematicScript.sample(script(visual).heartbeat, progress(visual, partial)) : 0.0f;
+    }
+
+    public static java.util.List<CinematicScript.Orb> orbs(EntityVisual visual, float partial) {
+        if (!active(visual)) {
+            return java.util.List.of();
+        }
+        float t = progress(visual, partial);
+        java.util.List<CinematicScript.Orb> out = new java.util.ArrayList<>();
+        for (CinematicScript.Orb orb : script(visual).orbs) {
+            if (t >= orb.from() && t <= orb.to()) {
+                out.add(orb);
+            }
+        }
+        return out;
+    }
+
+    public static int flashColor(EntityVisual visual) {
+        return active(visual) ? script(visual).flashColor : 0xFFFFFF;
+    }
+
     public static long cloudOffset() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) {
@@ -145,14 +200,11 @@ public final class CinematicDirector {
         double pitchRad = Math.toRadians(pitch);
         Vec3 forward = new Vec3(-Math.sin(rad), 0, Math.cos(rad));
         Vec3 desired = target.add(forward.scale(distance * Math.cos(pitchRad))).add(0, distance * Math.sin(pitchRad), 0);
-        HitResult hit = entity.level().clip(new ClipContext(target, desired, ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, entity));
-        Vec3 position = desired;
-        if (hit.getType() != HitResult.Type.MISS) {
-            Vec3 dir = desired.subtract(target);
-            double allowed = Math.max(0.6, hit.getLocation().distanceTo(target) - 0.3);
-            position = target.add(dir.normalize().scale(allowed));
-        }
-        return new CameraPose(position, yaw + 180.0f, pitch);
+        Vec3 position = CameraSolver.solve(entity.level(), target, desired, entity, "form:" + entity.getId() + ":" + visual.cinematicStart + ":" + shot.from());
+        Vec3 look = target.subtract(position);
+        float lookYaw = (float) (Math.toDegrees(Math.atan2(look.z, look.x)) - 90.0);
+        float lookPitch = (float) (-Math.toDegrees(Math.atan2(look.y, Math.sqrt(look.x * look.x + look.z * look.z))));
+        return new CameraPose(position, lookYaw, lookPitch);
     }
 
     public static void tick(Minecraft mc) {
@@ -190,6 +242,14 @@ public final class CinematicDirector {
             float rocks = CinematicScript.sample(script.rocks, now);
             if (rocks > 0.0f) {
                 spawnRocks(level, entity, rocks);
+            }
+            CinematicScript.ColorTrack swirl = CinematicScript.colorAt(script.swirls, now);
+            if (swirl != null) {
+                swirl(entity, swirl.color(), CinematicScript.colorValue(swirl, now));
+            }
+            CinematicScript.ColorTrack cocoon = CinematicScript.colorAt(script.cocoons, now);
+            if (cocoon != null) {
+                cocoon(entity, cocoon.color(), CinematicScript.colorValue(cocoon, now));
             }
             if (entity == mc.player) {
                 float shake = CinematicScript.sample(script.shake, now);
@@ -232,6 +292,10 @@ public final class CinematicDirector {
             case SOUND_SCREAM -> sound(level, entity, ModSounds.TRANSFORM_SCREAM.get(), 1.6f * event.strength(), 1.0f);
             case SOUND_BURST -> sound(level, entity, ModSounds.AURA_BURST.get(), 2.0f * event.strength(), 0.85f);
             case SOUND_POWER -> sound(level, entity, ModSounds.TRANSFORM.get(), 1.4f * event.strength(), 1.0f);
+            case SOUND_ROAR -> sound(level, entity, ModSounds.TRANSFORM_SCREAM.get(), 2.2f * event.strength(), 0.45f);
+            case SOUND_HEARTBEAT -> sound(level, entity, ModSounds.TRANSFORM_RUMBLE.get(), 1.6f * event.strength(), 1.8f);
+            case SOUND_CHIME -> sound(level, entity, ModSounds.KI_CHARGE_START.get(), 1.4f * event.strength(), 1.9f);
+            case SOUND_SLASH -> sound(level, entity, ModSounds.SWING.get(), 1.6f * event.strength(), 0.7f);
         }
     }
 
@@ -306,6 +370,40 @@ public final class CinematicDirector {
         if (random.nextFloat() < 0.4f) {
             CombatFxHandler.spawn(ModParticles.LIGHTNING, 0xFFF4B0, entity.getX() + (random.nextDouble() - 0.5) * 2, entity.getY() + random.nextDouble() * 2.5,
                     entity.getZ() + (random.nextDouble() - 0.5) * 2, 0, 0, 0, 1.4f);
+        }
+    }
+
+    private static void swirl(Entity entity, int color, float strength) {
+        if (strength <= 0.0f) {
+            return;
+        }
+        float time = ClientState.clientTicks + partial();
+        int n = Math.max(2, Math.round(10 * strength * com.dbtenkaichi.config.ConfigManager.client().quality().particleBudget));
+        double h = entity.getBbHeight();
+        for (int i = 0; i < n; i++) {
+            double a = time * 0.35 + i * Math.PI * 2 / n;
+            double y = (i * 0.37 + time * 0.05) % 1.0 * h * 1.3;
+            double r = 0.9 + 0.4 * Math.sin(a * 2.0) + entity.getBbWidth();
+            CombatFxHandler.spawn(ModParticles.KI_SPARK, i % 3 == 0 ? 0xFFFFFF : color, entity.getX() + Math.cos(a) * r, entity.getY() + y, entity.getZ() + Math.sin(a) * r,
+                    -Math.sin(a) * 0.12, 0.04, Math.cos(a) * 0.12, 1.4f);
+        }
+    }
+
+    private static void cocoon(Entity entity, int color, float strength) {
+        if (strength <= 0.0f) {
+            return;
+        }
+        RandomSource random = entity.level().getRandom();
+        int n = Math.max(3, Math.round(24 * strength * com.dbtenkaichi.config.ConfigManager.client().quality().particleBudget));
+        double radius = 1.0 + entity.getBbHeight() * 0.6;
+        double cy = entity.getY() + entity.getBbHeight() * 0.55;
+        for (int i = 0; i < n; i++) {
+            double u = random.nextDouble() * Math.PI * 2;
+            double v = Math.acos(2 * random.nextDouble() - 1);
+            double x = Math.sin(v) * Math.cos(u) * radius;
+            double y = Math.cos(v) * radius * 1.2;
+            double z = Math.sin(v) * Math.sin(u) * radius;
+            CombatFxHandler.spawn(ModParticles.ENERGY_ORB, random.nextFloat() < 0.25f ? 0xFFFFFF : color, entity.getX() + x, cy + y, entity.getZ() + z, 0, 0, 0, 2.6f);
         }
     }
 

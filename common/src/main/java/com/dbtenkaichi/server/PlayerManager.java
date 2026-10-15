@@ -42,6 +42,10 @@ public final class PlayerManager {
     private static final Identifier FALL_ID = id("trained_body_fall");
     private static final Identifier FORM_SPEED_ID = id("form_speed");
     private static final Identifier CHARGE_SLOW_ID = id("charge_slow");
+    private static final Identifier FORM_ARMOR_ID = id("form_super_armor");
+    private static final Identifier FORM_STEP_ID = id("form_giant_step");
+    private static final Identifier FORM_REACH_ID = id("form_giant_reach");
+    private static final Identifier FORM_BLOCK_REACH_ID = id("form_giant_block_reach");
 
     private PlayerManager() {
     }
@@ -79,6 +83,11 @@ public final class PlayerManager {
         flush(player, data, player.level().getGameTime());
         if (!data.isCreated()) {
             openCreator(player);
+        } else {
+            if (ConfigManager.gameplay().storyAutoStart && data.missions().active().isEmpty() && !data.missions().isCompleted(com.dbtenkaichi.mission.Missions.FIRST_STORY)) {
+                com.dbtenkaichi.mission.MissionManager.startStory(player, data);
+            }
+            com.dbtenkaichi.mission.MissionManager.sync(player, data);
         }
     }
 
@@ -107,6 +116,7 @@ public final class PlayerManager {
         PlayerData data = data(player);
         com.dbtenkaichi.ki.BeamClashManager.onLeave(player);
         com.dbtenkaichi.training.TrialManager.onLeave(player);
+        com.dbtenkaichi.mission.MissionManager.onLeave(player);
         if (data.runtime().flying) {
             player.setNoGravity(false);
         }
@@ -159,6 +169,10 @@ public final class PlayerManager {
         if (data.hasSkill(id) || !unlock.allows(data.race())) {
             return;
         }
+        if (!requirementMet(data, unlock.requirement())) {
+            player.sendSystemMessage(Component.translatable("message.dbtenkaichi.technique_requirement"));
+            return;
+        }
         if (com.dbtenkaichi.stats.BattlePower.base(data.stats(), ConfigManager.balance()) < unlock.battlePower()) {
             player.sendSystemMessage(Component.translatable("message.dbtenkaichi.lesson_locked", unlock.battlePower()));
             return;
@@ -172,6 +186,19 @@ public final class PlayerManager {
         data.runtime().dataDirty = true;
         player.sendSystemMessage(Component.translatable("message.dbtenkaichi.learned", Component.translatable(unlock.technique().translationKey())));
         com.dbtenkaichi.combat.CombatSystem.playSound(player.level(), player, com.dbtenkaichi.registry.ModSounds.UI_CONFIRM.get(), 1.0f, 1.0f);
+    }
+
+    public static boolean requirementMet(PlayerData data, String requirement) {
+        if (requirement == null || requirement.isEmpty()) {
+            return true;
+        }
+        if (requirement.startsWith("form:")) {
+            return data.hasUnlockedForm(requirement.substring(5));
+        }
+        if (requirement.startsWith("mission:")) {
+            return data.missions().isCompleted(requirement.substring(8));
+        }
+        return true;
     }
 
     public static void formTrial(ServerPlayer player, PlayerData data, int index) {
@@ -264,9 +291,23 @@ public final class PlayerManager {
                 rt.stateDirty = true;
                 rt.dataDirty = true;
             } else {
-                double drain = form.drainAt(data.mastery(form.id)) * DerivedStats.kiCostMultiplier(data.stats(), data.race(), cfg) / 20.0;
+                double efficient = Math.min(0.95, form.passive(com.dbtenkaichi.form.FormPassive.EFFICIENT));
+                double drain = form.drainAt(data.mastery(form.id)) * (1.0 - efficient) * DerivedStats.kiCostMultiplier(data.stats(), data.race(), cfg) / 20.0;
                 ki -= drain;
-                stamina -= form.staminaDrainPerSecond / 20.0;
+                if (!form.has(com.dbtenkaichi.form.FormPassive.STAMINA_FREE)) {
+                    stamina -= form.staminaDrainPerSecond / 20.0;
+                }
+                double regenPassive = form.passive(com.dbtenkaichi.form.FormPassive.REGENERATION);
+                if (regenPassive > 0 && now % 20 == 0 && player.getHealth() < player.getMaxHealth()) {
+                    player.heal((float) (player.getMaxHealth() * regenPassive));
+                }
+                double kiRegenPassive = form.passive(com.dbtenkaichi.form.FormPassive.KI_REGEN);
+                if (kiRegenPassive > 0) {
+                    ki += DerivedStats.kiRegenPerSecond(data.stats(), data.race(), cfg) * kiRegenPassive / 20.0;
+                }
+                if (rt.battleLust > 0 && rt.battleLustUntil <= now) {
+                    rt.battleLust = 0;
+                }
                 if (form.healthDrainPerSecond > 0.0 && player.getHealth() > 2.0f) {
                     float drained = (float) (form.healthDrainPerSecond * (1.0 - 0.5 * data.mastery(form.id)) / 20.0);
                     player.setHealth(Math.max(2.0f, player.getHealth() - drained));
@@ -321,6 +362,9 @@ public final class PlayerManager {
         data.setStamina(clamp(stamina, 0, maxStamina));
 
         ZenkaiSystem.tick(player, data, now);
+        com.dbtenkaichi.race.TailSystem.tick(player, data, now);
+        com.dbtenkaichi.race.KiSense.tick(player, data, now);
+        com.dbtenkaichi.mission.MissionManager.onOtherWorld(player, data, now);
         TransformationSystem.tickTransforming(player, data, now);
         FlightSystem.tick(player, data, now);
         TrainingSystem.tick(player, data, now);
@@ -341,10 +385,17 @@ public final class PlayerManager {
         float healthRatio = player.getMaxHealth() > 0 ? player.getHealth() / player.getMaxHealth() : 1.0f;
         setModifier(player, Attributes.MAX_HEALTH, HEALTH_ID, data.isCreated() ? DerivedStats.bonusHealth(data.stats(), cfg) : 0.0, AttributeModifier.Operation.ADD_VALUE);
         setModifier(player, Attributes.MOVEMENT_SPEED, SPEED_ID, data.isCreated() ? DerivedStats.movementBonus(data.stats()) : 0.0, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
-        setModifier(player, Attributes.SCALE, SCALE_ID, data.isCreated() ? data.appearance().height - 1.0 : 0.0, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
-        setModifier(player, Attributes.SAFE_FALL_DISTANCE, FALL_ID, data.isCreated() ? Math.min(40.0, 3.0 + data.stat(StatType.CONSTITUTION) * 0.25 + data.stat(StatType.AGILITY) * 0.15) : 0.0, AttributeModifier.Operation.ADD_VALUE);
         FormDefinition form = data.isTransformed() ? FormRegistry.get(data.form(), false) : null;
-        setModifier(player, Attributes.MOVEMENT_SPEED, FORM_SPEED_ID, (form == null ? 1.0 : form.speedMultiplier * form.controlFactor(data.mastery(form.id))) * com.dbtenkaichi.form.KaiokenSystem.speed(data.runtime().kaioken) - 1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+        double giant = FormDefinition.passive(form, com.dbtenkaichi.form.FormPassive.GIANT);
+        double scale = data.isCreated() ? data.appearance().height * (giant > 0 ? giant : 1.0) : 1.0;
+        setModifier(player, Attributes.SCALE, SCALE_ID, scale - 1.0, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+        setModifier(player, Attributes.STEP_HEIGHT, FORM_STEP_ID, giant > 0 ? giant * 0.6 : 0.0, AttributeModifier.Operation.ADD_VALUE);
+        setModifier(player, Attributes.ENTITY_INTERACTION_RANGE, FORM_REACH_ID, giant > 0 ? giant : 0.0, AttributeModifier.Operation.ADD_VALUE);
+        setModifier(player, Attributes.BLOCK_INTERACTION_RANGE, FORM_BLOCK_REACH_ID, giant > 0 ? giant : 0.0, AttributeModifier.Operation.ADD_VALUE);
+        setModifier(player, Attributes.KNOCKBACK_RESISTANCE, FORM_ARMOR_ID, form != null && form.has(com.dbtenkaichi.form.FormPassive.SUPER_ARMOR) ? 1.0 : 0.0, AttributeModifier.Operation.ADD_VALUE);
+        setModifier(player, Attributes.SAFE_FALL_DISTANCE, FALL_ID, data.isCreated() ? Math.min(40.0, 3.0 + data.stat(StatType.CONSTITUTION) * 0.25 + data.stat(StatType.AGILITY) * 0.15) * (giant > 0 ? giant : 1.0) : 0.0, AttributeModifier.Operation.ADD_VALUE);
+        double formSpeed = (form == null ? 1.0 : form.speedMultiplier * form.controlFactor(data.mastery(form.id)) * Math.max(0.2, 1.0 + form.passive(com.dbtenkaichi.form.FormPassive.SPEED)));
+        setModifier(player, Attributes.MOVEMENT_SPEED, FORM_SPEED_ID, formSpeed * com.dbtenkaichi.form.KaiokenSystem.speed(data.runtime().kaioken) - 1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
         setModifier(player, Attributes.MOVEMENT_SPEED, CHARGE_SLOW_ID, data.runtime().charging ? -0.6 : 0.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
         com.dbtenkaichi.race.RaceMechanics.applyAttributes(player, data);
         float newMax = player.getMaxHealth();
@@ -412,6 +463,8 @@ public final class PlayerManager {
     public static Packets.Appearance appearancePacket(ServerPlayer player, PlayerData data) {
         CompoundTag tag = data.appearance().save();
         tag.putBoolean("created", data.isCreated());
+        tag.putInt("tail_state", data.tailState());
+        tag.putBoolean("halo", data.missions().flag("halo"));
         return new Packets.Appearance(player.getId(), data.race().ordinal(), tag);
     }
 

@@ -31,7 +31,13 @@ public final class ModEntities {
     public static final Supplier<EntityType<RaiderEntity>> RAIDER = register("saiyan_raider",
             EntityType.Builder.<RaiderEntity>of(RaiderEntity::new, MobCategory.MONSTER).sized(0.6f, 1.9f).eyeHeight(1.7f).clientTrackingRange(10));
 
+    public static final Supplier<EntityType<com.dbtenkaichi.entity.PowerBallEntity>> POWER_BALL = register("power_ball",
+            EntityType.Builder.<com.dbtenkaichi.entity.PowerBallEntity>of(com.dbtenkaichi.entity.PowerBallEntity::new, MobCategory.MISC).sized(1.0f, 1.0f).noLootTable().noSave().clientTrackingRange(16).updateInterval(2));
+    public static final Supplier<EntityType<com.dbtenkaichi.entity.StoryNpc>> STORY_NPC = register("story_character",
+            EntityType.Builder.<com.dbtenkaichi.entity.StoryNpc>of(com.dbtenkaichi.entity.StoryNpc::new, MobCategory.MISC).sized(0.6f, 1.9f).eyeHeight(1.7f).clientTrackingRange(16));
+
     static {
+        ATTRIBUTES.put(STORY_NPC, com.dbtenkaichi.entity.StoryNpc::createAttributes);
         ATTRIBUTES.put(MASTER, MasterEntity::createAttributes);
         ATTRIBUTES.put(RAIDER, RaiderEntity::createAttributes);
     }

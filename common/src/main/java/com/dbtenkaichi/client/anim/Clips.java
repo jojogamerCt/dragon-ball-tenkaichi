@@ -128,6 +128,26 @@ public final class Clips {
                 f(0.0f, p().rightArm(-1.62f, -0.15f, 0).leftArm(-1.62f, 0.15f, 0).head(0.25f, 0, 0).rightLeg(0.5f, 0, 0.15f).leftLeg(-0.6f, 0, -0.1f)),
                 f(0.5f, p().rightArm(-1.5f, -0.2f, 0.05f).leftArm(-1.5f, 0.2f, -0.05f).head(0.35f, 0, 0)),
                 f(1.0f, p().rightArm(-1.6f, -0.15f, 0).leftArm(-1.6f, 0.15f, 0).head(0.25f, 0, 0)));
+        put(AnimClip.DISC_THROW,
+                f(0.0f, p().rightArm(-3.0f, 0, 0.1f).body(-0.1f, 0.2f, 0)),
+                f(0.4f, p().rightArm(-1.4f, 0.4f, 0).body(0.15f, -0.3f, 0)),
+                f(1.0f, p().rightArm(-0.6f, 0.2f, 0.1f).body(0, 0, 0)));
+        put(AnimClip.SOLAR_FLARE,
+                f(0.0f, p().rightArm(-2.6f, 0.5f, 0).leftArm(-2.6f, -0.5f, 0).head(0.1f, 0, 0)),
+                f(0.5f, p().rightArm(-2.2f, 0.25f, 0.4f).leftArm(-2.2f, -0.25f, -0.4f).head(-0.2f, 0, 0)),
+                f(1.0f, p().rightArm(-0.4f, 0, 0.2f).leftArm(-0.4f, 0, -0.2f).head(0, 0, 0)));
+        put(AnimClip.BARRIER_CAST,
+                f(0.0f, p().rightArm(-0.2f, 0, 0.4f).leftArm(-0.2f, 0, -0.4f).rightLeg(0, 0, 0.2f).leftLeg(0, 0, -0.2f)),
+                f(0.5f, p().rightArm(-0.4f, 0, 1.2f).leftArm(-0.4f, 0, -1.2f).head(-0.25f, 0, 0).rightLeg(0, 0, 0.3f).leftLeg(0, 0, -0.3f)),
+                f(1.0f, p().rightArm(-0.1f, 0, 0.6f).leftArm(-0.1f, 0, -0.6f).head(0, 0, 0)));
+        put(AnimClip.RAISE_THROW,
+                f(0.0f, p().rightArm(-3.0f, 0, 0.15f).leftArm(-3.0f, 0, -0.15f).head(-0.3f, 0, 0)),
+                f(0.45f, p().rightArm(-1.7f, 0, 0.1f).leftArm(-1.7f, 0, -0.1f).body(0.25f, 0, 0).head(0.1f, 0, 0)),
+                f(1.0f, p().rightArm(-0.8f, 0, 0.1f).leftArm(-0.8f, 0, -0.1f).body(0, 0, 0)));
+        put(AnimClip.GRAB,
+                f(0.0f, p().rightArm(-1.2f, -0.6f, 0).leftArm(-1.2f, 0.6f, 0).body(0.2f, 0, 0)),
+                f(0.5f, p().rightArm(-1.55f, 0.2f, 0).leftArm(-1.55f, -0.2f, 0).body(0.3f, 0, 0)),
+                f(1.0f, p().rightArm(-1.3f, 0.1f, 0).leftArm(-1.3f, -0.1f, 0).body(0.1f, 0, 0)));
 
         BASE.put(AnimPlayer.BaseState.STANCE, p().rightArm(-1.05f, -0.35f, 0.25f).leftArm(-1.25f, 0.35f, -0.25f));
         BASE.put(AnimPlayer.BaseState.HOVER, p().rightArm(0.12f, 0, 0.28f).leftArm(0.12f, 0, -0.28f).rightLeg(-0.3f, 0, 0.08f).leftLeg(-0.05f, 0, -0.08f));
@@ -154,6 +174,12 @@ public final class Clips {
         CHARGE.put(SkillStyle.MASENKO, p().body(-0.05f, 0, 0).head(0.05f, 0, 0).rightArm(-2.95f, 0.0f, 0.22f).leftArm(-2.95f, 0.0f, -0.22f).rightLeg(0, 0, 0.22f).leftLeg(0, 0, -0.22f));
         CHARGE.put(SkillStyle.SPECIAL_BEAM_CANNON, p().body(0.06f, 0, 0).rightArm(-2.5f, 0.0f, 0.55f).leftArm(0.15f, 0, -0.2f).rightLeg(0, 0, 0.3f).leftLeg(0, 0, -0.3f));
         CHARGE.put(SkillStyle.FINAL_FLASH, p().body(-0.12f, 0, 0).head(-0.1f, 0, 0).rightArm(-0.05f, 0, 1.5f).leftArm(-0.05f, 0, -1.5f).rightLeg(0, 0, 0.32f).leftLeg(0, 0, -0.32f));
+        CHARGE.put(SkillStyle.DISC, p().rightArm(-3.0f, 0, 0.1f).leftArm(0.1f, 0, -0.3f).rightLeg(0, 0, 0.25f).leftLeg(0, 0, -0.25f));
+        CHARGE.put(SkillStyle.RAISED, p().rightArm(-3.0f, 0, 0.18f).leftArm(-3.0f, 0, -0.18f).head(-0.35f, 0, 0).rightLeg(0, 0, 0.25f).leftLeg(0, 0, -0.25f));
+        CHARGE.put(SkillStyle.FACE, p().rightArm(-2.5f, 0.45f, 0).leftArm(-2.5f, -0.45f, 0).head(0.1f, 0, 0));
+        CHARGE.put(SkillStyle.TRIANGLE, p().rightArm(-1.55f, 0.4f, 0).leftArm(-1.55f, -0.4f, 0).rightLeg(0, 0, 0.3f).leftLeg(0, 0, -0.3f));
+        CHARGE.put(SkillStyle.BARRIER, p().rightArm(-0.4f, 0, 1.1f).leftArm(-0.4f, 0, -1.1f).rightLeg(0, 0, 0.3f).leftLeg(0, 0, -0.3f));
+        FIRE.put(SkillStyle.TRIANGLE, p().rightArm(-1.6f, 0.35f, 0).leftArm(-1.6f, -0.35f, 0).rightLeg(0.35f, 0, 0.15f).leftLeg(-0.45f, 0, -0.1f));
         FIRE.put(SkillStyle.KAMEHAMEHA, BASE.get(AnimPlayer.BaseState.BEAM_FIRE));
         FIRE.put(SkillStyle.GALICK_GUN, BASE.get(AnimPlayer.BaseState.BEAM_FIRE));
         FIRE.put(SkillStyle.MASENKO, p().body(0.1f, 0, 0).rightArm(-2.2f, -0.12f, 0).leftArm(-2.2f, 0.12f, 0).rightLeg(0.35f, 0, 0.15f).leftLeg(-0.45f, 0, -0.1f));

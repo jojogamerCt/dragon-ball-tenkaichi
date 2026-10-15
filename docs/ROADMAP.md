@@ -1,6 +1,6 @@
 # Roadmap — Dragon Block: Tenkaichi
 
-Stato aggiornato all'11 ottobre 2026. "Fatto" significa: codice presente, integrato, compilato su
+Stato aggiornato al 15 ottobre 2026. "Fatto" significa: codice presente, integrato, compilato su
 entrambi i loader e verificato nei limiti indicati in `TESTING.md`.
 
 ## Fase 1 — Fondamenta (completata)
@@ -17,7 +17,7 @@ entrambi i loader e verificato nei limiti indicati in `TESTING.md`.
 - [x] Tutte le 10 razze giocabili con passive reali, aspetto, modelli 3D e skin HD dedicati
 - [x] 12 statistiche persistenti, TP, limiti da Potenziale, pratica per statistica
 - [x] Battle Power con condizione, forma, soppressione
-- [ ] Altezza: applicata via attributo `scale`; editor espressioni/voce minimale
+- [ ] Altezza: applicata via attributo `scale`; editor espressioni minimale (opzione voce rimossa nella 0.3.0)
 
 ## Fase 3 — Combattimento (vertical slice)
 - [x] Combo leggere (5 colpi), pesanti contestuali (launcher, smash, guard break, rush), counter
@@ -35,13 +35,13 @@ entrambi i loader e verificato nei limiti indicati in `TESTING.md`.
 - [x] Beam Clash autoritativo con battiti a tempo, stagger, intervento esterno
 - [x] Distruzione ambientale configurabile
 - [x] Galick Gun, Masenko, Makankosappo, Final Flash, Big Bang Attack, Raggio della Morte, con pose canoniche
-- [ ] Destructo Disc, Spirit Bomb e altre
+- [x] Destructo Disc, Spirit Bomb e le altre tecniche canoniche per razza (0.3.0)
 
 ## Fase 5 — Trasformazioni
 - [x] Architettura data-driven via datapack, sincronizzata ai client
 - [x] Super Saiyan con sblocco per rabbia, cinematica alla prima attivazione, padronanza
 - [x] SS2, SS3 e Kaioken combinabile
-- [ ] Gradi SS, SS4, God, Blue, UI/UE e percorsi razziali; cutscene dedicate SS2/SS3
+- [x] Gradi SS, SS4, God, Blue, UI/UE e percorsi razziali, con cutscene dedicate (0.3.0)
 
 ## Fase 6 — NPC e Boss
 - [x] Maestro di arti marziali (allenatore) e Predone Saiyan con FSM gerarchica (10 stati, seconda fase)
@@ -49,6 +49,6 @@ entrambi i loader e verificato nei limiti indicati in `TESTING.md`.
 - [ ] Boss multi-fase canonici, spawn naturale, scaling avanzato
 
 ## Fasi 7–10
-Avviate: dimensione delle prove e luoghi iconici (Kame House, Torre di Karin, Palazzo del Supremo).
-Non iniziate: altre dimensioni (Aldilà, Namek), Sfere del Drago, story mode, fusioni, tornei, ottimizzazione
-avanzata e benchmark. Vedi `FEATURES.md` per l'elenco completo dei requisiti.
+Fatto: dimensione delle prove, luoghi iconici, Aldilà (Via del Serpente, pianeta di Re Kaio), modalità storia con la
+saga dei Saiyan e sistema di missioni (0.3.0).
+Non iniziate: Namek, Sfere del Drago, saghe successive, fusioni, tornei, ottimizzazione avanzata e benchmark. Vedi `FEATURES.md` per l'elenco completo dei requisiti.

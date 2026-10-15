@@ -48,7 +48,7 @@ public final class ClientSmokeTest {
         }
     }
 
-    private static void action(ActionType type, int arg) {
+    static void action(ActionType type, int arg) {
         Services.NETWORK.sendToServer(new Packets.Action(type.ordinal(), arg));
     }
 
@@ -217,14 +217,14 @@ public final class ClientSmokeTest {
         command(mc, String.format(java.util.Locale.ROOT, "tp %s %d %d %d facing %d %d %d", name, pos.getX() + dx, pos.getY() + dy, pos.getZ() + dz, pos.getX() + lx, pos.getY() + ly, pos.getZ() + lz));
     }
 
-    private static void command(Minecraft mc, String cmd) {
+    static void command(Minecraft mc, String cmd) {
         IntegratedServer server = mc.getSingleplayerServer();
         if (server != null) {
             server.execute(() -> server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), cmd));
         }
     }
 
-    private static void shot(Minecraft mc, String name) {
+    static void shot(Minecraft mc, String name) {
         Screenshot.grab(mc.gameDirectory, "dbt_" + name + ".png", mc.gameRenderer.mainRenderTarget(), 1, message -> Tenkaichi.LOG.info("[DBT-CLIENT] screenshot {}: {}", name, message.getString()));
         LOG.add("shot " + name);
     }
@@ -282,7 +282,7 @@ public final class ClientSmokeTest {
                 a.auraColor = 0xE8F4FF;
                 a.outfit = 0;
                 Services.NETWORK.sendToServer(new Packets.CreateCharacter(Race.SAIYAN.ordinal(), a.presentation, 1.0f, a.build, a.skinColor, a.eyeStyle, a.eyeColor,
-                        a.eyebrowStyle, a.hairStyle, a.hairColor, a.expression, a.voice, a.auraColor, a.outfit, a.outfitPrimary, a.outfitSecondary, a.featureColor, true, false));
+                        a.eyebrowStyle, a.hairStyle, a.hairColor, a.expression, a.auraColor, a.outfit, a.outfitPrimary, a.outfitSecondary, a.featureColor, true, false));
                 mc.gui.setScreen(null);
                 command(mc, "time set day");
                 command(mc, "weather clear");
@@ -294,6 +294,7 @@ public final class ClientSmokeTest {
                 for (String stat : new String[]{"strength", "defense", "constitution", "ki_control", "ki_capacity", "ki_output", "speed", "agility", "stamina", "martial_arts", "spirit", "potential"}) {
                     command(mc, "tenkaichi setstat " + name + " " + stat + " 30");
                 }
+                command(mc, "tenkaichi mission reset " + name);
                 command(mc, "tenkaichi learn " + name + " dbtenkaichi:kamehameha");
                 command(mc, "tenkaichi unlockform " + name + " dbtenkaichi:super_saiyan");
                 command(mc, "tenkaichi restore " + name);
@@ -556,11 +557,17 @@ public final class ClientSmokeTest {
             case 1366 -> action(ActionType.CHARGE_END, 0);
             case 1370 -> {
                 mc.gui.setScreen(null);
-                finished = true;
                 Tenkaichi.LOG.info("[DBT-CLIENT] RESULT {}", LOG);
-                mc.stop();
             }
             default -> {
+                if (tick > 1370) {
+                    if (FeatureTest.tick(mc)) {
+                        finished = true;
+                        Tenkaichi.LOG.info("[DBT-CLIENT] FEATURES {}", FeatureTest.summary());
+                        mc.stop();
+                    }
+                    return;
+                }
                 showcase(mc, name, tick - 1052);
                 hairGallery(mc, name, tick - 1310);
             }

@@ -1,4 +1,4 @@
-# Funzionalità — Dragon Block: Tenkaichi 0.2.0
+# Funzionalità — Dragon Block: Tenkaichi 0.3.0
 
 Legenda: **Implementata** = codice + risorse + registrazioni + build verde su entrambi i loader;
 la colonna "Verifica" indica come è stata provata (vedi `TESTING.md`).
@@ -55,15 +55,15 @@ la colonna "Verifica" indica come è stata provata (vedi `TESTING.md`).
 
 | Razza | Passive | Effetto in gioco |
 |---|---|---|
-| Saiyan | Zenkai, Fame di battaglia, Coda | Zenkai pieno; +50% guadagno di arti marziali colpendo avversari di forza simile o superiore |
+| Saiyan | Zenkai, Fame di battaglia, Coda | Zenkai pieno; +50% guadagno di arti marziali colpendo avversari di forza simile o superiore; coda avvolgibile, afferrabile, tagliabile (ricresce), Grande Scimmia con luna piena o Power Ball |
 | Mezzo-Saiyan | Zenkai, Potenziale nascosto | Zenkai al 60%; +25% danni sotto il 40% di HP |
 | Umano | Maestria tecnica, Efficienza Ki | +25% pratica, +50% padronanza delle tecniche, Ki più economico |
 | Namecciano | Rigenerazione, Arti allungabili | Rigenera 2%/s fuori combattimento pagando Ki; +1,2 blocchi di portata in mischia |
 | Razza di Freezer | Sopravvivenza nello spazio, Coda | Ossigeno quasi illimitato, immune al congelamento |
 | Majin | Rigenerazione, Corpo elastico, Assorbimento | Rigenera anche in combattimento; +40% resistenza al contraccolpo, -60% danni da caduta; uccidere cura e ricarica Ki |
-| Androide | Riserva di energia, Non percepibile | Nessuna fatica da allenamento, rigenerazione del Ki doppia; i nemici non lo individuano oltre 12 blocchi |
+| Androide | Riserva di energia, Non percepibile | Nessuna fatica da allenamento, rigenerazione del Ki doppia; i nemici non lo individuano oltre 12 blocchi e la percezione del ki/gli scouter non lo vedono oltre 12 blocchi |
 | Bio-Androide | Rigenerazione, Assorbimento, Zenkai, Coda | Rigenerazione, assorbimento alle uccisioni e Zenkai |
-| Kaioshin | Ki divino, Efficienza Ki | +15% potenza delle tecniche Ki |
+| Kaioshin | Ki divino, Efficienza Ki | +15% potenza delle tecniche Ki; ki divino invisibile alla percezione dei mortali e agli scouter |
 | Razza demoniaca | Furia demoniaca | +30% danni sotto il 35% di HP; i colpi in mischia restituiscono Ki |
 
 ## Novità della 0.2.0
@@ -90,8 +90,31 @@ la colonna "Verifica" indica come è stata provata (vedi `TESTING.md`).
   creazione; colore principale tingibile, colore dei dettagli salvato nell’oggetto; disegnati da `OutfitLayer` con una
   texture separata dalla pelle (anche sulle braccia in prima persona).
 
+## Novità della 0.3.0
+- **Modalità storia**: l'intera saga dei Saiyan in 10 missioni (`mission/Missions.java`) con il giocatore al posto di Goku
+  e Gohan come allievo; 17 scene scriptate (`story/Scenes.java`, DSL `StoryScene`) con inquadrature, effetti e
+  sottotitoli EN/IT (`tools/gen_story_lang.py`), saltabili con Invio solo se già viste; regia lato server
+  (`SceneDirector`) e riproduzione lato client (`ScenePlayer`, camera dedicata e input bloccato).
+- **Personaggi della storia** (`StoryNpc`, `StoryCharacters`): attori, nemici con soglia di sconfitta e alleati, con
+  forma (anche Grande Scimmia), coda, scouter e tecnica distintiva.
+- **Aldilà** (`dbtenkaichi:other_world`): ufficio di Re Enma, Via del Serpente (900 blocchi, chi cade torna sulla
+  strada) e pianeta di Re Kaio con gravità 10x fino al termine dell'allenamento; aureola da morto.
+- **Missioni** principali e secondarie (`MissionManager`, stato persistente in `MissionState`): menu O, HUD a destra con
+  obiettivo, avanzamento e distanza, indicatore nel mondo con frecce ai bordi (disattivabile).
+- **Percezione del ki** (tasto I) e **scouter**: marcatori a schermo con forza relativa o numeri; androidi e ki divino
+  nascosti; lo scouter esplode oltre i 5 miliardi e reagisce sopra 9000.
+- **Coda Saiyan e Grande Scimmia** (`TailSystem`), **Power Ball** (`PowerBallEntity`), **assorbimento** per Majin e
+  Bio-Androidi (sblocca le forme da assorbimento).
+- **Tutte le trasformazioni canoniche** per razza (43, dati in `tenkaichi_forms/` generati da `tools/gen_forms.py`) con
+  passive aggiuntive (`FormPassive`: velocità, colpi, potenza ki, difesa, efficienza, schivata automatica, ki divino,
+  gigante, furia, rigenerazione, sete di battaglia, ultima risorsa, riflesso, super armatura, distruzione, stamina
+  infinita, intimidazione, rigenerazione ki, legata alla coda/luna), forme ramificate con Obiettivo, arene di prova
+  tematiche nuove e una cutscene per ogni forma (`client/cinematic/FormCinematics.java`).
+- **Tecniche canoniche per razza** (36 nuove): raggi, sfere giganti caricate sopra la testa, dischi, laser, raffiche e
+  tecniche di supporto (`TechniqueEffects`), con pose e animazioni dedicate.
+- Rimossa l'opzione **Voce** dal creatore del personaggio.
+
 ## Non ancora implementato (dal documento di progetto)
-Trasformazioni per le razze non Saiyan, Super Saiyan God e oltre, cutscene dedicate per
-fusioni, Sfere del Drago e Shenron, altre dimensioni (Namek, Aldilà con il pianeta di Re Kaioh...), viaggio
-spaziale, story mode (saga dei Saiyan), boss canonici, tornei, gilde/party, musica dinamica, mesh/shader personalizzati
+Fusioni, Sfere del Drago e Shenron, Namek e altre dimensioni, viaggio spaziale, saghe successive a quella dei Saiyan,
+boss canonici fuori dalla storia, tornei, gilde/party, musica dinamica, mesh/shader personalizzati
 oltre alle pipeline vanilla, LOD dedicato, benchmark.

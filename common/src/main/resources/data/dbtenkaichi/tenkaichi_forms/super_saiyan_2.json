@@ -22,20 +22,32 @@
   "masteryPerSecond": 0.001,
   "masteryDrainReduction": 0.6,
   "lowMasteryControlPenalty": 0.15,
-  "kiActivationCost": 40.0,
+  "kiActivationCost": 40,
   "cinematicTicks": 150,
   "cinematic": "super_saiyan_2_awakening",
   "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "ki_power",
+      "amount": 0.15
+    },
+    {
+      "type": "last_stand",
+      "amount": 0.15
+    }
+  ],
   "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.25,
+    "auraIntensity": 1.15,
     "hairStyle": "ascended_spikes",
     "hairColor": "#FFE04A",
     "hairGlow": true,
     "eyeColor": "#2FD8B4",
     "auraColor": "#FFD43B",
     "auraSecondary": "#FFFBD8",
-    "auraStyle": "flame",
-    "lightning": true,
-    "auraScale": 1.25,
-    "auraIntensity": 1.15
-  }
+    "lightning": true
+  },
+  "trialArena": "CELL_RING"
 }

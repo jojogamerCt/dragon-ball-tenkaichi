@@ -1,0 +1,58 @@
+{
+  "name": "form.dbtenkaichi.super_saiyan_god",
+  "races": [
+    "saiyan"
+  ],
+  "parent": "dbtenkaichi:base",
+  "order": 50,
+  "requirements": {
+    "battlePower": 350000,
+    "stats": {
+      "potential": 40
+    },
+    "unlock": "trial"
+  },
+  "bpMultiplier": 1000.0,
+  "speedMultiplier": 1.3,
+  "kiDrainPerSecond": 2.5,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 22.5,
+  "cinematicTicks": 180,
+  "cinematic": "super_saiyan_god",
+  "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "god_ki",
+      "amount": 0.0
+    },
+    {
+      "type": "speed",
+      "amount": 0.2
+    },
+    {
+      "type": "efficient",
+      "amount": 0.4
+    },
+    {
+      "type": "regeneration",
+      "amount": 0.005
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.1,
+    "auraIntensity": 1.0,
+    "hairColor": "#D8302C",
+    "hairGlow": true,
+    "eyeColor": "#C8302C",
+    "build": 0,
+    "auraColor": "#FF5A2A",
+    "auraSecondary": "#FFD08A"
+  },
+  "trialArena": "BEERUS_PLANET"
+}

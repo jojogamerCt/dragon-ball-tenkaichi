@@ -1,0 +1,66 @@
+{
+  "name": "form.dbtenkaichi.great_ape",
+  "races": [
+    "saiyan"
+  ],
+  "parent": "dbtenkaichi:base",
+  "order": 5,
+  "requirements": {
+    "battlePower": 0,
+    "stats": {},
+    "unlock": "moon",
+    "tail": true
+  },
+  "bpMultiplier": 10.0,
+  "speedMultiplier": 0.8,
+  "kiDrainPerSecond": 1.0,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.0008,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.1,
+  "kiActivationCost": 0,
+  "cinematicTicks": 190,
+  "cinematic": "great_ape_transformation",
+  "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "giant",
+      "amount": 4.0
+    },
+    {
+      "type": "strike",
+      "amount": 0.4
+    },
+    {
+      "type": "super_armor",
+      "amount": 0.0
+    },
+    {
+      "type": "rampage",
+      "amount": 0.5
+    },
+    {
+      "type": "moon_bound",
+      "amount": 0.0
+    },
+    {
+      "type": "tail_bound",
+      "amount": 0.0
+    },
+    {
+      "type": "speed",
+      "amount": -0.25
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.6,
+    "auraIntensity": 1.0,
+    "body": "great_ape",
+    "eyeColor": "#FF2A1A",
+    "auraColor": "#FFE6A8",
+    "auraSecondary": "#FFFFFF"
+  }
+}

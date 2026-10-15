@@ -1,0 +1,46 @@
+{
+  "name": "form.dbtenkaichi.potential_unlocked",
+  "races": [
+    "human"
+  ],
+  "parent": "dbtenkaichi:base",
+  "order": 10,
+  "requirements": {
+    "battlePower": 15000,
+    "stats": {
+      "potential": 10
+    },
+    "unlock": "trial"
+  },
+  "bpMultiplier": 25.0,
+  "speedMultiplier": 1.15,
+  "kiDrainPerSecond": 0.2,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 15.6,
+  "cinematicTicks": 140,
+  "cinematic": "potential_unlocked",
+  "quickTicks": 10,
+  "kaiokenCompatible": true,
+  "passives": [
+    {
+      "type": "efficient",
+      "amount": 0.8
+    },
+    {
+      "type": "ki_power",
+      "amount": 0.1
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 0.9,
+    "auraIntensity": 1.0,
+    "auraColor": "#F2F6FF",
+    "auraSecondary": "#FFFFFF"
+  },
+  "trialArena": "NAMEK"
+}

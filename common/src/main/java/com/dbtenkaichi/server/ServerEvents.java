@@ -35,6 +35,8 @@ public final class ServerEvents {
         DestructionManager.tick(server);
         com.dbtenkaichi.world.Landmarks.tick(server);
         com.dbtenkaichi.training.TrialManager.tick(server);
+        com.dbtenkaichi.story.SceneDirector.tick(server);
+        com.dbtenkaichi.mission.MissionManager.tick(server);
         SmokeTest.tick(server);
     }
 
@@ -115,6 +117,7 @@ public final class ServerEvents {
         rewardContributors(level, entity, enemyBp);
         if (source.getEntity() instanceof ServerPlayer killer && PlayerManager.data(killer).isCreated()) {
             com.dbtenkaichi.race.RaceMechanics.onKill(killer, PlayerManager.data(killer), entity);
+            com.dbtenkaichi.mission.MissionManager.onKill(killer, PlayerManager.data(killer), entity);
         }
     }
 
@@ -145,6 +148,7 @@ public final class ServerEvents {
     }
 
     public static void onPlayerDeath(ServerPlayer player) {
+        com.dbtenkaichi.mission.MissionManager.onPlayerDeath(player);
         PlayerData data = PlayerManager.data(player);
         data.runtime().damageDealt.clear();
         if (data.runtime().flying) {

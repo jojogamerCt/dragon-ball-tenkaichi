@@ -54,7 +54,31 @@ public record Fighter(LivingEntity entity, StatBlock stats, Race race, @Nullable
     }
 
     public double formBp() {
-        return (form == null ? 1.0 : form.bpMultiplier) * com.dbtenkaichi.form.KaiokenSystem.multiplier(kaioken);
+        return (form == null ? 1.0 : form.bpMultiplier) * com.dbtenkaichi.form.KaiokenSystem.multiplier(kaioken) * absorbedFactor();
+    }
+
+    public double absorbedFactor() {
+        return data == null ? 1.0 : 1.0 + 0.05 * data.absorbedStacks();
+    }
+
+    public double passive(com.dbtenkaichi.form.FormPassive type) {
+        return FormDefinition.passive(form, type);
+    }
+
+    private double healthRatio() {
+        return entity.getMaxHealth() <= 0 ? 1.0 : entity.getHealth() / entity.getMaxHealth();
+    }
+
+    public double offenseBonus() {
+        double bonus = 1.0;
+        double stand = passive(com.dbtenkaichi.form.FormPassive.LAST_STAND);
+        if (stand > 0) {
+            bonus *= 1.0 + stand * (1.0 - healthRatio());
+        }
+        if (runtime != null && passive(com.dbtenkaichi.form.FormPassive.BATTLE_LUST) > 0 && runtime.battleLustUntil > entity.level().getGameTime()) {
+            bonus *= 1.0 + Math.min(passive(com.dbtenkaichi.form.FormPassive.BATTLE_LUST), runtime.battleLust);
+        }
+        return bonus * (data == null ? 1.0 : 1.0 + 0.03 * data.absorbedStacks());
     }
 
     private double kaiokenFactor(BalanceConfig cfg, double scale) {
@@ -63,20 +87,24 @@ public record Fighter(LivingEntity entity, StatBlock stats, Race race, @Nullable
 
     public double attackMultiplier(BalanceConfig cfg) {
         double race = com.dbtenkaichi.race.RaceMechanics.attackFactor(entity, this.race);
-        return (form == null ? 1.0 : form.attack(cfg) * form.controlFactor(mastery)) * race * kaiokenFactor(cfg, 1.0);
+        return (form == null ? 1.0 : form.attack(cfg) * form.controlFactor(mastery)) * race * kaiokenFactor(cfg, 1.0)
+                * (1.0 + passive(com.dbtenkaichi.form.FormPassive.STRIKE)) * offenseBonus();
     }
 
     public double defenseMultiplier(BalanceConfig cfg) {
-        return (form == null ? 1.0 : form.defense(cfg)) * kaiokenFactor(cfg, 0.9);
+        double guard = Math.min(0.8, passive(com.dbtenkaichi.form.FormPassive.GUARD));
+        return (form == null ? 1.0 : form.defense(cfg)) * kaiokenFactor(cfg, 0.9) / (1.0 - guard);
     }
 
     public double kiMultiplier(BalanceConfig cfg) {
         double race = com.dbtenkaichi.race.RaceMechanics.kiFactor(entity, this.race);
-        return (form == null ? 1.0 : form.ki(cfg) * form.controlFactor(mastery)) * race * kaiokenFactor(cfg, 1.0);
+        return (form == null ? 1.0 : form.ki(cfg) * form.controlFactor(mastery)) * race * kaiokenFactor(cfg, 1.0)
+                * (1.0 + passive(com.dbtenkaichi.form.FormPassive.KI_POWER)) * offenseBonus();
     }
 
     public double speedMultiplier() {
-        return (form == null ? 1.0 : form.speedMultiplier * form.controlFactor(mastery)) * com.dbtenkaichi.form.KaiokenSystem.speed(kaioken);
+        return (form == null ? 1.0 : form.speedMultiplier * form.controlFactor(mastery)) * com.dbtenkaichi.form.KaiokenSystem.speed(kaioken)
+                * Math.max(0.2, 1.0 + passive(com.dbtenkaichi.form.FormPassive.SPEED));
     }
 
     public long battlePower() {

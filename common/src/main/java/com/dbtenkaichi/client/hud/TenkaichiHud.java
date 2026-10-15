@@ -60,6 +60,14 @@ public final class TenkaichiHud {
         if (!data.isCreated()) {
             return;
         }
+        if (com.dbtenkaichi.client.story.ScenePlayer.active()) {
+            try {
+                com.dbtenkaichi.client.story.ScenePlayer.render(g, mc);
+            } catch (RuntimeException e) {
+                com.dbtenkaichi.client.render.RenderGuard.report("scene_hud", e);
+            }
+            return;
+        }
         try {
             float scale = Math.max(0.5f, Math.min(2.0f, ConfigManager.client().hudScale));
             EntityVisual visual = ClientState.visual(player.getId());
@@ -79,6 +87,8 @@ public final class TenkaichiHud {
             reticle(g, mc, delta);
             clash(g, mc);
             indicators(g, mc);
+            SenseHud.render(g, mc);
+            MissionHud.render(g, mc);
         } catch (RuntimeException e) {
             com.dbtenkaichi.client.render.RenderGuard.report("hud", e);
         }
@@ -387,10 +397,25 @@ public final class TenkaichiHud {
         } else if (streak >= 0.0f) {
             streak(g, streak, 0.8f);
         }
+        for (com.dbtenkaichi.client.cinematic.CinematicScript.Orb orb : com.dbtenkaichi.client.cinematic.CinematicDirector.orbs(visual, partial)) {
+            orb(g, orb);
+        }
+        float lines = com.dbtenkaichi.client.cinematic.CinematicDirector.speedLines(visual, partial);
+        if (lines > 0.0f) {
+            speedLines(g, lines, elapsed + partial);
+        }
+        float beat = com.dbtenkaichi.client.cinematic.CinematicDirector.heartbeat(visual, partial);
+        if (beat > 0.0f) {
+            heartbeat(g, beat, elapsed + partial);
+        }
+        int tint = com.dbtenkaichi.client.cinematic.CinematicDirector.tintColor(visual, partial);
+        if ((tint >>> 24) > 0) {
+            g.fill(0, 0, g.guiWidth(), g.guiHeight(), tint);
+        }
         float flash = com.dbtenkaichi.client.cinematic.CinematicDirector.flash(visual, partial);
         if (flash > 0.0f) {
             int a = Math.round(Math.min(1.0f, flash) * 255);
-            g.fill(0, 0, g.guiWidth(), g.guiHeight(), a << 24 | 0xFFFFFF);
+            g.fill(0, 0, g.guiWidth(), g.guiHeight(), a << 24 | (com.dbtenkaichi.client.cinematic.CinematicDirector.flashColor(visual) & 0xFFFFFF));
         }
         int bar = (int) (g.guiHeight() * 0.11f * t);
         g.fill(0, 0, g.guiWidth(), bar, 0xFF000000);
@@ -405,6 +430,69 @@ public final class TenkaichiHud {
             g.pose().scale(2.0f, 2.0f);
             g.centeredText(mc.font, Component.translatable(form.name), 0, 0, color);
             g.pose().popMatrix();
+        }
+    }
+
+    private static void orb(GuiGraphicsExtractor g, com.dbtenkaichi.client.cinematic.CinematicScript.Orb orb) {
+        int w = g.guiWidth();
+        int h = g.guiHeight();
+        int cx = Math.round(w * orb.x());
+        int cy = Math.round(h * orb.y());
+        int r = Math.max(4, Math.round(h * orb.radius()));
+        int color = orb.color() & 0xFFFFFF;
+        for (int ring = 3; ring >= 1; ring--) {
+            int rr = r + ring * r / 5;
+            int alpha = 40 / ring;
+            for (int dy = -rr; dy <= rr; dy++) {
+                int half = (int) Math.sqrt(Math.max(0, rr * rr - dy * dy));
+                g.fill(cx - half, cy + dy, cx + half, cy + dy + 1, alpha << 24 | color);
+            }
+        }
+        for (int dy = -r; dy <= r; dy++) {
+            int half = (int) Math.sqrt(Math.max(0, r * r - dy * dy));
+            float shade = 0.85f + 0.15f * (1.0f - Math.abs(dy) / (float) r);
+            g.fill(cx - half, cy + dy, cx + half, cy + dy + 1, 0xFF000000 | (TenkaichiUi.mix(0xFF000000 | color, 0xFFFFFFFF, 1.0f - shade) & 0xFFFFFF));
+        }
+        for (int i = 0; i < 7; i++) {
+            int sx = cx + Math.round((float) Math.cos(i * 1.7) * r * 0.5f);
+            int sy = cy + Math.round((float) Math.sin(i * 2.3) * r * 0.45f);
+            int sr = Math.max(1, r / (6 + i));
+            g.fill(sx - sr, sy - sr / 2, sx + sr, sy + sr / 2, 0x30000000);
+        }
+    }
+
+    private static void speedLines(GuiGraphicsExtractor g, float strength, float time) {
+        int w = g.guiWidth();
+        int h = g.guiHeight();
+        g.pose().pushMatrix();
+        g.pose().translate(w * 0.5f, h * 0.5f);
+        int count = Math.round(40 * Math.min(1.0f, strength));
+        for (int i = 0; i < count; i++) {
+            float angle = (float) (i * 2.399963 + Math.floor(time * 0.5) * 0.7);
+            int inner = Math.round(Math.min(w, h) * (0.32f + ((i * 37) % 17) / 60.0f));
+            int outer = Math.max(w, h);
+            g.pose().pushMatrix();
+            g.pose().rotate(angle);
+            int alpha = Math.round(170 * Math.min(1.0f, strength));
+            g.fill(inner, -1, outer, 1, alpha << 24 | 0xFFFFFF);
+            g.pose().popMatrix();
+        }
+        g.pose().popMatrix();
+    }
+
+    private static void heartbeat(GuiGraphicsExtractor g, float strength, float time) {
+        float pulse = (float) Math.pow(Math.max(0.0, Math.sin(time * 0.35)), 8.0);
+        int alpha = Math.round(160 * Math.min(1.0f, strength) * (0.35f + pulse * 0.65f));
+        int w = g.guiWidth();
+        int h = g.guiHeight();
+        int edge = Math.round(Math.min(w, h) * (0.12f + pulse * 0.08f));
+        for (int i = 0; i < edge; i++) {
+            int a = alpha * (edge - i) / edge;
+            int c = a << 24 | 0x8A0A0A;
+            g.fill(0, i, w, i + 1, c);
+            g.fill(0, h - i - 1, w, h - i, c);
+            g.fill(i, 0, i + 1, h, c);
+            g.fill(w - i - 1, 0, w - i, h, c);
         }
     }
 

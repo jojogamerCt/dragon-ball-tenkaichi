@@ -18,6 +18,11 @@ public final class RuntimeState {
     public static final int FLAG_CLASHING = 1 << 11;
     public static final int FLAG_DASHING = 1 << 12;
     public static final int FLAG_TRAINING = 1 << 13;
+    public static final int FLAG_SENSING = 1 << 21;
+    public static final int FLAG_IN_SCENE = 1 << 22;
+    public static final int FLAG_ABSORBING = 1 << 23;
+    public static final int FLAG_BARRIER = 1 << 24;
+    public static final int FLAG_PETRIFIED = 1 << 25;
 
     public boolean flying;
     public boolean fastFlight;
@@ -78,6 +83,18 @@ public final class RuntimeState {
     public long clashSurgeUntil;
     public long clashStaggerUntil;
     public final Map<Integer, Double> damageDealt = new HashMap<>();
+    public double battleLust;
+    public long battleLustUntil;
+    public boolean sensing;
+    public long nextSenseUpdate;
+    public boolean inScene;
+    public long absorbingUntil;
+    public long nextTechniqueAt;
+    public long barrierUntil;
+    public long blindedUntil;
+    public long petrifiedUntil;
+    public long tailGrabbedUntil;
+    public final Map<String, Long> cooldowns = new HashMap<>();
     public int actionsThisSecond;
     public long actionWindow;
 
@@ -136,6 +153,21 @@ public final class RuntimeState {
         }
         if (trainingActivity != null) {
             f |= FLAG_TRAINING;
+        }
+        if (sensing) {
+            f |= FLAG_SENSING;
+        }
+        if (inScene) {
+            f |= FLAG_IN_SCENE;
+        }
+        if (absorbingUntil > now) {
+            f |= FLAG_ABSORBING;
+        }
+        if (barrierUntil > now) {
+            f |= FLAG_BARRIER;
+        }
+        if (petrifiedUntil > now) {
+            f |= FLAG_PETRIFIED;
         }
         f |= Math.max(0, Math.min(7, kaioken)) << com.dbtenkaichi.form.KaiokenSystem.FLAG_SHIFT;
         if (skillSlot >= 0 || activeBeam >= 0 || clashId >= 0) {

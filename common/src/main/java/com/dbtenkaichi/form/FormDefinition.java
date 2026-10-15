@@ -33,7 +33,10 @@ public final class FormDefinition {
     public String cinematic = "power_up";
     public int quickTicks = 8;
     public boolean kaiokenCompatible;
+    public String trialArena;
+    public List<Passive> passives = new ArrayList<>();
     public Visual visual = new Visual();
+    private transient Map<FormPassive, Double> passiveCache;
 
     public boolean allows(Race race) {
         return races == null || races.isEmpty() || races.contains(race.id());
@@ -59,6 +62,31 @@ public final class FormDefinition {
         return 1.0 - lowMasteryControlPenalty * (1.0 - Math.max(0.0f, Math.min(1.0f, mastery)));
     }
 
+    public double passive(FormPassive type) {
+        Map<FormPassive, Double> cache = passiveCache;
+        if (cache == null) {
+            cache = new java.util.EnumMap<>(FormPassive.class);
+            if (passives != null) {
+                for (Passive p : passives) {
+                    FormPassive t = FormPassive.byId(p.type);
+                    if (t != null) {
+                        cache.merge(t, p.amount == 0.0 && !t.percent() ? 1.0 : p.amount, Double::sum);
+                    }
+                }
+            }
+            passiveCache = cache;
+        }
+        return cache.getOrDefault(type, 0.0);
+    }
+
+    public boolean has(FormPassive type) {
+        return passive(type) != 0.0;
+    }
+
+    public static double passive(FormDefinition form, FormPassive type) {
+        return form == null ? 0.0 : form.passive(type);
+    }
+
     public HairStyle hairStyle() {
         return visual == null || visual.hairStyle == null ? null : HairStyle.byId(visual.hairStyle);
     }
@@ -76,6 +104,10 @@ public final class FormDefinition {
         if (visual == null) {
             visual = new Visual();
         }
+        if (passives == null) {
+            passives = new ArrayList<>();
+        }
+        passiveCache = null;
         if (parent == null || parent.isEmpty()) {
             parent = FormRegistry.BASE;
         }
@@ -97,6 +129,14 @@ public final class FormDefinition {
         public String requiredForm;
         public float requiredMastery;
         public String unlock = "none";
+        public boolean tail;
+        public int absorptions;
+        public String mission;
+    }
+
+    public static final class Passive {
+        public String type;
+        public double amount;
     }
 
     public static final class Visual {
@@ -110,6 +150,12 @@ public final class FormDefinition {
         public boolean lightning;
         public float auraScale = 1.0f;
         public float auraIntensity = 1.0f;
+        public String skinColor;
+        public String featureColor;
+        public int build = -1;
+        public String body;
+        public int featureStyle = -1;
+        public boolean hideHair;
     }
 
     public static int parseColor(String value, int fallback) {

@@ -1,0 +1,55 @@
+{
+  "name": "form.dbtenkaichi.beast",
+  "races": [
+    "half_saiyan"
+  ],
+  "parent": "dbtenkaichi:ultimate",
+  "order": 70,
+  "requirements": {
+    "battlePower": 800000,
+    "stats": {
+      "potential": 70
+    },
+    "unlock": "trial"
+  },
+  "bpMultiplier": 5000.0,
+  "speedMultiplier": 1.4,
+  "kiDrainPerSecond": 14.0,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 57.0,
+  "cinematicTicks": 190,
+  "cinematic": "beast",
+  "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "last_stand",
+      "amount": 0.4
+    },
+    {
+      "type": "ki_power",
+      "amount": 0.35
+    },
+    {
+      "type": "strike",
+      "amount": 0.2
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.4,
+    "auraIntensity": 1.0,
+    "hairStyle": "beast_spire",
+    "hairColor": "#ECECF4",
+    "hairGlow": true,
+    "eyeColor": "#E01818",
+    "auraColor": "#C8A8FF",
+    "auraSecondary": "#FFFFFF",
+    "lightning": true
+  },
+  "trialArena": "RED_RIBBON_BASE"
+}

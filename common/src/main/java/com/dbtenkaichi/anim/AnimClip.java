@@ -31,7 +31,12 @@ public enum AnimClip {
     MEDITATE(40),
     CLASH_PUSH(10),
     BIG_BANG(14),
-    DEATH_BEAM(12);
+    DEATH_BEAM(12),
+    DISC_THROW(12),
+    SOLAR_FLARE(14),
+    BARRIER_CAST(16),
+    RAISE_THROW(14),
+    GRAB(12);
 
     private static final AnimClip[] VALUES = values();
 

@@ -1,0 +1,51 @@
+{
+  "name": "form.dbtenkaichi.max_power",
+  "races": [
+    "human"
+  ],
+  "parent": "dbtenkaichi:base",
+  "order": 20,
+  "requirements": {
+    "battlePower": 60000,
+    "stats": {
+      "potential": 18
+    },
+    "unlock": "trial"
+  },
+  "bpMultiplier": 40.0,
+  "speedMultiplier": 0.9,
+  "kiDrainPerSecond": 3.0,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 24.0,
+  "cinematicTicks": 140,
+  "cinematic": "max_power",
+  "quickTicks": 10,
+  "kaiokenCompatible": true,
+  "passives": [
+    {
+      "type": "strike",
+      "amount": 0.3
+    },
+    {
+      "type": "guard",
+      "amount": 0.15
+    },
+    {
+      "type": "speed",
+      "amount": -0.1
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.2,
+    "auraIntensity": 1.0,
+    "build": 3,
+    "auraColor": "#FFE7A0",
+    "auraSecondary": "#FFFFFF"
+  },
+  "trialArena": "TOURNAMENT_OF_POWER"
+}

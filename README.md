@@ -14,14 +14,14 @@ scripts in `tools/`.
 
 ## Status
 
-Version **0.1.0 — vertical slice**: character creation with all 10 playable races (Saiyan, Half-Saiyan,
-Human, Namekian, Frieza Race, Majin, Android, Bio-Android, Kaioshin, Demon Realm Race), each with its own
-server-side passives, 3D features and HD procedural skin, 12 stats, Battle Power,
-melee combat with combos/guards/dodges, lock-on, flight, Ki charging, 3D aura, Ki Blast, Kamehameha,
-Beam Clash, Super Saiyan, a trainer Master, a Saiyan Raider with AI, a fully custom UI (HUD with portrait,
-gauges and technique icons, themed menus), custom particles, first-person combat arms, multiplayer sync,
-saving and configuration. Details in `docs/FEATURES.md`, verification status in `docs/PROGRESS.md` and
-`docs/TESTING.md`, limitations in `docs/KNOWN_ISSUES.md` (project docs are currently in Italian).
+Version **0.3.0**: all 10 playable races (Saiyan, Half-Saiyan, Human, Namekian, Frieza Race, Majin, Android,
+Bio-Android, Kaioshin, Demon Realm Race) with their racial mechanics (ki sense, scouters, Saiyan tail and Great Ape,
+absorption, regeneration...), every canonical transformation of each race with its own cutscene and passives,
+canonical techniques per race, a **story mode** that retells the whole Saiyan Saga with subtitled cutscenes,
+a mission system with side missions, the Other World with Snake Way and King Kai's planet, plus melee and ki
+combat, beam clashes, flight, Masters and trials, iconic locations and a fully custom UI. Details in
+`docs/FEATURES.md`, verification status in `docs/PROGRESS.md` and `docs/TESTING.md`, limitations in
+`docs/KNOWN_ISSUES.md` (project docs are currently in Italian).
 
 ![The 10 playable races](docs/screenshots/race_gallery.png)
 
@@ -29,7 +29,7 @@ saving and configuration. Details in `docs/FEATURES.md`, verification status in 
 
 ## Changelog
 
-One file per version in [`changelog/`](changelog/): [0.1.0](changelog/0.1.0.md), [0.2.0](changelog/0.2.0.md).
+One file per version in [`changelog/`](changelog/): [0.1.0](changelog/0.1.0.md), [0.2.0](changelog/0.2.0.md), [0.3.0](changelog/0.3.0.md).
 
 ## Requirements
 
@@ -46,8 +46,8 @@ One file per version in [`changelog/`](changelog/): [0.1.0](changelog/0.1.0.md),
 On Windows PowerShell: `scripts\gw.ps1 build`. The script sets up Java 25 and the Windows trust store
 (needed when an antivirus intercepts HTTPS). The two final JARs are copied to `build/release/`:
 
-- `dragon-block-tenkaichi-0.1.0-26.3-fabric.jar`
-- `dragon-block-tenkaichi-0.1.0-26.3-neoforge.jar`
+- `dragon-block-tenkaichi-0.3.0-26.3-fabric.jar`
+- `dragon-block-tenkaichi-0.3.0-26.3-neoforge.jar`
 
 ## Testing
 
@@ -72,7 +72,11 @@ Smoke tests are only enabled with `-PdbtSmoke` (system properties `dbtenkaichi.s
 | Left Alt | Directional dodge / vanish behind the locked target |
 | Z | Dash (towards the locked target) |
 | J / K | Lock on / next target |
-| V / B | Transform / power down |
+| V / B | Transform (toward the Target form) / power down |
+| Y | Kaioken (raise the level, then off) |
+| I | Ki sense |
+| O | Missions menu |
+| Enter | Skip a cutscene you have already seen |
 | X, C, N, M | Technique slots 1–4 (hold to charge beams) |
 | U | Character menu |
 

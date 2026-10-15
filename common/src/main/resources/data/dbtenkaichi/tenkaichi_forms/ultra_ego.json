@@ -1,0 +1,60 @@
+{
+  "name": "form.dbtenkaichi.ultra_ego",
+  "races": [
+    "saiyan"
+  ],
+  "parent": "dbtenkaichi:base",
+  "order": 80,
+  "requirements": {
+    "battlePower": 1200000,
+    "stats": {
+      "potential": 90
+    },
+    "unlock": "trial",
+    "requiredForm": "dbtenkaichi:super_saiyan_blue"
+  },
+  "bpMultiplier": 10000.0,
+  "speedMultiplier": 1.2,
+  "kiDrainPerSecond": 12.0,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 51.0,
+  "cinematicTicks": 180,
+  "cinematic": "ultra_ego",
+  "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "battle_lust",
+      "amount": 0.6
+    },
+    {
+      "type": "destruction",
+      "amount": 0.5
+    },
+    {
+      "type": "god_ki",
+      "amount": 0.0
+    },
+    {
+      "type": "strike",
+      "amount": 0.25
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.35,
+    "auraIntensity": 1.0,
+    "hairStyle": "ascended_spikes",
+    "hairColor": "#5A2A8C",
+    "hairGlow": true,
+    "eyeColor": "#E040FF",
+    "build": 2,
+    "auraColor": "#8A2BE2",
+    "auraSecondary": "#F0A0FF"
+  },
+  "trialArena": "PLANET_CEREAL"
+}

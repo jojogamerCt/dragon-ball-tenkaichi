@@ -265,7 +265,7 @@ public final class CustomSkins {
         private void torsoAnatomy() {
             int x = 20 * S;
             int y = 20 * S;
-            float strength = a.build == 2 ? 0.82f : a.build == 1 ? 0.88f : 0.94f;
+            float strength = a.build >= 3 ? 0.76f : a.build == 2 ? 0.82f : a.build == 1 ? 0.88f : 0.94f;
             for (int dx = 1; dx < 15; dx++) {
                 darken(x + dx, y + 7 + (dx == 7 || dx == 8 ? 1 : 0), strength);
             }

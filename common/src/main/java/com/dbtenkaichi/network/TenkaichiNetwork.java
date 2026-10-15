@@ -16,7 +16,8 @@ public final class TenkaichiNetwork {
             new Serverbound<>(Packets.CreateCharacter.TYPE, Packets.CreateCharacter.CODEC, ServerPacketHandler::createCharacter),
             new Serverbound<>(Packets.Action.TYPE, Packets.Action.CODEC, ServerPacketHandler::action),
             new Serverbound<>(Packets.AssignSlot.TYPE, Packets.AssignSlot.CODEC, ServerPacketHandler::assignSlot),
-            new Serverbound<>(Packets.TrainingInput.TYPE, Packets.TrainingInput.CODEC, ServerPacketHandler::trainingInput)
+            new Serverbound<>(Packets.TrainingInput.TYPE, Packets.TrainingInput.CODEC, ServerPacketHandler::trainingInput),
+            new Serverbound<>(Packets.Request.TYPE, Packets.Request.CODEC, ServerPacketHandler::request)
     );
 
     public static final List<Clientbound<?>> CLIENTBOUND = List.of(
@@ -30,7 +31,8 @@ public final class TenkaichiNetwork {
             new Clientbound<>(Packets.OpenScreen.TYPE, Packets.OpenScreen.CODEC),
             new Clientbound<>(Packets.Clash.TYPE, Packets.Clash.CODEC),
             new Clientbound<>(Packets.Cinematic.TYPE, Packets.Cinematic.CODEC),
-            new Clientbound<>(Packets.ServerConfig.TYPE, Packets.ServerConfig.CODEC)
+            new Clientbound<>(Packets.ServerConfig.TYPE, Packets.ServerConfig.CODEC),
+            new Clientbound<>(Packets.Data.TYPE, Packets.Data.CODEC)
     );
 
     private TenkaichiNetwork() {

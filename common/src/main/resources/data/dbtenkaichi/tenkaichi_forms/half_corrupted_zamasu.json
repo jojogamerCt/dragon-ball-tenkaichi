@@ -1,0 +1,58 @@
+{
+  "name": "form.dbtenkaichi.half_corrupted_zamasu",
+  "races": [
+    "kaioshin"
+  ],
+  "parent": "dbtenkaichi:fused_zamasu",
+  "order": 30,
+  "requirements": {
+    "battlePower": 900000,
+    "stats": {
+      "potential": 75
+    },
+    "unlock": "trial"
+  },
+  "bpMultiplier": 6000.0,
+  "speedMultiplier": 1.2,
+  "kiDrainPerSecond": 12.0,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 51.0,
+  "cinematicTicks": 180,
+  "cinematic": "half_corrupted_zamasu",
+  "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "god_ki",
+      "amount": 0.0
+    },
+    {
+      "type": "regeneration",
+      "amount": 0.03
+    },
+    {
+      "type": "intimidate",
+      "amount": 0.2
+    },
+    {
+      "type": "ki_power",
+      "amount": 0.4
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.4,
+    "auraIntensity": 1.0,
+    "skinColor": "#6A3A8C",
+    "hairColor": "#F2F2F2",
+    "eyeColor": "#E03030",
+    "auraColor": "#A050E0",
+    "auraSecondary": "#FFC0FF",
+    "lightning": true
+  },
+  "trialArena": "RUINED_CITY"
+}

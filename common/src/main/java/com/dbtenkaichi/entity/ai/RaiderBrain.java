@@ -5,7 +5,7 @@ import com.dbtenkaichi.combat.CombatFxKind;
 import com.dbtenkaichi.combat.CombatSystem;
 import com.dbtenkaichi.entity.KiBeamEntity;
 import com.dbtenkaichi.entity.KiBlastEntity;
-import com.dbtenkaichi.entity.RaiderEntity;
+import com.dbtenkaichi.entity.FighterNpc;
 import com.dbtenkaichi.ki.Technique;
 import com.dbtenkaichi.ki.Techniques;
 import com.dbtenkaichi.player.RuntimeState;
@@ -31,7 +31,8 @@ public final class RaiderBrain {
         ENRAGE
     }
 
-    private final RaiderEntity npc;
+    private final FighterNpc npc;
+    private final BrainHost host;
     private State state = State.IDLE;
     private long stateStart;
     private long nextDecision;
@@ -44,8 +45,9 @@ public final class RaiderBrain {
     private int volleyShots;
     private boolean enraged;
 
-    public RaiderBrain(RaiderEntity npc) {
+    public <T extends FighterNpc & BrainHost> RaiderBrain(T npc) {
         this.npc = npc;
+        this.host = npc;
     }
 
     public State state() {
@@ -96,7 +98,7 @@ public final class RaiderBrain {
             idle(now);
             return;
         }
-        if (!enraged && npc.getHealth() < npc.getMaxHealth() * 0.5f) {
+        if (!enraged && host.canEnrage() && npc.getHealth() < npc.getMaxHealth() * 0.5f) {
             enraged = true;
             enter(State.ENRAGE, now);
         }
@@ -160,7 +162,7 @@ public final class RaiderBrain {
         if (fly != npc.isFighterFlying()) {
             npc.setFighterFlying(fly);
         }
-        double speed = npc.moveSpeed(enraged);
+        double speed = host.moveSpeed(enraged);
         if (fly) {
             FighterMovement.flyToward(npc, targetPos.add(0, -0.5, 0), speed, 0.25);
         } else {
@@ -191,7 +193,7 @@ public final class RaiderBrain {
             return;
         }
         if (npc.isFighterFlying()) {
-            FighterMovement.flyToward(npc, targetPos.subtract(npc.getLookAngle().scale(1.6)), npc.moveSpeed(enraged), 0.4);
+            FighterMovement.flyToward(npc, targetPos.subtract(npc.getLookAngle().scale(1.6)), host.moveSpeed(enraged), 0.4);
         } else {
             npc.getNavigation().moveTo(target, 1.0);
         }
@@ -227,7 +229,7 @@ public final class RaiderBrain {
             npc.setFighterFlying(true);
         }
         Vec3 point = FighterMovement.orbitPoint(npc, targetPos, 6.0, 1.5, orbitClockwise);
-        FighterMovement.flyToward(npc, point, npc.moveSpeed(enraged), 0.3);
+        FighterMovement.flyToward(npc, point, host.moveSpeed(enraged), 0.3);
         if (now - stateStart > 20 + npc.getRandom().nextInt(20)) {
             enter(npc.getRandom().nextFloat() < 0.4f && distance > 6 ? State.VOLLEY : State.APPROACH, now);
         }
@@ -270,11 +272,11 @@ public final class RaiderBrain {
         if (!npc.isFighterFlying() && npc.getRandom().nextFloat() < 0.5f) {
             npc.setFighterFlying(true);
         }
-        FighterMovement.flyToward(npc, FighterMovement.orbitPoint(npc, targetPos, Math.max(8.0, distance), 3.0, orbitClockwise), npc.moveSpeed(enraged) * 0.5, 0.2);
+        FighterMovement.flyToward(npc, FighterMovement.orbitPoint(npc, targetPos, Math.max(8.0, distance), 3.0, orbitClockwise), host.moveSpeed(enraged) * 0.5, 0.2);
         if ((now - stateStart) % (enraged ? 4 : 6) == 0 && volleyShots > 0) {
             Technique blast = Techniques.KI_BLAST;
             if (npc.spendFighterKi(blast.kiCost())) {
-                KiBlastEntity entity = KiBlastEntity.create(level, npc, blast, 0xFFD24A, target.getId(), 0.8 + (enraged ? 0.3 : 0.0));
+                KiBlastEntity entity = KiBlastEntity.create(level, npc, blast, host.blastColor(), target.getId(), 0.8 + (enraged ? 0.3 : 0.0));
                 level.addFreshEntity(entity);
                 CombatSystem.anim(npc, volleyShots % 2 == 0 ? AnimClip.KI_BLAST_LEFT : AnimClip.KI_BLAST_RIGHT, 6, 0);
                 CombatSystem.playSound(level, npc, ModSounds.KI_BLAST.get(), 0.8f, 0.8f);
@@ -293,7 +295,7 @@ public final class RaiderBrain {
         }
         if (distance < 14) {
             Vec3 away = npc.position().subtract(targetPos).normalize();
-            FighterMovement.flyToward(npc, npc.position().add(away.scale(6)).add(0, 2, 0), npc.moveSpeed(enraged), 0.3);
+            FighterMovement.flyToward(npc, npc.position().add(away.scale(6)).add(0, 2, 0), host.moveSpeed(enraged), 0.3);
             npc.fighterRuntime().charging = false;
         } else {
             FighterMovement.hover(npc);
@@ -307,7 +309,7 @@ public final class RaiderBrain {
     private void cannon(ServerLevel level, LivingEntity target, Vec3 targetPos, long now) {
         RuntimeState rt = npc.fighterRuntime();
         FighterMovement.hover(npc);
-        Technique technique = Techniques.RAIDER_CANNON;
+        Technique technique = host.signatureBeam();
         long elapsed = now - stateStart;
         if (elapsed == 0) {
             rt.skillSlot = 0;
@@ -340,7 +342,7 @@ public final class RaiderBrain {
             CombatSystem.playSound(level, npc, ModSounds.TRANSFORM_SCREAM.get(), 1.6f, 0.75f);
         }
         if (elapsed >= 30) {
-            npc.applyRage();
+            host.applyRage();
             CombatSystem.fx(npc, CombatFxKind.SHOCKWAVE, npc, npc, npc.position(), 2.0f);
             for (LivingEntity other : level.getEntitiesOfClass(LivingEntity.class, npc.getBoundingBox().inflate(5.0), e -> e != npc && e.isAlive())) {
                 Vec3 push = other.position().subtract(npc.position()).multiply(1, 0, 1);

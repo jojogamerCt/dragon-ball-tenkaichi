@@ -1,0 +1,60 @@
+{
+  "name": "form.dbtenkaichi.black_frieza",
+  "races": [
+    "frieza_race"
+  ],
+  "parent": "dbtenkaichi:frieza_final_form",
+  "order": 70,
+  "requirements": {
+    "battlePower": 1200000,
+    "stats": {
+      "potential": 90
+    },
+    "unlock": "trial",
+    "requiredForm": "dbtenkaichi:golden_frieza"
+  },
+  "bpMultiplier": 12000.0,
+  "speedMultiplier": 1.5,
+  "kiDrainPerSecond": 8.0,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 39.0,
+  "cinematicTicks": 190,
+  "cinematic": "black_frieza",
+  "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "intimidate",
+      "amount": 0.3
+    },
+    {
+      "type": "strike",
+      "amount": 0.4
+    },
+    {
+      "type": "ki_power",
+      "amount": 0.4
+    },
+    {
+      "type": "guard",
+      "amount": 0.2
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.35,
+    "auraIntensity": 1.0,
+    "featureStyle": 3,
+    "skinColor": "#1C1A24",
+    "featureColor": "#A040E0",
+    "eyeColor": "#E03030",
+    "auraColor": "#6A1A9A",
+    "auraSecondary": "#E0A0FF",
+    "lightning": true
+  },
+  "trialArena": "PLANET_CEREAL"
+}

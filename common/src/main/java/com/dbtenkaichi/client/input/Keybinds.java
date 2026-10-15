@@ -24,8 +24,12 @@ public final class Keybinds {
     public static final KeyMapping SKILL_4 = key("skill_4", InputConstants.KEY_M);
     public static final KeyMapping KAIOKEN = key("kaioken", InputConstants.KEY_Y);
     public static final KeyMapping MENU = key("character_menu", InputConstants.KEY_U);
+    public static final KeyMapping SENSE = key("ki_sense", InputConstants.KEY_I);
+    public static final KeyMapping MISSIONS = key("missions", InputConstants.KEY_O);
+    public static final KeyMapping SKIP_SCENE = key("skip_scene", InputConstants.KEY_RETURN);
 
-    public static final List<KeyMapping> ALL = List.of(CHARGE, FLIGHT, STANCE, LOCK_ON, NEXT_TARGET, DODGE, DASH, TRANSFORM, REVERT, SKILL_1, SKILL_2, SKILL_3, SKILL_4, KAIOKEN, MENU);
+    public static final List<KeyMapping> ALL = List.of(CHARGE, FLIGHT, STANCE, LOCK_ON, NEXT_TARGET, DODGE, DASH, TRANSFORM, REVERT, SKILL_1, SKILL_2, SKILL_3, SKILL_4, KAIOKEN, MENU,
+            SENSE, MISSIONS, SKIP_SCENE);
     public static final KeyMapping[] SKILLS = {SKILL_1, SKILL_2, SKILL_3, SKILL_4};
 
     private Keybinds() {

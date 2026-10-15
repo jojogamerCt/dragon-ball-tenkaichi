@@ -1,0 +1,48 @@
+{
+  "name": "form.dbtenkaichi.third_eye",
+  "races": [
+    "demon"
+  ],
+  "parent": "dbtenkaichi:base",
+  "order": 20,
+  "requirements": {
+    "battlePower": 250000,
+    "stats": {
+      "potential": 30
+    },
+    "unlock": "trial"
+  },
+  "bpMultiplier": 300.0,
+  "speedMultiplier": 1.2,
+  "kiDrainPerSecond": 5.0,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 30.0,
+  "cinematicTicks": 170,
+  "cinematic": "third_eye",
+  "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "ki_power",
+      "amount": 0.3
+    },
+    {
+      "type": "intimidate",
+      "amount": 0.15
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.25,
+    "auraIntensity": 1.0,
+    "eyeColor": "#FF3A3A",
+    "auraColor": "#5A1A7A",
+    "auraSecondary": "#E080FF",
+    "lightning": true
+  },
+  "trialArena": "DEMON_REALM"
+}

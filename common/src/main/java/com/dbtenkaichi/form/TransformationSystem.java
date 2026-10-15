@@ -48,6 +48,36 @@ public final class TransformationSystem {
         if (req.requiredForm != null && !req.requiredForm.isEmpty() && data.mastery(req.requiredForm) < req.requiredMastery) {
             return "mastery";
         }
+        if (req.requiredForm != null && !req.requiredForm.isEmpty() && !data.hasUnlockedForm(req.requiredForm)) {
+            return "required_form";
+        }
+        if (req.tail && !data.hasTail()) {
+            return "tail";
+        }
+        if (req.absorptions > 0 && data.absorptions() < req.absorptions) {
+            return "absorptions";
+        }
+        if (req.mission != null && !req.mission.isEmpty() && !data.missions().isCompleted(req.mission)) {
+            return "mission";
+        }
+        return null;
+    }
+
+    public static @Nullable FormDefinition nextFor(PlayerData data) {
+        FormDefinition toward = FormRegistry.stepToward(data.race(), data.form(), data.targetForm(), false);
+        if (toward != null) {
+            return toward;
+        }
+        for (FormDefinition child : FormRegistry.children(data.race(), data.form(), false)) {
+            if (data.hasUnlockedForm(child.id) && !"moon".equals(child.requirements.unlock)) {
+                return child;
+            }
+        }
+        for (FormDefinition child : FormRegistry.children(data.race(), data.form(), false)) {
+            if (!"moon".equals(child.requirements.unlock)) {
+                return child;
+            }
+        }
         return null;
     }
 
@@ -56,7 +86,10 @@ public final class TransformationSystem {
         if (rt.busy(now) || rt.activeBeam >= 0 || rt.clashId >= 0) {
             return;
         }
-        FormDefinition next = FormRegistry.next(data.race(), data.form(), false);
+        if (FormEffects.blocksTechniques(data)) {
+            return;
+        }
+        FormDefinition next = nextFor(data);
         if (next == null) {
             player.sendSystemMessage(Component.translatable("message.dbtenkaichi.no_next_form"));
             return;
@@ -78,7 +111,7 @@ public final class TransformationSystem {
                 }
                 return;
             }
-            if (!"none".equals(unlock)) {
+            if (!"none".equals(unlock) && !"absorb".equals(unlock) && !"mission".equals(unlock)) {
                 player.sendSystemMessage(Component.translatable("message.dbtenkaichi.form_hint." + unlock, Component.translatable(next.name)));
                 return;
             }
@@ -163,6 +196,10 @@ public final class TransformationSystem {
             return;
         }
         if (!data.isTransformed() || rt.transformingUntil > now) {
+            return;
+        }
+        if (FormEffects.blocksRevert(data)) {
+            player.sendSystemMessage(Component.translatable("message.dbtenkaichi.form_rampage"));
             return;
         }
         FormDefinition current = FormRegistry.get(data.form(), false);

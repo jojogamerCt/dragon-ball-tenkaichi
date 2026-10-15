@@ -1,0 +1,55 @@
+{
+  "name": "form.dbtenkaichi.full_power_super_saiyan",
+  "races": [
+    "saiyan",
+    "half_saiyan"
+  ],
+  "parent": "dbtenkaichi:super_saiyan",
+  "order": 14,
+  "requirements": {
+    "battlePower": 120000,
+    "stats": {
+      "potential": 18
+    },
+    "unlock": "trial"
+  },
+  "bpMultiplier": 65.0,
+  "speedMultiplier": 1.2,
+  "kiDrainPerSecond": 0.6,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 16.8,
+  "cinematicTicks": 140,
+  "cinematic": "full_power_super_saiyan",
+  "quickTicks": 10,
+  "kaiokenCompatible": true,
+  "passives": [
+    {
+      "type": "stamina_free",
+      "amount": 0.0
+    },
+    {
+      "type": "efficient",
+      "amount": 0.6
+    },
+    {
+      "type": "ki_regen",
+      "amount": 0.3
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 0.9,
+    "auraIntensity": 0.8,
+    "hairStyle": "super_spikes",
+    "hairColor": "#FFE25A",
+    "hairGlow": true,
+    "eyeColor": "#33D6B0",
+    "auraColor": "#FFD43B",
+    "auraSecondary": "#FFF6B8"
+  },
+  "trialArena": "CELL_RING"
+}

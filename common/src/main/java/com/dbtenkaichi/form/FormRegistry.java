@@ -49,6 +49,53 @@ public final class FormRegistry {
         return null;
     }
 
+    public static List<FormDefinition> children(Race race, String parent, boolean clientSide) {
+        List<FormDefinition> list = new ArrayList<>();
+        for (FormDefinition def : chainFor(race, clientSide)) {
+            if (def.parent.equals(parent)) {
+                list.add(def);
+            }
+        }
+        return list;
+    }
+
+    public static boolean isAncestor(String ancestor, String formId, boolean clientSide) {
+        String cursor = formId;
+        for (int guard = 0; guard < 32 && cursor != null; guard++) {
+            if (cursor.equals(ancestor)) {
+                return true;
+            }
+            if (BASE.equals(cursor)) {
+                return false;
+            }
+            FormDefinition def = get(cursor, clientSide);
+            cursor = def == null ? null : def.parent;
+        }
+        return false;
+    }
+
+    public static FormDefinition stepToward(Race race, String current, String target, boolean clientSide) {
+        if (target == null || target.isEmpty() || target.equals(current)) {
+            return null;
+        }
+        FormDefinition goal = get(target, clientSide);
+        if (goal == null || !goal.allows(race) || !isAncestor(current, target, clientSide)) {
+            return null;
+        }
+        FormDefinition step = goal;
+        for (int guard = 0; guard < 32; guard++) {
+            if (step.parent.equals(current)) {
+                return step;
+            }
+            FormDefinition parent = get(step.parent, clientSide);
+            if (parent == null) {
+                return null;
+            }
+            step = parent;
+        }
+        return null;
+    }
+
     public static void applyServer(Map<String, JsonElement> raw) {
         Map<String, FormDefinition> parsed = parse(raw);
         server = parsed;

@@ -20,14 +20,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AvatarRenderer.class)
 public abstract class AvatarRendererMixin {
-    private static final float[] DBTENKAICHI_BUILD_WIDTH = {0.93f, 1.0f, 1.09f};
+    private static final float[] DBTENKAICHI_BUILD_WIDTH = {0.93f, 1.0f, 1.09f, 1.2f};
 
     @Inject(method = "getTextureLocation(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;)Lnet/minecraft/resources/Identifier;", at = @At("HEAD"), cancellable = true)
     private void dbtenkaichi$customSkin(AvatarRenderState state, CallbackInfoReturnable<Identifier> cir) {
         try {
             EntityVisual visual = TenkaichiLayers.visual(state);
-            if (visual != null && !visual.appearance.useOwnSkin) {
-                cir.setReturnValue(CustomSkins.textureFor(visual.race, visual.appearance, visual.eyeColor(), visual.hairColor()));
+            if (visual != null && !visual.look().useOwnSkin) {
+                cir.setReturnValue(CustomSkins.textureFor(visual.race, visual.look(), visual.eyeColor(), visual.hairColor()));
             }
         } catch (RuntimeException e) {
             RenderGuard.report("skin", e);
@@ -38,7 +38,7 @@ public abstract class AvatarRendererMixin {
     private void dbtenkaichi$outfitLayers(net.minecraft.world.entity.Avatar avatar, AvatarRenderState state, float partial, CallbackInfo ci) {
         try {
             EntityVisual visual = TenkaichiLayers.visual(state);
-            if (visual != null && !visual.appearance.useOwnSkin) {
+            if (visual != null && !visual.look().useOwnSkin) {
                 state.showHat = true;
                 state.showJacket = true;
                 state.showLeftPants = true;
@@ -57,7 +57,7 @@ public abstract class AvatarRendererMixin {
             return null;
         }
         EntityVisual visual = com.dbtenkaichi.client.ClientState.forEntity(mc.player);
-        return visual.created && !visual.appearance.useOwnSkin ? visual : null;
+        return visual.created && !visual.look().useOwnSkin ? visual : null;
     }
 
     @ModifyVariable(method = "renderHand", at = @At("HEAD"), argsOnly = true)
@@ -65,7 +65,7 @@ public abstract class AvatarRendererMixin {
         try {
             EntityVisual visual = dbtenkaichi$localCustomVisual();
             if (visual != null) {
-                return CustomSkins.textureFor(visual.race, visual.appearance, visual.eyeColor(), visual.hairColor());
+                return CustomSkins.textureFor(visual.race, visual.look(), visual.eyeColor(), visual.hairColor());
             }
         } catch (RuntimeException e) {
             RenderGuard.report("hand_skin", e);
@@ -89,9 +89,9 @@ public abstract class AvatarRendererMixin {
             if (style < 0) {
                 return;
             }
-            int[] spec = {style, com.dbtenkaichi.item.Outfits.primary(chest, visual.appearance.outfitPrimary),
-                    com.dbtenkaichi.item.Outfits.secondary(chest, visual.appearance.outfitSecondary), -1, 0, 0, -1, 0, 0};
-            Identifier outfit = CustomSkins.outfitTexture(visual.race, visual.appearance, spec);
+            int[] spec = {style, com.dbtenkaichi.item.Outfits.primary(chest, visual.look().outfitPrimary),
+                    com.dbtenkaichi.item.Outfits.secondary(chest, visual.look().outfitSecondary), -1, 0, 0, -1, 0, 0};
+            Identifier outfit = CustomSkins.outfitTexture(visual.race, visual.look(), spec);
             if (dbtenkaichi$outfitModel == null) {
                 dbtenkaichi$outfitModel = mc.getEntityModels().bakeLayer(com.dbtenkaichi.client.render.TenkaichiModels.OUTFIT);
             }
@@ -136,9 +136,10 @@ public abstract class AvatarRendererMixin {
     private void dbtenkaichi$build(AvatarRenderState state, PoseStack poseStack, CallbackInfo ci) {
         EntityVisual visual = TenkaichiLayers.visual(state);
         if (visual != null) {
-            float width = DBTENKAICHI_BUILD_WIDTH[Math.max(0, Math.min(2, visual.appearance.build))] * (visual.appearance.presentation == 1 ? 0.93f : 1.0f);
-            if (width != 1.0f) {
-                poseStack.scale(width, 1.0f, width);
+            float width = DBTENKAICHI_BUILD_WIDTH[Math.max(0, Math.min(3, visual.look().build))] * (visual.look().presentation == 1 ? 0.93f : 1.0f);
+            float grow = com.dbtenkaichi.client.cinematic.CinematicDirector.growScale(visual);
+            if (width != 1.0f || grow != 1.0f) {
+                poseStack.scale(width * grow, grow, width * grow);
             }
         }
     }

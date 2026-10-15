@@ -101,12 +101,12 @@ public final class TrialManager {
             player.sendSystemMessage(Component.translatable("message.dbtenkaichi.trial_busy"));
             return false;
         }
-        Arena arena = switch (form.id) {
+        Arena arena = Arena.byId(form.trialArena, switch (form.id) {
             case "dbtenkaichi:super_saiyan" -> Arena.NAMEK;
             case "dbtenkaichi:super_saiyan_2" -> Arena.CELL_RING;
             case "dbtenkaichi:super_saiyan_3" -> Arena.CANYON;
             default -> Arena.MOUNTAIN;
-        };
+        });
         return begin(player, data, arena, null, form, MasterKind.MASTER, Component.translatable(form.name),
                 Component.translatable("message.dbtenkaichi.trial_vs_self", Component.translatable(form.name)));
     }

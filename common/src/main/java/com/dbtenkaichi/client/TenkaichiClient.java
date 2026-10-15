@@ -36,6 +36,8 @@ public final class TenkaichiClient {
         registrar.register(ModEntities.KI_BLAST.get(), KiBlastRenderer::new);
         registrar.register(ModEntities.MASTER.get(), FighterNpcRenderer::new);
         registrar.register(ModEntities.RAIDER.get(), FighterNpcRenderer::new);
+        registrar.register(ModEntities.STORY_NPC.get(), FighterNpcRenderer::new);
+        registrar.register(ModEntities.POWER_BALL.get(), com.dbtenkaichi.client.render.PowerBallRenderer::new);
     }
 
     public static void registerParticles(ParticleRegistrar registrar) {

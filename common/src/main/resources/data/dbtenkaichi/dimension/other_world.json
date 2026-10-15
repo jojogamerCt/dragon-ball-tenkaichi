@@ -1,0 +1,26 @@
+{
+  "type": "dbtenkaichi:other_world",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "minecraft:the_void",
+      "features": false,
+      "lakes": false,
+      "layers": [
+        {
+          "block": "minecraft:air",
+          "height": 104
+        },
+        {
+          "block": "minecraft:orange_wool",
+          "height": 3
+        },
+        {
+          "block": "minecraft:yellow_wool",
+          "height": 3
+        }
+      ],
+      "structure_overrides": []
+    }
+  }
+}

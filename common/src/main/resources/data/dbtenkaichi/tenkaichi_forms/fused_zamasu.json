@@ -1,0 +1,53 @@
+{
+  "name": "form.dbtenkaichi.fused_zamasu",
+  "races": [
+    "kaioshin"
+  ],
+  "parent": "dbtenkaichi:base",
+  "order": 20,
+  "requirements": {
+    "battlePower": 500000,
+    "stats": {
+      "potential": 50
+    },
+    "unlock": "trial"
+  },
+  "bpMultiplier": 2500.0,
+  "speedMultiplier": 1.25,
+  "kiDrainPerSecond": 9.0,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 42.0,
+  "cinematicTicks": 180,
+  "cinematic": "fused_zamasu",
+  "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "god_ki",
+      "amount": 0.0
+    },
+    {
+      "type": "regeneration",
+      "amount": 0.02
+    },
+    {
+      "type": "ki_power",
+      "amount": 0.3
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.3,
+    "auraIntensity": 1.0,
+    "skinColor": "#5FB860",
+    "hairColor": "#F2F2F2",
+    "eyeColor": "#3A2A6A",
+    "auraColor": "#C06AFF",
+    "auraSecondary": "#FFE0FF"
+  },
+  "trialArena": "RUINED_CITY"
+}

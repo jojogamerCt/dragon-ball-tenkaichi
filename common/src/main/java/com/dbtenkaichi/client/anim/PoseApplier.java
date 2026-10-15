@@ -26,6 +26,9 @@ public final class PoseApplier {
 
     public static void tickVisual(Entity entity, EntityVisual visual) {
         int f = visual.flags;
+        if ((f & RuntimeState.FLAG_SKILL_CHARGING) == 0) {
+            visual.skillChargeStart = ClientState.clientTicks;
+        }
         if ((f & (RuntimeState.FLAG_SKILL_CHARGING | RuntimeState.FLAG_BEAM_FIRING | RuntimeState.FLAG_CLASHING)) != 0) {
             visual.style = SkillStyle.fromFlags(f);
         }

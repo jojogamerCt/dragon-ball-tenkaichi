@@ -16,6 +16,7 @@ public final class Cinematics {
         register(superSaiyan3Awakening());
         register(darkRage());
         register(powerUp());
+        FormCinematics.registerAll();
     }
 
     private Cinematics() {

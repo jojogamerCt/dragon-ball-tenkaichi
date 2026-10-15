@@ -30,7 +30,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jspecify.annotations.Nullable;
 
-public class RaiderEntity extends FighterNpc implements Enemy {
+public class RaiderEntity extends FighterNpc implements Enemy, com.dbtenkaichi.entity.ai.BrainHost {
     public static final String RAGE_FORM = "dbtenkaichi:raider_rage";
 
     private final RaiderBrain brain = new RaiderBrain(this);
@@ -93,11 +93,23 @@ public class RaiderEntity extends FighterNpc implements Enemy {
         applyStats(block, Race.SAIYAN);
     }
 
+    @Override
     public double moveSpeed(boolean enraged) {
         double base = 0.55 + stat(StatType.SPEED) * 0.006;
         return Math.min(ConfigManager.gameplay().maxFlightSpeed, base * (enraged ? 1.35 : 1.0));
     }
 
+    @Override
+    public com.dbtenkaichi.ki.Technique signatureBeam() {
+        return com.dbtenkaichi.ki.Techniques.RAIDER_CANNON;
+    }
+
+    @Override
+    public int blastColor() {
+        return 0xFFD24A;
+    }
+
+    @Override
     public void applyRage() {
         setFighterForm(RAGE_FORM);
         for (StatType type : new StatType[]{StatType.STRENGTH, StatType.SPEED, StatType.KI_OUTPUT, StatType.AGILITY}) {

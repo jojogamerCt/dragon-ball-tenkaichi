@@ -1,4 +1,4 @@
-# Problemi noti e limitazioni — 0.2.0
+# Problemi noti e limitazioni — 0.3.0
 
 Classificazione: **Alta** (blocca funzioni importanti), **Media** (degrada l'esperienza),
 **Bassa** (cosmetica o marginale).
@@ -7,7 +7,6 @@ Classificazione: **Alta** (blocca funzioni importanti), **Media** (degrada l'esp
 |---|---|---|
 | Media | Prestazioni non misurate | L'aura e i raggi generano geometria per frame (fino a ~20 fiamme × 6 segmenti × 4 strati). Livelli Low/Medium riducono il carico ma mancano benchmark. |
 | Media | Multiplayer con più giocatori reali non provato | La logica è autoritativa e i pacchetti sono inviati ai tracker, ma il test reale è stato fatto con un solo client. |
-| Media | Trasformazioni solo per Saiyan e Mezzo-Saiyan | Super Saiyan, SS2 e SS3 (più il Kaioken per tutti); le altre razze non hanno ancora forme proprie. |
 | Bassa | Nuvole della cutscene SSJ3 | Le nuvole vanilla corrono avanti e indietro solo se sono attive nelle opzioni e se in quel punto del cielo ce ne sono; gli sbuffi di nuvole generati dalla cutscene sono sempre visibili. |
 | Media | Prove dei Maestri non provate con input umano | Teletrasporto, conto alla rovescia, vittoria forzata e ritorno sono verificati dal test client su entrambi i loader; difficoltà e premi non sono stati giocati. |
 | Bassa | La Kame House può essere lontana dallo spawn | Viene costruita nell’oceano più vicino (ricerca fino a ~1,6 km); `/tenkaichi landmarks` mostra le coordinate. |
@@ -16,7 +15,6 @@ Classificazione: **Alta** (blocca funzioni importanti), **Media** (degrada l'esp
 | Bassa | Karin senza bastone | Il bastone di Karin non è ancora modellato. |
 | Bassa | Posa di carica del Galick Gun poco leggibile di fronte | Le braccia sono portate dietro il corpo ruotato. |
 | Bassa | Tecniche a sfera con ricarica condivisa | Big Bang Attack e Raggio della Morte usano lo stesso tempo di ricarica dei colpi Ki. |
-| Bassa | Pianeta di Re Kaioh rimosso di proposito | Tornerà con l’Aldilà; nel frattempo il Kaioken si compra dalla lista tecniche. |
 | Media | Bilanciamento del Predone e combo breaker non provati con input umano | Danni ridotti (×0,6), cadenza più lenta e immunità allo stordimento dopo 3 colpi sono verificati solo nel codice e nello smoke test dell'IA. |
 | Media | Durata delle sessioni di sparring/schivata non provata dal vivo | La causa dell'interruzione precoce (Maestro cercato entro 8 blocchi) è stata corretta (40 blocchi, sessioni da 60 s e 45 s), ma non è stata giocata una sessione reale. |
 | Bassa | Le kick non hanno animazione in prima persona | In prima persona sono visibili solo pugni e parata; i calci danno solo un leggero scossone della camera. |

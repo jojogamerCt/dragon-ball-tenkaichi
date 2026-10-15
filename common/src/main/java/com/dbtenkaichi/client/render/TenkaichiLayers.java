@@ -47,7 +47,7 @@ public final class TenkaichiLayers {
 
     public static List<RenderLayer<AvatarRenderState, PlayerModel>> create(RenderLayerParent<AvatarRenderState, PlayerModel> parent, EntityModelSet models) {
         return List.of(new BustLayer(parent, models), new OutfitLayer(parent, models), new TailLayer(parent, models), new FeatureLayer(parent, models), new GearLayer(parent, models), new HairLayer(parent, models),
-                new AuraLayer(parent, models));
+                new ExtraLayers(parent, models), new AuraLayer(parent, models));
     }
 
     public static @Nullable EntityVisual visual(AvatarRenderState state) {
@@ -130,7 +130,7 @@ public final class TenkaichiLayers {
                     return;
                 }
                 EntityVisual visual = visual(state);
-                if (visual == null) {
+                if (visual == null || visual.greatApe()) {
                     return;
                 }
                 HairStyle style = visual.hairStyle();
@@ -174,13 +174,13 @@ public final class TenkaichiLayers {
                     collector.submitModel(model, state, poseStack, RenderTypes.entityCutout(TAIL_TEXTURE), light, OverlayTexture.NO_OVERLAY, 0xFFF4F1EA, null, state.outlineColor);
                     return;
                 }
-                if (race == Race.FRIEZA_RACE || race == Race.BIO_ANDROID && visual.appearance.tail) {
-                    int skin = visual.appearance.skinColor;
-                    int color = 0xFF000000 | (race == Race.BIO_ANDROID ? EntityVisual.mix(skin, visual.appearance.featureColor, 0.25f) : skin);
+                if (race == Race.FRIEZA_RACE || race == Race.BIO_ANDROID && visual.look().tail) {
+                    int skin = visual.look().skinColor;
+                    int color = 0xFF000000 | (race == Race.BIO_ANDROID ? EntityVisual.mix(skin, visual.look().featureColor, 0.25f) : skin);
                     collector.submitModel(race == Race.BIO_ANDROID ? stinger : thick, state, poseStack, RenderTypes.entityCutout(THICK_TAIL_TEXTURE), light, OverlayTexture.NO_OVERLAY, color, null, state.outlineColor);
                     return;
                 }
-                if (!visual.appearance.tail || !race.has(RacePassive.TAIL) || !race.hasHair()) {
+                if (!visual.look().tail || !race.has(RacePassive.TAIL) || !race.hasHair()) {
                     return;
                 }
                 int color = 0xFF000000 | (visual.formDefinition() == null ? 0x5A3418 : visual.hairColor());
@@ -210,24 +210,24 @@ public final class TenkaichiLayers {
                     return;
                 }
                 EntityVisual visual = visual(state);
-                if (visual == null || visual.appearance.useOwnSkin) {
+                if (visual == null || visual.greatApe() || visual.featureStyle() > 0 || visual.look().useOwnSkin) {
                     return;
                 }
                 Map<TenkaichiModels.FeatureTint, HairModel> byTint = models.get(visual.race);
                 if (byTint == null) {
                     return;
                 }
-                boolean natural = visual.appearance.outfit == Appearance.OUTFIT_NATURAL;
+                boolean natural = visual.look().outfit == Appearance.OUTFIT_NATURAL;
                 for (Map.Entry<TenkaichiModels.FeatureTint, HairModel> entry : byTint.entrySet()) {
                     TenkaichiModels.FeatureTint tint = entry.getKey();
                     if (tint.bodyOnly() && !natural) {
                         continue;
                     }
                     int color = switch (tint) {
-                        case SKIN -> visual.appearance.skinColor;
-                        case ACCENT, GEM, BODY_GEM -> visual.appearance.featureColor;
-                        case HORN -> visual.race == Race.FRIEZA_RACE ? 0x2A2430 : visual.appearance.featureColor;
-                        case PLATE, BODY_PLATE -> visual.race == Race.BIO_ANDROID ? carapaceColor(visual.appearance.featureColor) : plateColor(visual.appearance.skinColor);
+                        case SKIN -> visual.look().skinColor;
+                        case ACCENT, GEM, BODY_GEM -> visual.look().featureColor;
+                        case HORN -> visual.race == Race.FRIEZA_RACE ? 0x2A2430 : visual.look().featureColor;
+                        case PLATE, BODY_PLATE -> visual.race == Race.BIO_ANDROID ? carapaceColor(visual.look().featureColor) : plateColor(visual.look().skinColor);
                     };
                     Identifier texture = tint.gem() ? GEM_TEXTURE : FEATURE_TEXTURE;
                     collector.submitModel(entry.getValue(), state, poseStack, RenderTypes.entityCutout(texture), light, OverlayTexture.NO_OVERLAY,
@@ -253,12 +253,12 @@ public final class TenkaichiLayers {
         Entity entity = mc.level == null ? null : mc.level.getEntity(state.id);
         boolean fromAppearance = !(entity instanceof net.minecraft.world.entity.player.Player) || visual.previewing;
         if (fromAppearance) {
-            int style = visual.appearance.outfit;
+            int style = visual.look().outfit;
             if (style >= 0 && style < com.dbtenkaichi.player.Appearance.OUTFIT_NATURAL) {
                 for (int piece = 0; piece < 3; piece++) {
                     spec[piece * 3] = style;
-                    spec[piece * 3 + 1] = visual.appearance.outfitPrimary;
-                    spec[piece * 3 + 2] = visual.appearance.outfitSecondary;
+                    spec[piece * 3 + 1] = visual.look().outfitPrimary;
+                    spec[piece * 3 + 2] = visual.look().outfitSecondary;
                 }
             }
             return spec;
@@ -272,8 +272,8 @@ public final class TenkaichiLayers {
             int style = com.dbtenkaichi.item.Outfits.style(stacks[piece], piece);
             if (style >= 0) {
                 spec[piece * 3] = style;
-                spec[piece * 3 + 1] = com.dbtenkaichi.item.Outfits.primary(stacks[piece], visual.appearance.outfitPrimary);
-                spec[piece * 3 + 2] = com.dbtenkaichi.item.Outfits.secondary(stacks[piece], visual.appearance.outfitSecondary);
+                spec[piece * 3 + 1] = com.dbtenkaichi.item.Outfits.primary(stacks[piece], visual.look().outfitPrimary);
+                spec[piece * 3 + 2] = com.dbtenkaichi.item.Outfits.secondary(stacks[piece], visual.look().outfitSecondary);
             }
         }
         return spec;
@@ -298,10 +298,10 @@ public final class TenkaichiLayers {
                     return;
                 }
                 EntityVisual visual = visual(state);
-                if (visual == null || visual.appearance.useOwnSkin || visual.appearance.presentation != 1) {
+                if (visual == null || visual.greatApe() || visual.look().useOwnSkin || visual.look().presentation != 1) {
                     return;
                 }
-                Identifier skin = CustomSkins.textureFor(visual.race, visual.appearance, visual.eyeColor(), visual.hairColor());
+                Identifier skin = CustomSkins.textureFor(visual.race, visual.look(), visual.eyeColor(), visual.hairColor());
                 collector.submitModel(model, state, poseStack, RenderTypes.entityCutout(skin), light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF, null, state.outlineColor);
             } catch (RuntimeException e) {
                 RenderGuard.report("bust", e);
@@ -326,15 +326,15 @@ public final class TenkaichiLayers {
                     return;
                 }
                 EntityVisual visual = visual(state);
-                if (visual == null || visual.appearance.useOwnSkin) {
+                if (visual == null || visual.greatApe() || "ssj4".equals(visual.body()) || visual.look().useOwnSkin) {
                     return;
                 }
                 int[] spec = outfitSpec(state, visual);
                 if (!hasOutfit(spec)) {
                     return;
                 }
-                Identifier texture = CustomSkins.outfitTexture(visual.race, visual.appearance, spec);
-                collector.submitModel(visual.appearance.presentation == 1 && spec[0] >= 0 ? feminine : model, state, poseStack, RenderTypes.entityCutout(texture), light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF, null, state.outlineColor);
+                Identifier texture = CustomSkins.outfitTexture(visual.race, visual.look(), spec);
+                collector.submitModel(visual.look().presentation == 1 && spec[0] >= 0 ? feminine : model, state, poseStack, RenderTypes.entityCutout(texture), light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF, null, state.outlineColor);
             } catch (RuntimeException e) {
                 RenderGuard.report("outfit_layer", e);
             }
@@ -362,14 +362,14 @@ public final class TenkaichiLayers {
                     return;
                 }
                 EntityVisual visual = visual(state);
-                if (visual == null) {
+                if (visual == null || visual.greatApe()) {
                     return;
                 }
-                if (visual.appearance.outfit == 1 && !visual.appearance.useOwnSkin) {
+                if (visual.look().outfit == 1 && !visual.look().useOwnSkin) {
                     collector.submitModel(pads, state, poseStack, RenderTypes.entityCutout(ARMOR_PAD_TEXTURE), light, OverlayTexture.NO_OVERLAY, 0xFFEDE7D6, null, state.outlineColor);
                 }
                 if (visual.beard) {
-                    collector.submitModel(beard, state, poseStack, RenderTypes.entityCutout(HAIR_TEXTURE), light, OverlayTexture.NO_OVERLAY, 0xFFEDEDED, null, state.outlineColor);
+                    collector.submitModel(beard, state, poseStack, RenderTypes.entityCutout(HAIR_TEXTURE), light, OverlayTexture.NO_OVERLAY, 0xFF000000 | visual.beardColor, null, state.outlineColor);
                 }
                 if (visual.cat) {
                     collector.submitModel(cat, state, poseStack, RenderTypes.entityCutout(HAIR_TEXTURE), light, OverlayTexture.NO_OVERLAY, 0xFFF6F3EC, null, state.outlineColor);

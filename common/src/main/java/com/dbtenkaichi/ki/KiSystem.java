@@ -68,9 +68,24 @@ public final class KiSystem {
         if (technique == null) {
             return;
         }
+        if (com.dbtenkaichi.form.FormEffects.blocksTechniques(data) || rt.inScene || rt.petrifiedUntil > now) {
+            return;
+        }
         rt.charging = false;
         if (technique.type() == Technique.Type.BLAST) {
             fireBlast(player, data, technique, now);
+            return;
+        }
+        if (technique.type() == Technique.Type.SUPPORT) {
+            TechniqueEffects.activate(player, data, technique, now);
+            return;
+        }
+        if (technique.type() == Technique.Type.BARRAGE) {
+            TechniqueEffects.fireBarrage(player, data, technique, now);
+            return;
+        }
+        if (technique.type() == Technique.Type.SPHERE && TechniqueEffects.onCooldown(data, technique, now)) {
+            player.sendOverlayMessage(Component.translatable("message.dbtenkaichi.technique_cooldown", Component.translatable(technique.translationKey())));
             return;
         }
         if (rt.skillSlot < 0) {
@@ -95,7 +110,7 @@ public final class KiSystem {
         rt.skillSlot = -1;
         rt.stateDirty = true;
         Technique technique = Techniques.get(id);
-        if (technique == null || technique.type() != Technique.Type.BEAM || rt.busy(now)) {
+        if (technique == null || !technique.charged() || rt.busy(now)) {
             return;
         }
         int charged = (int) (now - rt.skillStart);
@@ -113,6 +128,13 @@ public final class KiSystem {
             ratio = 0.0;
         }
         ServerLevel level = player.level();
+        if (technique.type() == Technique.Type.SPHERE) {
+            TechniqueEffects.fireSphere(player, data, technique, ratio, now);
+            rt.lastCombat = now;
+            data.setSkillMastery(id, data.skillMastery(id) + 0.01f);
+            com.dbtenkaichi.mission.MissionManager.onTechnique(player, data, id);
+            return;
+        }
         KiBeamEntity beam = KiBeamEntity.create(level, player, technique, ratio);
         level.addFreshEntity(beam);
         rt.activeBeam = beam.getId();
@@ -122,6 +144,7 @@ public final class KiSystem {
         float mastery = data.skillMastery(id);
         data.setSkillMastery(id, mastery + 0.01f * com.dbtenkaichi.race.RaceMechanics.skillMasteryFactor(data.race()));
         TrainingSystem.passiveGain(player, data, "technique_" + id, technique.trainedStat(), 2.0 + ratio * 2.0);
+        com.dbtenkaichi.mission.MissionManager.onTechnique(player, data, id);
     }
 
     public static void fireBlast(ServerPlayer player, PlayerData data, Technique technique, long now) {
@@ -136,15 +159,18 @@ public final class KiSystem {
         rt.nextKiBlast = now + technique.cooldownTicks();
         rt.lastCombat = now;
         ServerLevel level = player.level();
-        int color = data.appearance().auraColor;
+        int color = technique == Techniques.KI_BLAST ? data.appearance().auraColor : technique.glowColor();
         KiBlastEntity blast = KiBlastEntity.create(level, player, technique, color, rt.lockedTarget, 1.0);
         level.addFreshEntity(blast);
+        com.dbtenkaichi.mission.MissionManager.onTechnique(player, data, technique.id());
         rt.blastHand = !rt.blastHand;
         SkillStyle style = SkillStyle.of(technique.id());
         if (style == SkillStyle.BIG_BANG) {
             CombatSystem.anim(player, AnimClip.BIG_BANG, AnimClip.BIG_BANG.defaultDuration, 0);
         } else if (style == SkillStyle.DEATH_BEAM) {
             CombatSystem.anim(player, AnimClip.DEATH_BEAM, AnimClip.DEATH_BEAM.defaultDuration, 0);
+        } else if (style == SkillStyle.DISC) {
+            CombatSystem.anim(player, AnimClip.DISC_THROW, AnimClip.DISC_THROW.defaultDuration, 0);
         } else {
             CombatSystem.anim(player, rt.blastHand ? AnimClip.KI_BLAST_LEFT : AnimClip.KI_BLAST_RIGHT, 6, 0);
         }

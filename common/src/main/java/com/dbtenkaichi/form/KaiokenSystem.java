@@ -84,6 +84,9 @@ public final class KaiokenSystem {
             return;
         }
         set(player, data, next, now);
+        if (next > 0) {
+            com.dbtenkaichi.mission.MissionManager.onTechnique(player, data, ABILITY);
+        }
     }
 
     public static void set(ServerPlayer player, PlayerData data, int level, long now) {

@@ -1,0 +1,63 @@
+{
+  "name": "form.dbtenkaichi.ultra_instinct",
+  "races": [
+    "saiyan"
+  ],
+  "parent": "dbtenkaichi:ultra_instinct_sign",
+  "order": 75,
+  "requirements": {
+    "battlePower": 1000000,
+    "stats": {
+      "potential": 80
+    },
+    "unlock": "trial"
+  },
+  "bpMultiplier": 8000.0,
+  "speedMultiplier": 1.7,
+  "kiDrainPerSecond": 18.0,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 69.0,
+  "cinematicTicks": 190,
+  "cinematic": "ultra_instinct",
+  "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "auto_dodge",
+      "amount": 0.55
+    },
+    {
+      "type": "reflect",
+      "amount": 0.3
+    },
+    {
+      "type": "god_ki",
+      "amount": 0.0
+    },
+    {
+      "type": "speed",
+      "amount": 0.3
+    },
+    {
+      "type": "strike",
+      "amount": 0.2
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.4,
+    "auraIntensity": 1.0,
+    "hairStyle": "super_spikes",
+    "hairColor": "#E6EAF5",
+    "hairGlow": true,
+    "eyeColor": "#DCE6FF",
+    "auraColor": "#DDE8FF",
+    "auraSecondary": "#FFFFFF",
+    "lightning": true
+  },
+  "trialArena": "TOURNAMENT_OF_POWER"
+}

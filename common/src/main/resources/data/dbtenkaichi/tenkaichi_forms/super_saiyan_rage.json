@@ -1,0 +1,51 @@
+{
+  "name": "form.dbtenkaichi.super_saiyan_rage",
+  "races": [
+    "half_saiyan"
+  ],
+  "parent": "dbtenkaichi:super_saiyan_2",
+  "order": 25,
+  "requirements": {
+    "battlePower": 500000,
+    "stats": {
+      "potential": 50
+    },
+    "unlock": "trial"
+  },
+  "bpMultiplier": 1200.0,
+  "speedMultiplier": 1.25,
+  "kiDrainPerSecond": 10.0,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 45.0,
+  "cinematicTicks": 170,
+  "cinematic": "super_saiyan_rage",
+  "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "last_stand",
+      "amount": 0.35
+    },
+    {
+      "type": "ki_power",
+      "amount": 0.2
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.3,
+    "auraIntensity": 1.0,
+    "hairStyle": "ascended_spikes",
+    "hairColor": "#EAF2FF",
+    "hairGlow": true,
+    "eyeColor": "#2FD8B4",
+    "auraColor": "#9FD0FF",
+    "auraSecondary": "#FFFFFF",
+    "lightning": true
+  },
+  "trialArena": "RUINED_CITY"
+}

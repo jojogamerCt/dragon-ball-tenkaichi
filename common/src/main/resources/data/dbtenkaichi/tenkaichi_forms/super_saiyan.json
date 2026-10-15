@@ -17,24 +17,32 @@
   "speedMultiplier": 1.15,
   "kiDrainPerSecond": 3.0,
   "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
   "masteryPerSecond": 0.0012,
-  "masteryDrainReduction": 0.7,
+  "masteryDrainReduction": 0.6,
   "lowMasteryControlPenalty": 0.12,
-  "kiActivationCost": 20.0,
+  "kiActivationCost": 20,
   "cinematicTicks": 150,
   "cinematic": "super_saiyan_awakening",
-  "quickTicks": 8,
+  "quickTicks": 10,
   "kaiokenCompatible": true,
+  "passives": [
+    {
+      "type": "last_stand",
+      "amount": 0.2
+    }
+  ],
   "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.15,
+    "auraIntensity": 1.0,
     "hairStyle": "super_spikes",
+    "lightning": false,
     "hairColor": "#FFE25A",
     "hairGlow": true,
     "eyeColor": "#33D6B0",
     "auraColor": "#FFD43B",
-    "auraSecondary": "#FFF6B8",
-    "auraStyle": "flame",
-    "lightning": false,
-    "auraScale": 1.15,
-    "auraIntensity": 1.0
-  }
+    "auraSecondary": "#FFF6B8"
+  },
+  "trialArena": "NAMEK"
 }

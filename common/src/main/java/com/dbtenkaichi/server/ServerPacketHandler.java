@@ -70,7 +70,6 @@ public final class ServerPacketHandler {
         appearance.hairStyle = packet.hairStyle();
         appearance.hairColor = packet.hairColor();
         appearance.expression = packet.expression();
-        appearance.voice = packet.voice();
         appearance.auraColor = packet.auraColor();
         appearance.outfit = packet.outfit();
         appearance.outfitPrimary = packet.outfitPrimary();
@@ -106,6 +105,18 @@ public final class ServerPacketHandler {
         PlayerManager.markAllDirty(data);
         PlayerManager.flush(player, data, player.level().getGameTime());
         player.sendSystemMessage(Component.translatable("message.dbtenkaichi.character_created", Component.translatable(race.translationKey())));
+        if (firstCreation && ConfigManager.gameplay().storyAutoStart) {
+            com.dbtenkaichi.mission.MissionManager.startStory(player, data);
+        }
+        com.dbtenkaichi.mission.MissionManager.sync(player, data);
+    }
+
+    public static void request(Packets.Request packet, ServerPlayer player) {
+        PlayerData data = PlayerManager.data(player);
+        if (!allow(player, data) || !data.isCreated()) {
+            return;
+        }
+        com.dbtenkaichi.mission.MissionManager.request(player, data, packet.kind(), packet.value());
     }
 
     public static void action(Packets.Action packet, ServerPlayer player) {
@@ -129,6 +140,13 @@ public final class ServerPacketHandler {
         RuntimeState rt = data.runtime();
         long now = player.level().getGameTime();
         int arg = packet.arg();
+        if (type == ActionType.SCENE_SKIP) {
+            com.dbtenkaichi.story.SceneDirector.skip(player);
+            return;
+        }
+        if (rt.inScene) {
+            return;
+        }
         if (rt.trainingActivity != null && type != ActionType.CHARGE_START && type != ActionType.CHARGE_END
                 && type != ActionType.LIGHT_ATTACK && type != ActionType.HEAVY_ATTACK && type != ActionType.GUARD_START && type != ActionType.GUARD_END
                 && type != ActionType.DODGE && type != ActionType.DASH && type != ActionType.LOCK_TARGET && type != ActionType.FLIGHT_TOGGLE
@@ -169,6 +187,9 @@ public final class ServerPacketHandler {
             case KAIOKEN -> com.dbtenkaichi.form.KaiokenSystem.cycle(player, data, now);
             case BUY_TECHNIQUE -> PlayerManager.buyTechnique(player, data, arg);
             case FORM_TRIAL -> PlayerManager.formTrial(player, data, arg);
+            case SENSE_TOGGLE -> com.dbtenkaichi.race.KiSense.toggle(player, data);
+            case TAIL_TOGGLE -> com.dbtenkaichi.race.TailSystem.toggleWrap(player, data);
+            case WAYPOINT_TOGGLE -> com.dbtenkaichi.mission.MissionManager.toggleWaypoint(player, data);
             default -> {
             }
         }

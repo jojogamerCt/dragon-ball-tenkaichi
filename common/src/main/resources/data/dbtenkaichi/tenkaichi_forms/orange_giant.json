@@ -1,0 +1,53 @@
+{
+  "name": "form.dbtenkaichi.orange_giant",
+  "races": [
+    "namekian"
+  ],
+  "parent": "dbtenkaichi:orange_piccolo",
+  "order": 35,
+  "requirements": {
+    "battlePower": 800000,
+    "stats": {
+      "potential": 70
+    },
+    "unlock": "trial"
+  },
+  "bpMultiplier": 2000.0,
+  "speedMultiplier": 0.8,
+  "kiDrainPerSecond": 14.0,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 57.0,
+  "cinematicTicks": 170,
+  "cinematic": "orange_giant",
+  "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "giant",
+      "amount": 4.0
+    },
+    {
+      "type": "strike",
+      "amount": 0.45
+    },
+    {
+      "type": "super_armor",
+      "amount": 0.0
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.2,
+    "auraIntensity": 1.0,
+    "skinColor": "#E8862E",
+    "build": 3,
+    "eyeColor": "#E81E1E",
+    "auraColor": "#FF9A3A",
+    "auraSecondary": "#FFE0B0"
+  },
+  "trialArena": "RED_RIBBON_BASE"
+}

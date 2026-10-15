@@ -20,6 +20,7 @@ public final class ClientPayloads {
         registrar.register(Packets.OpenScreen.TYPE, ClientPacketHandler::openScreen);
         registrar.register(Packets.Clash.TYPE, ClientPacketHandler::clash);
         registrar.register(Packets.Cinematic.TYPE, ClientPacketHandler::cinematic);
+        registrar.register(Packets.Data.TYPE, ClientPacketHandler::data);
         registrar.register(Packets.ServerConfig.TYPE, ClientPacketHandler::serverConfig);
     }
 

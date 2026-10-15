@@ -1,0 +1,57 @@
+{
+  "name": "form.dbtenkaichi.kid_buu",
+  "races": [
+    "majin"
+  ],
+  "parent": "dbtenkaichi:super_buu",
+  "order": 30,
+  "requirements": {
+    "battlePower": 700000,
+    "stats": {
+      "potential": 60
+    },
+    "unlock": "trial"
+  },
+  "bpMultiplier": 1400.0,
+  "speedMultiplier": 1.5,
+  "kiDrainPerSecond": 3.0,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 24.0,
+  "cinematicTicks": 170,
+  "cinematic": "kid_buu",
+  "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "regeneration",
+      "amount": 0.03
+    },
+    {
+      "type": "speed",
+      "amount": 0.2
+    },
+    {
+      "type": "ki_power",
+      "amount": 0.2
+    },
+    {
+      "type": "giant",
+      "amount": 0.8
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.2,
+    "auraIntensity": 1.0,
+    "build": 0,
+    "skinColor": "#F5A6C8",
+    "eyeColor": "#141414",
+    "auraColor": "#FF90D0",
+    "auraSecondary": "#FFFFFF"
+  },
+  "trialArena": "SACRED_WORLD"
+}

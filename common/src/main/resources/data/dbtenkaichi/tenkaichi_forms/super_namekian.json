@@ -1,0 +1,46 @@
+{
+  "name": "form.dbtenkaichi.super_namekian",
+  "races": [
+    "namekian"
+  ],
+  "parent": "dbtenkaichi:base",
+  "order": 10,
+  "requirements": {
+    "battlePower": 30000,
+    "stats": {
+      "potential": 10
+    },
+    "unlock": "trial"
+  },
+  "bpMultiplier": 60.0,
+  "speedMultiplier": 1.15,
+  "kiDrainPerSecond": 2.0,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 21.0,
+  "cinematicTicks": 160,
+  "cinematic": "super_namekian",
+  "quickTicks": 10,
+  "kaiokenCompatible": true,
+  "passives": [
+    {
+      "type": "regeneration",
+      "amount": 0.01
+    },
+    {
+      "type": "ki_power",
+      "amount": 0.15
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.1,
+    "auraIntensity": 1.0,
+    "auraColor": "#F2FFF0",
+    "auraSecondary": "#FFFFFF"
+  },
+  "trialArena": "NAMEK"
+}

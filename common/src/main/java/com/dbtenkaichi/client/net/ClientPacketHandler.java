@@ -71,6 +71,8 @@ public final class ClientPacketHandler {
         appearance.load(packet.appearance());
         visual.appearance = appearance;
         visual.created = packet.appearance().getBooleanOr("created", false);
+        visual.tailState = packet.appearance().getIntOr("tail_state", 0);
+        visual.halo = packet.appearance().getBooleanOr("halo", false);
     }
 
     public static void entityState(Packets.EntityState packet) {
@@ -149,5 +151,17 @@ public final class ClientPacketHandler {
         visual.cinematicFull = packet.full();
         visual.cinematicForm = packet.form();
         CombatFxHandler.cinematic(packet);
+    }
+
+    public static void data(Packets.Data packet) {
+        net.minecraft.nbt.CompoundTag tag = packet.data() == null ? new net.minecraft.nbt.CompoundTag() : packet.data();
+        switch (packet.kind()) {
+            case "sense" -> com.dbtenkaichi.client.hud.SenseHud.update(tag);
+            case "missions" -> com.dbtenkaichi.client.hud.MissionHud.update(tag);
+            case "scene" -> com.dbtenkaichi.client.story.ScenePlayer.start(tag);
+            case "scene_end" -> com.dbtenkaichi.client.story.ScenePlayer.stop();
+            default -> {
+            }
+        }
     }
 }

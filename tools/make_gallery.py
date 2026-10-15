@@ -252,7 +252,7 @@ def creator():
     img = ImageEnhance.Brightness(img).enhance(0.9)
     img = bands(img, 250, 120)
     img = gradient_text(img, "CREATE YOUR FIGHTER", 140, W // 2, 24)
-    img = plain_text(img, "Race, build, face, hair, outfit, aura color and voice", 42, W // 2, 190)
+    img = plain_text(img, "Race, build, face, hair, outfit and aura color", 42, W // 2, 190)
     finish(brand(img), "08_character_creator")
 
 
@@ -260,7 +260,86 @@ def destruction():
     hero("big_bang_crater", "DESTRUCTION!", "Big Bang Attack craters and explosions that grow with your power", "09_destruction", 0.5, 0.5, 1.1)
 
 
+def story():
+    img = grade(cover(shot("scene_power_ball_640"), W, H, 0.5, 0.5, zoom=1.0), 1.15)
+    img = bands(img, 230, 110)
+    left = cover(shot("scene_reunion_430"), 560, 315, 0.5, 0.5)
+    img = paste_card(img, grade(left), (70, H - 430, 630, H - 115), tilt=-3)
+    right = cover(shot("scene_gohan_rage_600"), 560, 315, 0.5, 0.5)
+    img = paste_card(img, grade(right), (W - 630, H - 430, W - 70, H - 115), tilt=3)
+    img = gradient_text(img, "STORY MODE!", 160, W // 2, 22)
+    img = plain_text(img, "Relive the whole Saiyan Saga as the hero, told through subtitled cutscenes", 42, W // 2, 196)
+    finish(brand(img), "10_story_mode")
+
+
+def missions():
+    img = grade(cover(shot("mission_hud"), W, H, 0.5, 0.5, zoom=1.0), 1.1)
+    img = bands(img, 230, 110)
+    img = gradient_text(img, "MISSIONS!", 160, W // 2, 22, top=(225, 248, 255), bottom=(40, 140, 255), glow=(30, 120, 255))
+    img = plain_text(img, "Story and side missions, a mission HUD and a marker that points to your goal", 42, W // 2, 196)
+    finish(brand(img), "11_missions")
+
+
+def every_form():
+    forms = [("super_saiyan_god", "SUPER SAIYAN GOD"), ("super_saiyan_blue", "SUPER SAIYAN BLUE"), ("ultra_instinct", "ULTRA INSTINCT"), ("ultra_ego", "ULTRA EGO"),
+             ("super_saiyan_4", "SUPER SAIYAN 4"), ("golden_frieza", "GOLDEN FRIEZA"), ("black_frieza", "BLACK FRIEZA"), ("kid_buu", "KID BUU"),
+             ("perfect", "PERFECT CELL"), ("beast", "BEAST")]
+    img = grade(cover(shot("form_ultra_instinct"), W, H)).filter(ImageFilter.GaussianBlur(24))
+    img = ImageEnhance.Brightness(img).enhance(0.45).convert("RGBA")
+    img = burst(img, W // 2, 140, (255, 210, 60), length=1200, alpha=45)
+    cw, ch = 330, 360
+    gap = 28
+    x0 = (W - cw * 5 - gap * 4) // 2
+    for i, (src, label) in enumerate(forms):
+        card = cover(shot("form_" + src), cw, ch, 0.5, 0.42, zoom=1.75)
+        col, row = i % 5, i // 5
+        box = (x0 + col * (cw + gap), 260 + row * (ch + 30), x0 + col * (cw + gap) + cw, 260 + row * (ch + 30) + ch)
+        img = paste_card(img, grade(card), box)
+        img = plain_text(img, label, 32, box[0] + cw // 2, box[3] - 16, fill=(255, 226, 90), anchor="ms", stroke=4, font_path=TITLE_FONT)
+    img = gradient_text(img, "EVERY CANON FORM", 150, W // 2, 24)
+    img = plain_text(img, "Manga forms included, each with its own passives and cutscene", 40, W // 2, 196)
+    finish(brand(img), "12_every_form")
+
+
+def great_ape():
+    hero("scene_power_ball_470", "GREAT APE!", "Look at the full moon with your tail... or throw a Power Ball", "13_great_ape", 0.5, 0.45, 1.05,
+         color=(255, 120, 40), top=(255, 235, 200), bottom=(220, 90, 20))
+
+
+def other_world():
+    img = grade(cover(shot("snake_way"), W, H)).filter(ImageFilter.GaussianBlur(10))
+    img = ImageEnhance.Brightness(img).enhance(0.6).convert("RGBA")
+    items = [("check_in", "KING YEMMA'S CHECK-IN"), ("snake_way", "SNAKE WAY"), ("king_kai_planet", "KING KAI'S PLANET")]
+    cw, ch = 580, 620
+    gap = 40
+    x0 = (W - cw * 3 - gap * 2) // 2
+    for i, (src, label) in enumerate(items):
+        card = cover(shot(src), cw, ch, 0.5, 0.5, zoom=1.2)
+        box = (x0 + i * (cw + gap), 300, x0 + i * (cw + gap) + cw, 300 + ch)
+        img = paste_card(img, grade(card), box)
+        img = plain_text(img, label, 44, box[0] + cw // 2, box[3] - 20, fill=(255, 226, 90), anchor="ms", stroke=5, font_path=TITLE_FONT)
+    img = gradient_text(img, "THE OTHER WORLD", 160, W // 2, 26)
+    img = plain_text(img, "Run Snake Way and train under ten times Earth's gravity", 42, W // 2, 212)
+    finish(brand(img), "14_other_world")
+
+
+def senses():
+    img = grade(cover(shot("scouter"), W, H, 0.5, 0.5, zoom=1.0), 1.1)
+    img = bands(img, 230, 110)
+    inset = cover(shot("ki_sense"), 620, 350, 0.5, 0.5, zoom=1.1)
+    img = paste_card(img, grade(inset), (W - 700, H - 470, W - 80, H - 120), border=(90, 255, 120), tilt=3)
+    img = gradient_text(img, "IT'S OVER 9000!", 150, W // 2, 22, top=(225, 255, 225), bottom=(40, 200, 80), glow=(30, 200, 60))
+    img = plain_text(img, "Read power levels with a scouter or sense ki: androids and gods stay hidden", 42, W // 2, 196)
+    finish(brand(img), "15_scouter_and_ki_sense")
+
+
 if __name__ == "__main__":
+    story()
+    missions()
+    every_form()
+    great_ape()
+    other_world()
+    senses()
     cutscenes()
     transformations()
     races()

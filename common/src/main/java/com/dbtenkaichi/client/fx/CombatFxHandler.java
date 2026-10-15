@@ -322,6 +322,25 @@ public final class CombatFxHandler {
                 chargeOrb(base.add(0, h * 0.75, 0).add(side.scale(1.05)), random, quality, 0xFFE640);
                 chargeOrb(base.add(0, h * 0.75, 0).add(side.scale(-1.05)), random, quality, 0xFFE640);
             }
+            case RAISED -> {
+                EntityVisual visual = ClientState.forEntity(entity);
+                float grow = Math.min(1.0f, (ClientState.clientTicks - visual.skillChargeStart) / 80.0f);
+                Vec3 orb = base.add(0, h * 1.35 + 0.6 + grow * 2.4, 0);
+                chargeOrb(orb, random, quality, color);
+                spawn(ModParticles.ENERGY_ORB, color, orb.x, orb.y, orb.z, 0, 0, 0, 2.0f + grow * 9.0f);
+                spawn(ModParticles.ENERGY_ORB, 0xFFFFFF, orb.x, orb.y, orb.z, 0, 0, 0, 1.2f + grow * 5.0f);
+            }
+            case DISC -> chargeOrb(base.add(0, h * 1.2, 0).add(side.scale(0.35)), random, quality, color);
+            case FACE -> chargeOrb(base.add(0, h * 0.88, 0).add(look.scale(0.45)), random, quality, 0xFFFFE0);
+            case TRIANGLE -> chargeOrb(base.add(0, h * 0.75, 0).add(look.scale(0.6)), random, quality, color);
+            case GRAB -> chargeOrb(base.add(0, h * 0.6, 0).add(look.scale(0.55)), random, quality, color);
+            case BARRIER -> {
+                for (int i = 0; i < 3; i++) {
+                    double a = random.nextDouble() * Math.PI * 2;
+                    double y = random.nextDouble() * 2.2;
+                    spawn(ModParticles.KI_SPARK, color, base.x + Math.cos(a) * 1.3, base.y + y, base.z + Math.sin(a) * 1.3, 0, 0.02, 0, 1.0f);
+                }
+            }
             default -> chargeOrb(base.add(0, h * 0.42, 0).add(look.scale(-0.45)).add(side.scale(0.1)), random, quality, color);
         }
     }

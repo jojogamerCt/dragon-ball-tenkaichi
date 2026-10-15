@@ -71,6 +71,23 @@ public final class ClientController {
             com.dbtenkaichi.client.MarketingCapture.tick(mc);
             return;
         }
+        com.dbtenkaichi.client.story.ScenePlayer.tick(mc);
+        if (com.dbtenkaichi.client.story.ScenePlayer.active()) {
+            releaseAll();
+            while (Keybinds.SKIP_SCENE.consumeClick()) {
+                if (com.dbtenkaichi.client.story.ScenePlayer.skippable()) {
+                    send(ActionType.SCENE_SKIP, 0);
+                }
+            }
+            for (net.minecraft.client.KeyMapping key : Keybinds.ALL) {
+                while (key.consumeClick()) {
+                }
+            }
+            CameraEffects.tick();
+            com.dbtenkaichi.client.ClientSmokeTest.tick(mc);
+            com.dbtenkaichi.client.MarketingCapture.tick(mc);
+            return;
+        }
         LockOn.tick(mc);
         if (mc.gui.screen() == null) {
             handleInput(mc, player, data);
@@ -109,6 +126,15 @@ public final class ClientController {
         while (Keybinds.MENU.consumeClick()) {
             mc.gui.setScreen(new CharacterScreen());
             return;
+        }
+        while (Keybinds.MISSIONS.consumeClick()) {
+            mc.gui.setScreen(new com.dbtenkaichi.client.screen.MissionScreen());
+            return;
+        }
+        while (Keybinds.SENSE.consumeClick()) {
+            send(ActionType.SENSE_TOGGLE, 0);
+        }
+        while (Keybinds.SKIP_SCENE.consumeClick()) {
         }
         while (Keybinds.STANCE.consumeClick()) {
             stance = !stance;

@@ -32,6 +32,13 @@ public final class ModItems {
     public static final Supplier<Item> MASTER_SPAWN_EGG = register("master_spawn_egg", props -> new SpawnEggItem(props.spawnEgg(ModEntities.MASTER.get())));
     public static final Supplier<Item> RAIDER_SPAWN_EGG = register("saiyan_raider_spawn_egg", props -> new SpawnEggItem(props.spawnEgg(ModEntities.RAIDER.get())));
 
+    public static final Supplier<Item> SCOUTER = register("scouter", props -> new com.dbtenkaichi.item.ScouterItem(props.stacksTo(1)
+            .component(net.minecraft.core.component.DataComponents.EQUIPPABLE, net.minecraft.world.item.equipment.Equippable.builder(net.minecraft.world.entity.EquipmentSlot.HEAD)
+                    .setEquipSound(net.minecraft.sounds.SoundEvents.ARMOR_EQUIP_IRON).build())
+            .rarity(Rarity.UNCOMMON)));
+    public static final Supplier<Item> CANDY = register("majin_candy", props -> new Item(props
+            .food(new FoodProperties(6, 0.8f, true), Consumables.defaultFood().consumeSeconds(1.0f).build())
+            .stacksTo(64)));
     public static final Supplier<Item> GI_TOP = outfit("gi_top", net.minecraft.world.entity.EquipmentSlot.CHEST, 3);
     public static final Supplier<Item> GI_PANTS = outfit("gi_pants", net.minecraft.world.entity.EquipmentSlot.LEGS, 2);
     public static final Supplier<Item> GI_BOOTS = outfit("gi_boots", net.minecraft.world.entity.EquipmentSlot.FEET, 1);

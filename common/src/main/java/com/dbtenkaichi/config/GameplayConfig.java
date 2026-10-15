@@ -47,6 +47,7 @@ public final class GameplayConfig {
     public List<String> destructionDimensionBlacklist = new ArrayList<>();
     public float maxBlockHardness = 50.0f;
     public boolean protectLandmarks = true;
+    public boolean storyAutoStart = true;
     public int landmarkSafeZoneRadius = 48;
 
     public int maxActionsPerSecond = 40;

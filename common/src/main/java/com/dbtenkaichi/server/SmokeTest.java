@@ -56,6 +56,7 @@ public final class SmokeTest {
         try {
             if (tick == 0) {
                 staticChecks(level);
+                storyChecks(level);
                 spawn(level);
             } else if (tick > 0 && tick < 400) {
                 observe(level);
@@ -107,6 +108,82 @@ public final class SmokeTest {
         FormDefinition ssj = FormRegistry.get("dbtenkaichi:super_saiyan", false);
         check(ssj != null && ssj.kaiokenCompatible, "Super Saiyan accepts the Kaioken");
         check(com.dbtenkaichi.form.KaiokenSystem.multiplier(5) == 20.0 && com.dbtenkaichi.form.KaiokenSystem.fromFlags(3 << com.dbtenkaichi.form.KaiokenSystem.FLAG_SHIFT) == 3, "Kaioken levels and flag encoding");
+    }
+
+    private static void storyChecks(ServerLevel level) {
+        java.util.Collection<FormDefinition> forms = FormRegistry.all(false);
+        check(forms.stream().filter(f -> !f.id.startsWith("dbtenkaichi:raider")).count() >= 43, "all canon forms loaded (" + forms.size() + ")");
+        for (FormDefinition form : forms) {
+            boolean parentOk = form.parent.equals(FormRegistry.BASE) || FormRegistry.get(form.parent, false) != null;
+            boolean required = form.requirements.requiredForm == null || form.requirements.requiredForm.isEmpty() || FormRegistry.get(form.requirements.requiredForm, false) != null;
+            boolean passives = form.passives.stream().allMatch(p -> p.type != null);
+            if (!parentOk || !required || !passives) {
+                check(false, "form " + form.id + " links (parent " + parentOk + ", required " + required + ", passives " + passives + ")");
+            }
+        }
+        for (com.dbtenkaichi.race.Race race : com.dbtenkaichi.race.Race.values()) {
+            long count = FormRegistry.chainFor(race, false).stream().filter(f -> !f.id.startsWith("dbtenkaichi:raider")).count();
+            check(race == com.dbtenkaichi.race.Race.ANDROID || count > 0, race.id() + " has canon forms (" + count + ")");
+        }
+        net.minecraft.server.MinecraftServer server = level.getServer();
+        ServerLevel other = com.dbtenkaichi.world.OtherWorld.level(server);
+        check(other != null, "Other World dimension loaded");
+        if (other != null) {
+            check(!other.getBlockState(com.dbtenkaichi.world.OtherWorld.CHECK_IN.below()).isAir(), "check-in station built in the Other World");
+            check(!other.getBlockState(com.dbtenkaichi.world.OtherWorld.roadPoint(450).below()).isAir(), "Snake Way road built");
+            BlockPos planet = com.dbtenkaichi.world.OtherWorld.planet();
+            check(!other.getBlockState(planet.below()).isAir() && !other.getBlockState(planet.offset(5, -1, 3)).isAir() && !other.getBlockState(planet.offset(10, -1, 0)).isAir(), "King Kai's planet built with a flat top under the house and path");
+        }
+        java.util.Set<String> sites = new java.util.HashSet<>();
+        for (com.dbtenkaichi.mission.Mission mission : com.dbtenkaichi.mission.Missions.all().values()) {
+            if (!mission.next.isEmpty()) {
+                check(com.dbtenkaichi.mission.Missions.get(mission.next) != null, mission.id + " continues into " + mission.next);
+            }
+            for (com.dbtenkaichi.mission.Mission.Stage stage : mission.stages) {
+                if (stage.kind == com.dbtenkaichi.mission.Mission.Kind.SCENE) {
+                    com.dbtenkaichi.story.StoryScene scene = com.dbtenkaichi.story.Scenes.get(stage.target);
+                    if (scene == null) {
+                        check(false, mission.id + " scene " + stage.target + " exists");
+                        continue;
+                    }
+                    sites.add(scene.site);
+                    for (com.dbtenkaichi.story.StoryScene.ActorSpec actor : scene.actors) {
+                        if (com.dbtenkaichi.story.StoryCharacters.get(actor.character()) == null) {
+                            check(false, "scene " + scene.id + " actor " + actor.character() + " exists");
+                        }
+                    }
+                } else if (!stage.site.isEmpty()) {
+                    sites.add(stage.site);
+                }
+                for (com.dbtenkaichi.mission.Mission.Fighter fighter : stage.fighters) {
+                    if (com.dbtenkaichi.story.StoryCharacters.get(fighter.character()) == null) {
+                        check(false, mission.id + " fighter " + fighter.character() + " exists");
+                    }
+                }
+            }
+        }
+        for (String site : sites) {
+            com.dbtenkaichi.world.StoryWorld.Site found = com.dbtenkaichi.world.StoryWorld.site(server, site);
+            check(found != null && !found.level().getBlockState(found.pos().below()).isAir(), "story site " + site + " exists with ground");
+        }
+        int spawned = 0;
+        BlockPos spawn = level.getRespawnData().pos();
+        for (com.dbtenkaichi.story.StoryCharacters.Character character : com.dbtenkaichi.story.StoryCharacters.all().values()) {
+            com.dbtenkaichi.entity.StoryNpc npc = com.dbtenkaichi.entity.StoryNpc.spawn(level, character, Vec3.atBottomCenterOf(spawn).add(4, 1, 4), com.dbtenkaichi.entity.StoryNpc.ROLE_ACTOR, null, 1.0);
+            if (npc != null && npc.isAlive()) {
+                spawned++;
+                if ("vegeta".equals(character.id())) {
+                    npc.setStoryForm(com.dbtenkaichi.race.TailSystem.GREAT_APE);
+                    check(npc.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.SCALE) > 2.5, "story Vegeta grows into a giant Great Ape");
+                }
+                npc.discard();
+            }
+        }
+        check(spawned == com.dbtenkaichi.story.StoryCharacters.all().size(), "every story character can be spawned (" + spawned + ")");
+        com.dbtenkaichi.entity.PowerBallEntity ball = ModEntities.POWER_BALL.get().create(level, EntitySpawnReason.COMMAND);
+        check(ball != null, "Power Ball entity can be created");
+        check(ModItems.SCOUTER.get() != null && ModItems.CANDY.get() != null, "scouter and Majin candy items registered");
+        check(com.dbtenkaichi.mission.Missions.all().size() >= 16, "story and side missions registered (" + com.dbtenkaichi.mission.Missions.all().size() + ")");
     }
 
     private static void spawn(ServerLevel level) {

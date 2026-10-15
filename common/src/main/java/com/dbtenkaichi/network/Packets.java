@@ -23,14 +23,14 @@ public final class Packets {
     }
 
     public record CreateCharacter(int race, int presentation, float height, int build, int skinColor, int eyeStyle, int eyeColor,
-                                  int eyebrowStyle, int hairStyle, int hairColor, int expression, int voice, int auraColor,
+                                  int eyebrowStyle, int hairStyle, int hairColor, int expression, int auraColor,
                                   int outfit, int outfitPrimary, int outfitSecondary, int featureColor, boolean tail, boolean useOwnSkin) implements CustomPacketPayload {
         public static final Type<CreateCharacter> TYPE = payloadType("create_character");
         public static final StreamCodec<RegistryFriendlyByteBuf, CreateCharacter> CODEC = StreamCodec.ofMember(CreateCharacter::write, CreateCharacter::read);
 
         private static CreateCharacter read(RegistryFriendlyByteBuf buf) {
             return new CreateCharacter(buf.readVarInt(), buf.readVarInt(), buf.readFloat(), buf.readVarInt(), buf.readInt(), buf.readVarInt(), buf.readInt(),
-                    buf.readVarInt(), buf.readVarInt(), buf.readInt(), buf.readVarInt(), buf.readVarInt(), buf.readInt(),
+                    buf.readVarInt(), buf.readVarInt(), buf.readInt(), buf.readVarInt(), buf.readInt(),
                     buf.readVarInt(), buf.readInt(), buf.readInt(), buf.readInt(), buf.readBoolean(), buf.readBoolean());
         }
 
@@ -46,7 +46,6 @@ public final class Packets {
             buf.writeVarInt(hairStyle);
             buf.writeInt(hairColor);
             buf.writeVarInt(expression);
-            buf.writeVarInt(voice);
             buf.writeInt(auraColor);
             buf.writeVarInt(outfit);
             buf.writeInt(outfitPrimary);
@@ -365,6 +364,44 @@ public final class Packets {
 
         @Override
         public Type<ServerConfig> type() {
+            return TYPE;
+        }
+    }
+
+    public record Data(String kind, CompoundTag data) implements CustomPacketPayload {
+        public static final Type<Data> TYPE = payloadType("data");
+        public static final StreamCodec<RegistryFriendlyByteBuf, Data> CODEC = StreamCodec.ofMember(Data::write, Data::read);
+
+        private static Data read(RegistryFriendlyByteBuf buf) {
+            return new Data(buf.readUtf(MAX_STRING), buf.readNbt());
+        }
+
+        private void write(RegistryFriendlyByteBuf buf) {
+            buf.writeUtf(kind, MAX_STRING);
+            buf.writeNbt(data);
+        }
+
+        @Override
+        public Type<Data> type() {
+            return TYPE;
+        }
+    }
+
+    public record Request(String kind, String value) implements CustomPacketPayload {
+        public static final Type<Request> TYPE = payloadType("request");
+        public static final StreamCodec<RegistryFriendlyByteBuf, Request> CODEC = StreamCodec.ofMember(Request::write, Request::read);
+
+        private static Request read(RegistryFriendlyByteBuf buf) {
+            return new Request(buf.readUtf(MAX_STRING), buf.readUtf(MAX_STRING));
+        }
+
+        private void write(RegistryFriendlyByteBuf buf) {
+            buf.writeUtf(kind, MAX_STRING);
+            buf.writeUtf(value, MAX_STRING);
+        }
+
+        @Override
+        public Type<Request> type() {
             return TYPE;
         }
     }

@@ -81,7 +81,7 @@ public final class FirstPersonCombat {
                     pose.rotateDegrees(Axis.ZP, 20.0f);
                 }
             }
-            case MASENKO -> {
+            case MASENKO, RAISED, DISC, FACE -> {
                 pose.translate(right ? -0.36f : 0.36f, 0.8f + shake, -0.45f);
                 pose.rotateDegrees(Axis.ZP, right ? -8.0f : 8.0f);
             }

@@ -27,13 +27,24 @@ public class KiBlastRenderer extends EntityRenderer<KiBlastEntity, KiBlastRender
         state.size = entity.size();
         state.motion = entity.getDeltaMovement().scale(-1.0);
         state.time = entity.tickCount + partialTicks;
+        state.core = entity.coreColor();
+        state.shape = entity.shape();
+        state.yaw = entity.getYRot();
     }
 
     @Override
     public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
         try {
+            poseStack.pushPose();
+            if (state.shape == KiBlastEntity.SHAPE_DISC) {
+                poseStack.translate(0.0, state.size, 0.0);
+                poseStack.scale(1.6f, 0.22f, 1.6f);
+                poseStack.translate(0.0, -state.size, 0.0);
+            }
+            Vec3 trail = state.shape == KiBlastEntity.SHAPE_LASER ? state.motion.scale(2.5) : state.motion;
             collector.submitCustomGeometry(poseStack, TenkaichiRenderTypes.aura(),
-                    (pose, buffer) -> EnergyMesh.orb(pose.pose(), buffer, new Vec3(0, state.size, 0), state.size, 0xFFFFFF, state.color, state.motion, state.time));
+                    (pose, buffer) -> EnergyMesh.orb(pose.pose(), buffer, new Vec3(0, state.size, 0), state.size, state.core, state.color, trail, state.time));
+            poseStack.popPose();
         } catch (RuntimeException e) {
             RenderGuard.report("ki_blast", e);
         }
@@ -45,5 +56,8 @@ public class KiBlastRenderer extends EntityRenderer<KiBlastEntity, KiBlastRender
         public float size;
         public Vec3 motion = Vec3.ZERO;
         public float time;
+        public int core = 0xFFFFFF;
+        public int shape;
+        public float yaw;
     }
 }

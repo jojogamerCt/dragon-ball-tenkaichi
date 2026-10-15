@@ -28,7 +28,12 @@ public abstract class CameraMixin {
     @Inject(method = "alignWithEntity", at = @At("TAIL"))
     private void dbtenkaichi$shake(float partialTicks, CallbackInfo ci) {
         net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
-        if (mc.player != null) {
+        com.dbtenkaichi.client.story.ScenePlayer.Pose scene = com.dbtenkaichi.client.story.ScenePlayer.camera(partialTicks);
+        if (scene != null) {
+            this.detached = true;
+            this.setPosition(scene.position());
+            this.setRotation(scene.yaw(), scene.pitch());
+        } else if (mc.player != null) {
             com.dbtenkaichi.client.cinematic.CinematicDirector.CameraPose pose = com.dbtenkaichi.client.cinematic.CinematicDirector.camera(mc.player, partialTicks);
             if (pose != null) {
                 this.detached = true;

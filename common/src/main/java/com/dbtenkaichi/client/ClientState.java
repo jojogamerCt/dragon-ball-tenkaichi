@@ -64,9 +64,24 @@ public final class ClientState {
             visual.kiRatio = npc.visualKiRatio();
             String form = npc.visualForm();
             visual.form = form.isEmpty() ? PlayerData.BASE_FORM : form;
-            if (npc instanceof RaiderEntity) {
+            if (npc instanceof com.dbtenkaichi.entity.StoryNpc story) {
+                com.dbtenkaichi.story.StoryCharacters.Character character = story.character();
+                if (character != null) {
+                    visual.race = character.race();
+                    if (visual.appearance != character.appearance()) {
+                        visual.appearance = character.appearance();
+                    }
+                    visual.beard = character.beardColor() >= 0;
+                    visual.beardColor = character.beardColor() >= 0 ? character.beardColor() : 0xEDEDED;
+                    visual.cat = false;
+                    visual.scouter = character.scouter();
+                    visual.storyTail = story.hasStoryTail();
+                    visual.tailState = story.hasStoryTail() ? 0 : 2;
+                }
+            } else if (npc instanceof RaiderEntity) {
                 visual.race = Race.SAIYAN;
                 visual.appearance = raiderAppearance();
+                visual.scouter = true;
             } else if (npc instanceof MasterEntity master && master.mirrorOf() >= 0 && existing(master.mirrorOf()) != null) {
                 EntityVisual source = existing(master.mirrorOf());
                 visual.race = source.race;

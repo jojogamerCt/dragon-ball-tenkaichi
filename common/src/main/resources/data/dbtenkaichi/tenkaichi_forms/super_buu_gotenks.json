@@ -1,0 +1,53 @@
+{
+  "name": "form.dbtenkaichi.super_buu_gotenks",
+  "races": [
+    "majin"
+  ],
+  "parent": "dbtenkaichi:super_buu",
+  "order": 15,
+  "requirements": {
+    "battlePower": 400000,
+    "stats": {
+      "potential": 40
+    },
+    "unlock": "absorb",
+    "absorptions": 1
+  },
+  "bpMultiplier": 900.0,
+  "speedMultiplier": 1.35,
+  "kiDrainPerSecond": 3.0,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 24.0,
+  "cinematicTicks": 160,
+  "cinematic": "super_buu_gotenks",
+  "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "strike",
+      "amount": 0.2
+    },
+    {
+      "type": "ki_power",
+      "amount": 0.25
+    },
+    {
+      "type": "regeneration",
+      "amount": 0.015
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.25,
+    "auraIntensity": 1.0,
+    "build": 1,
+    "skinColor": "#D86A9E",
+    "eyeColor": "#C81E1E",
+    "auraColor": "#E070C0",
+    "auraSecondary": "#FFD0F0"
+  }
+}

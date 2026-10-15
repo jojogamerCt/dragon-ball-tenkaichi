@@ -1,0 +1,60 @@
+{
+  "name": "form.dbtenkaichi.super_saiyan_blue_evolved",
+  "races": [
+    "saiyan"
+  ],
+  "parent": "dbtenkaichi:super_saiyan_blue",
+  "order": 60,
+  "requirements": {
+    "battlePower": 650000,
+    "stats": {
+      "potential": 60
+    },
+    "unlock": "trial",
+    "requiredForm": "dbtenkaichi:super_saiyan_blue"
+  },
+  "bpMultiplier": 4000.0,
+  "speedMultiplier": 1.25,
+  "kiDrainPerSecond": 16.0,
+  "staminaDrainPerSecond": 0.0,
+  "healthDrainPerSecond": 0.0,
+  "masteryPerSecond": 0.001,
+  "masteryDrainReduction": 0.6,
+  "lowMasteryControlPenalty": 0.15,
+  "kiActivationCost": 63.0,
+  "cinematicTicks": 170,
+  "cinematic": "super_saiyan_blue_evolved",
+  "quickTicks": 10,
+  "kaiokenCompatible": false,
+  "passives": [
+    {
+      "type": "god_ki",
+      "amount": 0.0
+    },
+    {
+      "type": "strike",
+      "amount": 0.35
+    },
+    {
+      "type": "guard",
+      "amount": 0.2
+    },
+    {
+      "type": "last_stand",
+      "amount": 0.2
+    }
+  ],
+  "visual": {
+    "auraStyle": "flame",
+    "auraScale": 1.35,
+    "auraIntensity": 1.0,
+    "hairStyle": "ascended_spikes",
+    "hairColor": "#1E5FD8",
+    "hairGlow": true,
+    "eyeColor": "#2E6FE0",
+    "auraColor": "#1E4FD0",
+    "auraSecondary": "#9FC8FF",
+    "lightning": true
+  },
+  "trialArena": "TOURNAMENT_OF_POWER"
+}

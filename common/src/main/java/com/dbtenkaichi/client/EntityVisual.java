@@ -32,6 +32,59 @@ public final class EntityVisual {
     public long lastSeen;
     public final AnimPlayer anim = new AnimPlayer();
     public com.dbtenkaichi.ki.SkillStyle style = com.dbtenkaichi.ki.SkillStyle.KAMEHAMEHA;
+    public int tailState;
+    public boolean halo;
+    public int beardColor = 0xEDEDED;
+    public boolean storyTail;
+    public boolean scouter;
+    public long skillChargeStart;
+    private Appearance lookCache;
+    private Appearance lookBase;
+    private String lookKey = "";
+
+    public Appearance look() {
+        FormDefinition def = visualForm();
+        boolean tailHidden = tailState != 0;
+        if ((def == null || !overrides(def.visual)) && !tailHidden) {
+            return appearance;
+        }
+        String key = (def == null ? "" : def.id) + "|" + tailState + "|" + appearance.skinColor + "|" + appearance.build + "|" + appearance.featureColor + "|" + appearance.tail;
+        if (lookCache == null || lookBase != appearance || !key.equals(lookKey)) {
+            Appearance a = appearance.copy();
+            if (def != null) {
+                a.skinColor = FormDefinition.parseColor(def.visual.skinColor, a.skinColor);
+                a.featureColor = FormDefinition.parseColor(def.visual.featureColor, a.featureColor);
+                if (def.visual.build >= 0) {
+                    a.build = def.visual.build;
+                }
+            }
+            if (tailHidden) {
+                a.tail = false;
+            }
+            lookCache = a;
+            lookBase = appearance;
+            lookKey = key;
+        }
+        return lookCache;
+    }
+
+    private static boolean overrides(FormDefinition.Visual v) {
+        return v.skinColor != null || v.featureColor != null || v.build >= 0;
+    }
+
+    public String body() {
+        FormDefinition def = visualForm();
+        return def == null || def.visual.body == null ? "" : def.visual.body;
+    }
+
+    public boolean greatApe() {
+        return "great_ape".equals(body());
+    }
+
+    public int featureStyle() {
+        FormDefinition def = visualForm();
+        return def == null ? 0 : Math.max(0, def.visual.featureStyle);
+    }
 
     public boolean has(int flag) {
         return (flags & flag) != 0;
